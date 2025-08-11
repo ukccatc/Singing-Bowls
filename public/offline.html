@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Himalayan Sound</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fefdf8 0%, #ebe3d0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 500px;
+            padding: 2rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(212, 178, 122, 0.1);
+            border: 1px solid #f3e8d3;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #d4b27a, #b8921f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .features {
+            background: #fefdf8;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border: 1px solid #f3e8d3;
+        }
+        
+        .features h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #d4b27a;
+        }
+        
+        .features ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .features li {
+            padding: 0.5rem 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features li::before {
+            content: "✓";
+            color: #d4b27a;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .retry-btn {
+            background: linear-gradient(135deg, #d4b27a, #b8921f);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .retry-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .status.offline {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        
+        .status.online {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .cached-products {
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .product-card {
+            background: white;
+            border: 1px solid #f3e8d3;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .product-price {
+            color: #d4b27a;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">H</div>
+        
+        <h1>You're Offline</h1>
+        <p>It looks like you've lost your internet connection. Don't worry – you can still browse our cached products and your cart is safely stored!</p>
+        
+        <div class="features">
+            <h2>Available Offline:</h2>
+            <ul>
+                <li>Browse previously viewed products</li>
+                <li>View your saved cart items</li>
+                <li>Read cached blog articles</li>
+                <li>Access your wishlist</li>
+            </ul>
+        </div>
+        
+        <button class="retry-btn" onclick="window.location.reload()">
+            Try Again
+        </button>
+        
+        <div id="network-status" class="status offline">
+            ⚡ Currently offline
+        </div>
+        
+        <div id="cached-content" class="cached-products" style="display: none;">
+            <h2>Recently Viewed Products</h2>
+            <div id="product-grid" class="product-grid"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Network status monitoring
+        function updateNetworkStatus() {
+            const statusEl = document.getElementById('network-status');
+            if (navigator.onLine) {
+                statusEl.className = 'status online';
+                statusEl.innerHTML = '🌐 Back online! <a href="/" style="color: inherit; text-decoration: underline;">Return to site</a>';
+            } else {
+                statusEl.className = 'status offline';
+                statusEl.innerHTML = '⚡ Currently offline';
+            }
+        }
+        
+        // Load cached products
+        function loadCachedProducts() {
+            try {
+                const cachedData = localStorage.getItem('himalayan_products_cache');
+                if (cachedData) {
+                    const data = JSON.parse(cachedData);
+                    if (data.products && data.products.length > 0) {
+                        displayCachedProducts(data.products.slice(0, 6));
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load cached products:', error);
+            }
+        }
+        
+        function displayCachedProducts(products) {
+            const container = document.getElementById('cached-content');
+            const grid = document.getElementById('product-grid');
+            
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.images[0]?.url || '/placeholder.jpg'}" alt="${product.name.en}" loading="lazy" />
+                    <div class="product-name">${product.name.en}</div>
+                    <div class="product-price">$${product.price}</div>
+                </div>
+            `).join('');
+            
+            container.style.display = 'block';
+        }
+        
+        // Event listeners
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        
+        // Initialize
+        updateNetworkStatus();
+        loadCachedProducts();
+        
+        // Auto-refresh when back online
+        window.addEventListener('online', () => {
+            setTimeout(() => {
+                if (navigator.onLine) {
+                    window.location.href = '/';
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

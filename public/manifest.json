@@ -1,0 +1,71 @@
+{
+  "name": "Himalayan Sound - Authentic Sound Healing",
+  "short_name": "Himalayan Sound",
+  "description": "Discover authentic handcrafted Nepali singing bowls and sound meditation instruments for your wellness journey.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ebe3d0",
+  "theme_color": "#d4b27a",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["shopping", "wellness", "meditation"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Shop",
+      "short_name": "Shop",
+      "description": "Browse our collection of singing bowls",
+      "url": "/shop",
+      "icons": [
+        {
+          "src": "/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "short_name": "Cart",
+      "description": "View your shopping cart",
+      "url": "/cart",
+      "icons": [
+        {
+          "src": "/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Himalayan Sound homepage on desktop"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Himalayan Sound homepage on mobile"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
