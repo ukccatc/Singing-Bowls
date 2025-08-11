@@ -1,3 +1,5 @@
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,10 +20,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useRouter } from 'next/navigation';
 import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react';
 import { sampleProducts } from '@/lib/data/products';
 
 export default function AdminProducts() {
+  const router = useRouter();
+  
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -30,7 +35,7 @@ export default function AdminProducts() {
           <h1 className="text-3xl font-bold text-gray-900">Products</h1>
           <p className="text-gray-600">Manage your product catalog</p>
         </div>
-        <Button>
+        <Button onClick={() => router.push('/admin/products/new')}>
           <Plus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
@@ -112,7 +117,7 @@ export default function AdminProducts() {
                         <span className="text-xs text-gray-500">IMG</span>
                       </div>
                       <div>
-                        <div className="font-medium">{product.name}</div>
+                        <div className="font-medium">{product.name.en}</div>
                         <div className="text-sm text-gray-500">{product.slug}</div>
                       </div>
                     </div>
@@ -122,13 +127,13 @@ export default function AdminProducts() {
                   </TableCell>
                   <TableCell>${product.price}</TableCell>
                   <TableCell>
-                    <span className={product.stock > 10 ? 'text-green-600' : 'text-red-600'}>
-                      {product.stock} in stock
+                    <span className={product.inventory > 10 ? 'text-green-600' : 'text-red-600'}>
+                      {product.inventory} in stock
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={product.stock > 0 ? 'default' : 'secondary'}>
-                      {product.stock > 0 ? 'Active' : 'Out of Stock'}
+                    <Badge variant={product.inventory > 0 ? 'default' : 'secondary'}>
+                      {product.inventory > 0 ? 'Active' : 'Out of Stock'}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
@@ -144,7 +149,7 @@ export default function AdminProducts() {
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push(`/admin/products/edit/${product.id}`)}>
                           <Edit className="mr-2 h-4 w-4" />
                           Edit
                         </DropdownMenuItem>

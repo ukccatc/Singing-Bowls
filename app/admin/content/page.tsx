@@ -131,9 +131,9 @@ export default function AdminContent() {
                         <FileText className="h-4 w-4 text-gray-500" />
                       </div>
                       <div>
-                        <div className="font-medium">{article.title}</div>
+                        <div className="font-medium">{article.title.en}</div>
                         <div className="text-sm text-gray-500">
-                          {article.excerpt.substring(0, 50)}...
+                          {article.excerpt.en.substring(0, 50)}...
                         </div>
                       </div>
                     </div>
@@ -141,7 +141,7 @@ export default function AdminContent() {
                   <TableCell>
                     <div className="flex items-center space-x-2">
                       <div className="h-6 w-6 rounded-full bg-gray-200"></div>
-                      <span>{article.author}</span>
+                      <span>{article.author.name}</span>
                     </div>
                   </TableCell>
                   <TableCell>
