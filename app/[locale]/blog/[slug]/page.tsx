@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       type: 'article',
       publishedTime: article.publishedAt,
       authors: [article.author?.name || 'Sound Healing Expert'],
-      tags: article.tags?.map(tag => tag[params.locale]) || [],
+      tags: article.tags || [],
     },
   };
 }
@@ -155,7 +155,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 </div>
                 <div className="flex items-center space-x-2">
                   <BookOpen className="w-4 h-4" />
-                  <span>{article.readCount || 0} {t('article.views', params.locale)}</span>
+                  <span>{article.readingTime || 0} {t('article.readingTime', params.locale)}</span>
                 </div>
               </div>
 
@@ -166,7 +166,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                   <div className="flex flex-wrap gap-2">
                     {article.tags.map((tag, index) => (
                       <Badge key={index} variant="outline" className="text-xs">
-                        {tag[params.locale]}
+                        {tag}
                       </Badge>
                     ))}
                   </div>
@@ -174,11 +174,11 @@ export default function ArticlePage({ params }: ArticlePageProps) {
               )}
 
               {/* Featured Image */}
-              {article.featuredImage && (
+              {article.image && (
                 <div className="mb-8">
                   <img
-                    src={article.featuredImage.url}
-                    alt={article.featuredImage.alt[params.locale]}
+                    src={article.image.url}
+                    alt={article.image.alt[params.locale]}
                     className="w-full h-64 lg:h-96 object-cover rounded-2xl shadow-lg"
                   />
                 </div>
@@ -196,7 +196,8 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                       .map(paragraph => {
                         if (paragraph.startsWith('#')) {
                           // Handle headers
-                          const level = paragraph.match(/^#+/)[0].length;
+                          const match = paragraph.match(/^#+/);
+                          const level = match ? match[0].length : 1;
                           const text = paragraph.replace(/^#+\s*/, '');
                           return `<h${level} class="text-${level === 1 ? '3xl' : level === 2 ? '2xl' : 'xl'} font-bold text-gray-900 mb-4 mt-8">${text}</h${level}>`;
                         } else if (paragraph.startsWith('- ')) {
@@ -291,10 +292,10 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                   .map((relatedArticle) => (
                     <Card key={relatedArticle.id} className="hover:shadow-lg transition-shadow">
                       <CardContent className="p-6">
-                        {relatedArticle.featuredImage && (
+                        {relatedArticle.image && (
                           <img
-                            src={relatedArticle.featuredImage.url}
-                            alt={relatedArticle.featuredImage.alt[params.locale]}
+                            src={relatedArticle.image.url}
+                            alt={relatedArticle.image.alt[params.locale]}
                             className="w-full h-48 object-cover rounded-lg mb-4"
                           />
                         )}
@@ -354,14 +355,14 @@ export default function ArticlePage({ params }: ArticlePageProps) {
               <CardContent>
                 <div className="space-y-4">
                   {sampleArticles
-                    .sort((a, b) => (b.readCount || 0) - (a.readCount || 0))
+                    .sort((a, b) => (b.readingTime || 0) - (a.readingTime || 0))
                     .slice(0, 5)
                     .map((popularArticle) => (
                       <div key={popularArticle.id} className="flex space-x-3">
-                        {popularArticle.featuredImage && (
+                        {popularArticle.image && (
                           <img
-                            src={popularArticle.featuredImage.url}
-                            alt={popularArticle.featuredImage.alt[params.locale]}
+                            src={popularArticle.image.url}
+                            alt={popularArticle.image.alt[params.locale]}
                             className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                           />
                         )}

@@ -32,9 +32,9 @@ export default function NewProduct() {
     currency: 'USD',
     category: ProductCategory.SINGING_BOWLS,
     stock: '',
-    images: [],
-    specifications: [],
-    tags: [],
+    images: [] as any[],
+    specifications: [] as any[],
+    tags: [] as string[],
   });
 
   const [newTag, setNewTag] = useState('');
@@ -46,7 +46,7 @@ export default function NewProduct() {
       setFormData(prev => ({
         ...prev,
         [field]: {
-          ...prev[field as keyof typeof prev],
+          ...(prev[field as keyof typeof prev] as any),
           [locale]: value
         }
       }));
@@ -287,8 +287,9 @@ export default function NewProduct() {
                 <SelectContent>
                   <SelectItem value={ProductCategory.SINGING_BOWLS}>Singing Bowls</SelectItem>
                   <SelectItem value={ProductCategory.MEDITATION_BELLS}>Meditation Bells</SelectItem>
-                  <SelectItem value={ProductCategory.TIBETAN_BOWLS}>Tibetan Bowls</SelectItem>
-                  <SelectItem value={ProductCategory.CRYSTAL_BOWLS}>Crystal Bowls</SelectItem>
+                  <SelectItem value={ProductCategory.GONGS}>Gongs</SelectItem>
+                  <SelectItem value={ProductCategory.ACCESSORIES}>Accessories</SelectItem>
+                  <SelectItem value={ProductCategory.GIFT_SETS}>Gift Sets</SelectItem>
                 </SelectContent>
               </Select>
             </div>

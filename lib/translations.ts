@@ -762,11 +762,6 @@ const translations: Translations = {
     ru: 'Товар Не Найден',
     uk: 'Товар Не Знайдено',
   },
-  'product.audioSample': {
-    en: 'Audio Sample',
-    ru: 'Аудио Образец',
-    uk: 'Аудіо Зразок',
-  },
   'product.freeShipping': {
     en: 'Free Shipping',
     ru: 'Бесплатная Доставка',
@@ -802,12 +797,6 @@ const translations: Translations = {
     ru: 'Наличие',
     uk: 'Наявність',
   },
-  'product.relatedProducts': {
-    en: 'Related Products',
-    ru: 'Похожие Товары',
-    uk: 'Схожі Товари',
-  },
-
   // Footer translations
   'footer.newsletter': {
     en: 'Newsletter',

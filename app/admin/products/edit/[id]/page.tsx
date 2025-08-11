@@ -36,9 +36,9 @@ export default function EditProduct() {
     currency: 'USD',
     category: ProductCategory.SINGING_BOWLS,
     inventory: '',
-    images: [],
-    specifications: [],
-    tags: [],
+    images: [] as any[],
+    specifications: [] as any[],
+    tags: [] as string[],
   });
 
   const [newTag, setNewTag] = useState('');
@@ -51,8 +51,16 @@ export default function EditProduct() {
     if (foundProduct) {
       setProduct(foundProduct);
       setFormData({
-        name: foundProduct.name,
-        description: foundProduct.description,
+        name: {
+          en: foundProduct.name.en || '',
+          ru: foundProduct.name.ru || '',
+          uk: foundProduct.name.uk || '',
+        },
+        description: {
+          en: foundProduct.description.en || '',
+          ru: foundProduct.description.ru || '',
+          uk: foundProduct.description.uk || '',
+        },
         slug: foundProduct.slug,
         price: foundProduct.price.toString(),
         currency: foundProduct.currency,
@@ -70,7 +78,7 @@ export default function EditProduct() {
       setFormData(prev => ({
         ...prev,
         [field]: {
-          ...prev[field as keyof typeof prev],
+          ...(prev[field as keyof typeof prev] as any),
           [locale]: value
         }
       }));
@@ -324,8 +332,9 @@ export default function EditProduct() {
                 <SelectContent>
                   <SelectItem value={ProductCategory.SINGING_BOWLS}>Singing Bowls</SelectItem>
                   <SelectItem value={ProductCategory.MEDITATION_BELLS}>Meditation Bells</SelectItem>
-                  <SelectItem value={ProductCategory.TIBETAN_BOWLS}>Tibetan Bowls</SelectItem>
-                  <SelectItem value={ProductCategory.CRYSTAL_BOWLS}>Crystal Bowls</SelectItem>
+                  <SelectItem value={ProductCategory.GONGS}>Gongs</SelectItem>
+                  <SelectItem value={ProductCategory.ACCESSORIES}>Accessories</SelectItem>
+                  <SelectItem value={ProductCategory.GIFT_SETS}>Gift Sets</SelectItem>
                 </SelectContent>
               </Select>
             </div>

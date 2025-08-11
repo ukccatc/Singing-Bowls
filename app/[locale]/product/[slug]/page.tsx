@@ -148,11 +148,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <span className="text-3xl font-bold text-amber-600">
                 {formatPrice(product.price, product.currency)}
               </span>
-              {product.originalPrice && (
-                <span className="text-xl text-gray-500 line-through">
-                  {formatPrice(product.originalPrice, product.currency)}
-                </span>
-              )}
+              {/* Original price removed - not in Product type */}
             </div>
 
             {/* Rating */}
@@ -162,13 +158,13 @@ export default function ProductPage({ params }: ProductPageProps) {
                   <Star
                     key={star}
                     className={`w-5 h-5 ${
-                      star <= (product.rating || 5) ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                      star <= 5 ? 'text-yellow-400 fill-current' : 'text-gray-300'
                     }`}
                   />
                 ))}
               </div>
               <span className="text-sm text-gray-600">
-                ({product.reviewCount || 0} {t('product.reviews', params.locale)})
+                (0 {t('product.reviews', params.locale)})
               </span>
             </div>
 
@@ -182,7 +178,10 @@ export default function ProductPage({ params }: ProductPageProps) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <AudioPlayer audioUrl={product.audioSample} />
+                  <AudioPlayer 
+                    audioUrl={product.audioSample} 
+                    title={product.name[params.locale]}
+                  />
                 </CardContent>
               </Card>
             )}
@@ -258,7 +257,7 @@ export default function ProductPage({ params }: ProductPageProps) {
             )}
 
             {/* Reviews */}
-            <ProductReviews productId={product.id} locale={params.locale} />
+            <ProductReviews productId={product.id} />
           </div>
 
           {/* Sidebar */}
