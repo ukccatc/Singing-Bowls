@@ -6,6 +6,8 @@ import { sampleProducts } from '@/lib/data/products';
 import ProductDetail from '@/components/product/ProductDetail';
 import ProductReviews from '@/components/product/ProductReviews';
 import AudioPlayer from '@/components/product/AudioPlayer';
+import { MediaEmbed } from '@/components/media/MediaEmbed';
+import { MediaFile } from '@/lib/media-manager';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +20,10 @@ import {
   Heart,
   ShoppingCart,
   Play,
-  Pause
+  Pause,
+  Volume2,
+  Video,
+  Image
 } from 'lucide-react';
 
 interface ProductPageProps {
@@ -82,6 +87,47 @@ export default function ProductPage({ params }: ProductPageProps) {
     }).format(price);
   };
 
+  // Convert product images to MediaFile format
+  const imageMedia: MediaFile[] = product.images.map((img, index) => ({
+    id: `image-${product.id}-${index}`,
+    type: 'image',
+    title: `${product.name[params.locale]} - Image ${index + 1}`,
+    description: img.alt[params.locale] || img.alt.en,
+    url: img.url,
+    platform: 'cdn',
+    thumbnail: img.url,
+    size: 0,
+    metadata: {
+      width: img.width,
+      height: img.height,
+      format: 'jpg',
+      tags: ['singing bowl', 'himalayan', 'meditation'],
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }));
+
+  // Convert product audio sample to MediaFile format
+  const audioMedia: MediaFile | null = product.audioSample ? {
+    id: `audio-${product.id}`,
+    type: 'audio',
+    title: `${product.name[params.locale]} - Audio Sample`,
+    description: product.description[params.locale] || product.description.en,
+    url: product.audioSample,
+    platform: 'soundcloud',
+    thumbnail: product.images[0]?.url,
+    duration: 180, // Default duration
+    size: 0,
+    metadata: {
+      tags: ['singing bowl', 'meditation', 'sound healing'],
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } : null;
+
+  // Mock video media (if product had video)
+  const videoMedia: MediaFile | null = null; // Could be added to product data
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
       <div className="container mx-auto px-4 py-8">
@@ -107,26 +153,49 @@ export default function ProductPage({ params }: ProductPageProps) {
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Images */}
+          {/* Product Media Gallery */}
           <div className="space-y-4">
+            {/* Main Image */}
             <div className="aspect-square rounded-2xl overflow-hidden bg-white shadow-lg">
-              <img
-                src={product.images[0].url}
-                alt={product.images[0].alt[params.locale]}
-                className="w-full h-full object-cover"
-              />
+              {imageMedia[0] && (
+                <MediaEmbed
+                  media={imageMedia[0]}
+                  width={600}
+                  height={600}
+                  className="w-full h-full"
+                />
+              )}
             </div>
-            {product.images.length > 1 && (
+            
+            {/* Thumbnail Gallery */}
+            {imageMedia.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
-                {product.images.slice(1).map((image) => (
+                {imageMedia.slice(1).map((image) => (
                   <div key={image.id} className="aspect-square rounded-lg overflow-hidden bg-white shadow-md">
-                    <img
-                      src={image.url}
-                      alt={image.alt[params.locale]}
-                      className="w-full h-full object-cover"
+                    <MediaEmbed
+                      media={image}
+                      width={150}
+                      height={150}
+                      className="w-full h-full"
                     />
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Video Section (if available) */}
+            {videoMedia && (
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                  <Video className="w-5 h-5 mr-2 text-amber-600" />
+                  {t('product.video', params.locale)}
+                </h3>
+                <MediaEmbed
+                  media={videoMedia}
+                  width={600}
+                  height={338}
+                  controls={true}
+                />
               </div>
             )}
           </div>
@@ -148,7 +217,6 @@ export default function ProductPage({ params }: ProductPageProps) {
               <span className="text-3xl font-bold text-amber-600">
                 {formatPrice(product.price, product.currency)}
               </span>
-              {/* Original price removed - not in Product type */}
             </div>
 
             {/* Rating */}
@@ -169,18 +237,20 @@ export default function ProductPage({ params }: ProductPageProps) {
             </div>
 
             {/* Audio Sample */}
-            {product.audioSample && (
+            {audioMedia && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <Play className="w-5 h-5" />
+                    <Volume2 className="w-5 h-5" />
                     <span>{t('product.audioSample', params.locale)}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <AudioPlayer 
-                    audioUrl={product.audioSample} 
-                    title={product.name[params.locale]}
+                  <MediaEmbed
+                    media={audioMedia}
+                    width={400}
+                    height={200}
+                    controls={true}
                   />
                 </CardContent>
               </Card>
@@ -250,6 +320,28 @@ export default function ProductPage({ params }: ProductPageProps) {
                         {spec.value[params.locale]}
                         {spec.unit && ` ${spec.unit}`}
                       </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Media Gallery */}
+            {imageMedia.length > 1 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Image className="w-6 h-6 mr-2 text-amber-600" />
+                  {t('product.gallery', params.locale)}
+                </h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {imageMedia.map((image) => (
+                    <div key={image.id} className="aspect-square rounded-lg overflow-hidden bg-white shadow-md">
+                      <MediaEmbed
+                        media={image}
+                        width={300}
+                        height={300}
+                        className="w-full h-full"
+                      />
                     </div>
                   ))}
                 </div>

@@ -1,242 +1,296 @@
 'use client';
 
-import React, { useState } from 'react';
+import { MediaEmbed } from '@/components/media/MediaEmbed';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { MediaFile } from '@/lib/media-manager';
+import { Product } from '@/lib/types';
+import { Heart, ShoppingCart, Volume2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ShoppingCart, Heart, Play, Pause } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { Product } from '@/lib/types';
-import { t } from '@/lib/translations';
-import { Locale } from '@/lib/types';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
-  locale: Locale;
-  className?: string;
+  locale: string;
   showAudio?: boolean;
-  onAddToCart?: (productId: string) => void;
-  onToggleWishlist?: (productId: string) => void;
-  isInWishlist?: boolean;
+  viewMode?: 'grid' | 'list';
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  product,
-  locale,
-  className,
-  showAudio = true,
-  onAddToCart,
-  onToggleWishlist,
-  isInWishlist = false,
-}) => {
+export default function ProductCard({ product, locale, showAudio = false, viewMode = 'grid' }: ProductCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [imageLoading, setImageLoading] = useState(true);
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
+  const productName = product.name[locale as keyof typeof product.name] || product.name.en;
+  const productDescription = product.description[locale as keyof typeof product.description] || product.description.en;
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
-  const productName = product.name[locale] || product.name.en;
-  const productSlug = product.slug;
 
-  const handleAudioToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  // Convert product audio sample to MediaFile format
+  const audioMedia: MediaFile | null = product.audioSample ? {
+    id: `audio-${product.id}`,
+    type: 'audio',
+    title: productName,
+    description: product.description[locale as keyof typeof product.description] || product.description.en,
+    url: product.audioSample,
+    platform: 'soundcloud', // Assuming SoundCloud for audio samples
+    thumbnail: primaryImage?.url,
+    duration: 180, // Default duration, could be stored in product data
+    size: 0,
+    metadata: {
+      tags: ['singing bowl', 'meditation', 'sound healing'],
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } : null;
 
-    if (!product.audioSample) return;
-
-    if (isPlaying) {
-      audio?.pause();
-      setIsPlaying(false);
-    } else {
-      if (audio) {
-        audio.play();
-      } else {
-        const newAudio = new Audio(product.audioSample);
-        newAudio.addEventListener('ended', () => setIsPlaying(false));
-        newAudio.addEventListener('error', () => setIsPlaying(false));
-        newAudio.play();
-        setAudio(newAudio);
-      }
-      setIsPlaying(true);
-    }
+  const handleAddToCart = () => {
+    // TODO: Implement add to cart functionality
+    console.log('Add to cart:', product.id);
   };
 
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onAddToCart?.(product.id);
+  const handleToggleWishlist = () => {
+    setIsInWishlist(!isInWishlist);
+    // TODO: Implement wishlist functionality
+    console.log('Toggle wishlist:', product.id);
   };
 
-  const handleToggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onToggleWishlist?.(product.id);
+  const handlePlayAudio = () => {
+    setIsPlaying(!isPlaying);
+    // TODO: Implement audio playback
+    console.log('Play audio:', product.id);
   };
 
-  const formatPrice = (price: number, currency: string) => {
-    return new Intl.NumberFormat(locale === 'ru' ? 'ru-RU' : locale === 'uk' ? 'uk-UA' : 'en-US', {
-      style: 'currency',
-      currency: currency,
-    }).format(price);
-  };
-
-  return (
-    <Link href={`/${locale}/product/${productSlug}`}>
-      <div className={cn(
-        'group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden card-hover',
-        'border border-cream-200 hover:border-gold-300',
-        className
-      )}>
-        
-        {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden bg-cream-50">
-          {primaryImage && (
-            <Image
-              src={primaryImage.url}
-              alt={primaryImage.alt[locale] || primaryImage.alt.en}
-              fill
-              className={cn(
-                'object-cover transition-all duration-300 group-hover:scale-105',
-                imageLoading ? 'blur-sm' : 'blur-0'
-              )}
-              onLoad={() => setImageLoading(false)}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          )}
-          
-          {/* Loading placeholder */}
-          {imageLoading && (
-            <div className="absolute inset-0 bg-cream-100 animate-pulse" />
-          )}
-
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col space-y-2">
-            {product.isFeatured && (
-              <Badge variant="secondary" className="bg-gold-500 text-white text-xs">
-                Featured
-              </Badge>
-            )}
-            {product.isHandmade && (
-              <Badge variant="outline" className="bg-white/90 text-charcoal-700 text-xs">
-                Handmade
-              </Badge>
-            )}
-            {product.inventory < 5 && product.inventory > 0 && (
-              <Badge variant="destructive" className="text-xs">
-                {t('product.limitedStock', locale, { count: product.inventory })}
-              </Badge>
-            )}
+  if (viewMode === 'list') {
+    return (
+      <Card className="card-metal hover-glow-gold overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          {/* Product Image */}
+          <div className="md:w-48 lg:w-64 flex-shrink-0">
+            <Link href={`/${locale}/product/${product.slug}`}>
+              <div className="aspect-square relative overflow-hidden">
+                {primaryImage ? (
+                  <Image
+                    src={primaryImage.url}
+                    alt={primaryImage.alt[locale as keyof typeof primaryImage.alt] || primaryImage.alt.en}
+                    fill
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-cream-100 flex items-center justify-center">
+                    <span className="text-cream-400">No image</span>
+                  </div>
+                )}
+              </div>
+            </Link>
           </div>
 
-          {/* Action Buttons */}
-          <div className="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            {onToggleWishlist && (
+          {/* Product Info */}
+          <div className="flex-1 p-6">
+            <div className="flex flex-col h-full">
+              <div className="flex-1">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <Link href={`/${locale}/product/${product.slug}`}>
+                      <h3 className="text-xl font-semibold text-charcoal-900 hover:text-gold-600 transition-colors">
+                        {productName}
+                      </h3>
+                    </Link>
+                    <p className="text-charcoal-600 mt-1 line-clamp-2">
+                      {productDescription}
+                    </p>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleToggleWishlist}
+                    className="text-charcoal-400 hover:text-red-500"
+                  >
+                    <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-2 mb-3">
+                  <Badge className="badge-gold text-xs">
+                    {product.category}
+                  </Badge>
+                  {product.isFeatured && (
+                    <Badge className="badge-bronze text-xs">
+                      Featured
+                    </Badge>
+                  )}
+                  {product.isHandmade && (
+                    <Badge className="badge-copper text-xs">
+                      Handmade
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-2xl font-bold text-gradient-gold">
+                    ${product.price}
+                  </span>
+                  {product.inventory > 0 ? (
+                    <Badge className="bg-green-100 text-green-800 border border-green-200 text-xs">
+                      In Stock ({product.inventory})
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-red-100 text-red-800 border border-red-200 text-xs">
+                      Out of Stock
+                    </Badge>
+                  )}
+                </div>
+
+                {/* Audio Sample */}
+                {showAudio && audioMedia && (
+                  <div className="mb-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Volume2 className="h-4 w-4 text-gold-600" />
+                      <span className="text-sm font-medium text-charcoal-700">
+                        Audio Sample
+                      </span>
+                    </div>
+                    <div className="w-full max-w-md">
+                      <MediaEmbed
+                        media={audioMedia}
+                        width={400}
+                        height={80}
+                        controls={true}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div className="flex items-center gap-3 pt-4 border-t border-cream-200">
+                <Button
+                  onClick={handleAddToCart}
+                  disabled={product.inventory === 0}
+                  className="btn-primary flex-1"
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  Add to Cart
+                </Button>
+                <Link href={`/${locale}/product/${product.slug}`}>
+                  <Button variant="outline" className="btn-outline">
+                    View Details
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
+  // Grid view (original)
+  return (
+    <Card className="card-metal hover-glow-gold group overflow-hidden">
+      <CardHeader className="p-0">
+        <Link href={`/${locale}/product/${product.slug}`}>
+          <div className="aspect-square relative overflow-hidden">
+            {primaryImage ? (
+              <Image
+                src={primaryImage.url}
+                alt={primaryImage.alt[locale as keyof typeof primaryImage.alt] || primaryImage.alt.en}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              />
+            ) : (
+              <div className="w-full h-full bg-cream-100 flex items-center justify-center">
+                <span className="text-cream-400">No image</span>
+              </div>
+            )}
+            
+            {/* Quick Actions Overlay */}
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleToggleWishlist}
-                className={cn(
-                  'w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-sm',
-                  isInWishlist ? 'text-red-500' : 'text-charcoal-600'
-                )}
-                aria-label="Toggle wishlist"
+                className="bg-white/90 hover:bg-white text-charcoal-700"
               >
-                <Heart className={cn('h-4 w-4', isInWishlist && 'fill-current')} />
+                <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
               </Button>
-            )}
-            
-            {showAudio && product.audioSample && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleAudioToggle}
-                className="w-9 h-9 rounded-full bg-white/90 hover:bg-white shadow-sm text-charcoal-600"
-                aria-label={isPlaying ? t('product.pauseAudio', locale) : t('product.playAudio', locale)}
-              >
-                {isPlaying ? (
-                  <Pause className="h-4 w-4" />
-                ) : (
-                  <Play className="h-4 w-4 ml-0.5" />
-                )}
-              </Button>
-            )}
-          </div>
-
-          {/* Out of Stock Overlay */}
-          {!product.isAvailable && (
-            <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-              <Badge variant="secondary" className="bg-charcoal-700 text-white">
-                {t('product.outOfStock', locale)}
-              </Badge>
             </div>
-          )}
-        </div>
 
-        {/* Content */}
-        <div className="p-4 space-y-3">
-          
-          {/* Product Name */}
-          <h3 className="font-semibold text-charcoal-900 line-clamp-2 group-hover:text-gold-700 transition-colors">
-            {productName}
-          </h3>
-
-          {/* Specifications Summary */}
-          <div className="flex items-center space-x-4 text-xs text-charcoal-600">
-            {product.specifications.find(spec => spec.name.en.toLowerCase().includes('diameter')) && (
-              <span>
-                ⌀ {product.specifications.find(spec => spec.name.en.toLowerCase().includes('diameter'))?.value[locale] || 
-                   product.specifications.find(spec => spec.name.en.toLowerCase().includes('diameter'))?.value.en}
-              </span>
-            )}
-            {product.materials.length > 0 && (
-              <span className="truncate">
-                {product.materials.slice(0, 2).join(', ')}
-                {product.materials.length > 2 && '+'}
-              </span>
-            )}
-          </div>
-
-          {/* Price and Add to Cart */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex flex-col">
-              <span className="text-lg font-bold text-charcoal-900">
-                {formatPrice(product.price, product.currency)}
-              </span>
-              {product.inventory <= 10 && product.inventory > 0 && (
-                <span className="text-xs text-orange-600">
-                  {t('product.limitedStock', locale, { count: product.inventory })}
-                </span>
+            {/* Badges */}
+            <div className="absolute top-2 left-2 flex flex-col gap-1">
+              {product.isFeatured && (
+                <Badge className="badge-bronze text-xs">
+                  Featured
+                </Badge>
+              )}
+              {product.isHandmade && (
+                <Badge className="badge-copper text-xs">
+                  Handmade
+                </Badge>
               )}
             </div>
+          </div>
+        </Link>
+      </CardHeader>
 
-            {product.isAvailable && onAddToCart && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleAddToCart}
-                className="border-gold-500 text-gold-700 hover:bg-gold-500 hover:text-white transition-colors"
-              >
-                <ShoppingCart className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">
-                  {t('product.addToCart', locale)}
-                </span>
-              </Button>
+      <CardContent className="p-4">
+        <div className="space-y-3">
+          <div>
+            <Link href={`/${locale}/product/${product.slug}`}>
+              <h3 className="font-semibold text-charcoal-900 hover:text-gold-600 transition-colors line-clamp-2">
+                {productName}
+              </h3>
+            </Link>
+            <p className="text-sm text-charcoal-600 mt-1 line-clamp-2">
+              {productDescription}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-lg font-bold text-gradient-gold">
+              ${product.price}
+            </span>
+            <Badge className="badge-gold text-xs">
+              {product.category}
+            </Badge>
+          </div>
+
+          <div className="flex items-center justify-between text-sm">
+            <span className={product.inventory > 0 ? 'text-green-600' : 'text-red-600'}>
+              {product.inventory > 0 ? `In Stock (${product.inventory})` : 'Out of Stock'}
+            </span>
+            {product.craftsman && (
+              <span className="text-charcoal-600">
+                by {product.craftsman}
+              </span>
             )}
           </div>
 
-          {/* Origin and Craftsman */}
-          {product.craftsman && (
-            <div className="text-xs text-charcoal-500 pt-1 border-t border-cream-200">
-              <span>
-                {t('product.craftsman', locale)}: {product.craftsman}
-              </span>
+          {/* Audio Sample */}
+          {showAudio && audioMedia && (
+            <div className="bg-cream-50 rounded-lg p-2">
+              <div className="flex items-center space-x-2">
+                <Volume2 className="h-4 w-4 text-gold-600" />
+                <span className="text-xs text-charcoal-600">
+                  Audio Sample
+                </span>
+              </div>
+              {/* Mini audio player could be added here */}
             </div>
           )}
-        </div>
-      </div>
-    </Link>
-  );
-};
 
-export default ProductCard;
+          <Button
+            onClick={handleAddToCart}
+            disabled={product.inventory === 0}
+            className="btn-primary w-full"
+          >
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            Add to Cart
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

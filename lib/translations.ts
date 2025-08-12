@@ -1,5 +1,4 @@
-import { Locale } from './types';
-import { ArticleCategory } from './types';
+import { ArticleCategory, Locale } from './types';
 
 // Translation object structure
 interface Translations {
@@ -37,7 +36,44 @@ const translations: Translations = {
     uk: 'Контакти',
   },
 
-  // Home page
+  // Home page - Main keys
+  'home.title': {
+    en: 'Authentic Himalayan Sound Healing',
+    ru: 'Аутентичное Гималайское Звуковое Исцеление',
+    uk: 'Автентичне Гімалайське Звукове Зцілення',
+  },
+  'home.subtitle': {
+    en: 'Discover the transformative power of handcrafted Nepali singing bowls and meditation instruments',
+    ru: 'Откройте для себя преобразующую силу рукотворных непальских поющих чаш и медитативных инструментов',
+    uk: 'Відкрийте для себе перетворюючу силу рукотворних непальських співаючих чаш та медитативних інструментів',
+  },
+  'home.shopNow': {
+    en: 'Shop Now',
+    ru: 'Магазин',
+    uk: 'Магазин',
+  },
+  'home.learnMore': {
+    en: 'Learn More',
+    ru: 'Узнать Больше',
+    uk: 'Дізнатися Більше',
+  },
+  'home.featuredProducts': {
+    en: 'Featured Products',
+    ru: 'Рекомендуемые Товары',
+    uk: 'Рекомендовані Товари',
+  },
+  'home.featuredProductsSubtitle': {
+    en: 'Handpicked authentic instruments for your sound healing journey',
+    ru: 'Тщательно отобранные аутентичные инструменты для вашего путешествия в звуковое исцеление',
+    uk: 'Ретельно відібрані автентичні інструменти для вашої подорожі в звукове зцілення',
+  },
+  'home.viewAllProducts': {
+    en: 'View All Products',
+    ru: 'Посмотреть Все Товары',
+    uk: 'Переглянути Всі Товари',
+  },
+
+  // Home page - Hero section (existing)
   'home.hero.badge': {
     en: 'Authentic Himalayan Instruments',
     ru: 'Аутентичные Гималайские Инструменты',

@@ -2,50 +2,205 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 51, 51, 51;
-  --background-start-rgb: 254, 254, 254;
-  --background-end-rgb: 235, 227, 208;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 43 100% 98%;
-    --foreground: 0 0% 20%;
-    --card: 43 100% 98%;
-    --card-foreground: 0 0% 20%;
-    --popover: 43 100% 98%;
-    --popover-foreground: 0 0% 20%;
-    --primary: 36 38% 65%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 43 26% 92%;
-    --secondary-foreground: 0 0% 20%;
-    --muted: 43 26% 92%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 36 38% 65%;
-    --accent-foreground: 0 0% 20%;
+    --background: 60 9% 98%;
+    --foreground: 20 14% 4%;
+    --card: 60 9% 98%;
+    --card-foreground: 20 14% 4%;
+    --popover: 60 9% 98%;
+    --popover-foreground: 20 14% 4%;
+    --primary: 43 96% 56%;
+    --primary-foreground: 20 14% 4%;
+    --secondary: 25 95% 53%;
+    --secondary-foreground: 20 14% 4%;
+    --muted: 25 5% 84%;
+    --muted-foreground: 25 5% 45%;
+    --accent: 15 76% 51%;
+    --accent-foreground: 20 14% 4%;
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 43 26% 89%;
-    --input: 43 26% 89%;
-    --ring: 36 38% 65%;
-    --radius: 0.75rem;
+    --destructive-foreground: 60 9% 98%;
+    --border: 25 5% 84%;
+    --input: 25 5% 84%;
+    --ring: 43 96% 56%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14% 4%;
+    --foreground: 60 9% 98%;
+    --card: 20 14% 4%;
+    --card-foreground: 60 9% 98%;
+    --popover: 20 14% 4%;
+    --popover-foreground: 60 9% 98%;
+    --primary: 43 96% 56%;
+    --primary-foreground: 20 14% 4%;
+    --secondary: 25 95% 53%;
+    --secondary-foreground: 20 14% 4%;
+    --muted: 25 5% 15%;
+    --muted-foreground: 25 5% 65%;
+    --accent: 15 76% 51%;
+    --accent-foreground: 20 14% 4%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 60 9% 98%;
+    --border: 25 5% 15%;
+    --input: 25 5% 15%;
+    --ring: 43 96% 56%;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-cream-200;
   }
-  
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    @apply bg-cream-50 text-charcoal-900;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
 @layer components {
-  .container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  /* Metal-inspired button styles */
+  .btn-primary {
+    @apply bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply bg-gradient-to-r from-bronze-500 to-bronze-600 hover:from-bronze-600 hover:to-bronze-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+  }
+
+  .btn-accent {
+    @apply bg-gradient-to-r from-copper-500 to-copper-600 hover:from-copper-600 hover:to-copper-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply border-2 border-gold-500 text-gold-700 hover:bg-gold-50 font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+
+  /* Metal texture backgrounds */
+  .bg-metal-light {
+    @apply bg-gradient-to-br from-cream-50 to-cream-100;
+  }
+
+  .bg-metal-warm {
+    @apply bg-gradient-to-br from-bronze-50 to-bronze-100;
+  }
+
+  .bg-metal-rich {
+    @apply bg-gradient-to-br from-copper-50 to-copper-100;
+  }
+
+  /* Card styles with metal inspiration */
+  .card-metal {
+    @apply bg-white rounded-xl shadow-lg border border-cream-200 hover:shadow-xl transition-all duration-300 hover:border-gold-300;
+  }
+
+  .card-metal-gold {
+    @apply bg-gradient-to-br from-gold-50 to-gold-100 rounded-xl shadow-lg border border-gold-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  .card-metal-bronze {
+    @apply bg-gradient-to-br from-bronze-50 to-bronze-100 rounded-xl shadow-lg border border-bronze-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  .card-metal-copper {
+    @apply bg-gradient-to-br from-copper-50 to-copper-100 rounded-xl shadow-lg border border-copper-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  /* Text styles */
+  .text-metal-gold {
+    @apply text-gold-700;
+  }
+
+  .text-metal-bronze {
+    @apply text-bronze-700;
+  }
+
+  .text-metal-copper {
+    @apply text-copper-700;
+  }
+
+  /* Gradient text effects */
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-600 to-gold-800 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-bronze {
+    @apply bg-gradient-to-r from-bronze-600 to-bronze-800 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-copper {
+    @apply bg-gradient-to-r from-copper-600 to-copper-800 bg-clip-text text-transparent;
+  }
+
+  /* Hover effects */
+  .hover-glow-gold {
+    @apply hover:shadow-lg hover:shadow-gold-200 transition-all duration-300;
+  }
+
+  .hover-glow-bronze {
+    @apply hover:shadow-lg hover:shadow-bronze-200 transition-all duration-300;
+  }
+
+  .hover-glow-copper {
+    @apply hover:shadow-lg hover:shadow-copper-200 transition-all duration-300;
+  }
+
+  /* Badge styles */
+  .badge-gold {
+    @apply bg-gold-100 text-gold-800 border border-gold-200;
+  }
+
+  .badge-bronze {
+    @apply bg-bronze-100 text-bronze-800 border border-bronze-200;
+  }
+
+  .badge-copper {
+    @apply bg-copper-100 text-copper-800 border border-copper-200;
+  }
+
+  /* Input styles */
+  .input-metal {
+    @apply bg-white border border-cream-300 focus:border-gold-500 focus:ring-2 focus:ring-gold-200 rounded-lg transition-all duration-200;
+  }
+
+  /* Loading animations */
+  .animate-pulse-gold {
+    animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-gold {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-cream-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gold-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold-400;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
 }
