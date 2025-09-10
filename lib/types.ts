@@ -8,6 +8,9 @@ export interface Product {
   currency: string;
   images: ProductImage[];
   audioSample?: string;
+  // New media fields
+  youtubeVideo?: ProductVideo;
+  soundcloudAudio?: ProductAudio;
   category: ProductCategory;
   specifications: ProductSpecification[];
   inventory: number;
@@ -34,6 +37,36 @@ export interface ProductImage {
   height: number;
   isPrimary: boolean;
   is360?: boolean;
+}
+
+export interface ProductVideo {
+  id: string;
+  videoId: string; // YouTube video ID
+  title: string;
+  description?: string;
+  thumbnail?: string;
+  duration?: string; // ISO 8601 duration format
+  url: string; // Full YouTube URL
+  platform: 'youtube';
+  isEmbeddable: boolean;
+  privacyStatus: 'public' | 'unlisted' | 'private';
+  createdAt: string;
+}
+
+export interface ProductAudio {
+  id: string;
+  trackId: string; // SoundCloud track ID
+  title: string;
+  description?: string;
+  streamUrl: string;
+  artworkUrl?: string;
+  duration: number; // in seconds
+  genre?: string;
+  tags: string[];
+  platform: 'soundcloud';
+  isPublic: boolean;
+  downloadable: boolean;
+  createdAt: string;
 }
 
 export interface ProductSpecification {

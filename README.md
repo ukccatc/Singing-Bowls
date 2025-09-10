@@ -9,7 +9,7 @@ A modern, multilingual e-commerce platform for authentic Himalayan singing bowls
 - 📱 **PWA Ready** - Progressive Web App with offline support
 - 🎨 **Modern UI** - Beautiful, responsive design with Tailwind CSS
 - 🔍 **SEO Optimized** - Meta tags, structured data, sitemap
-- 🎵 **Audio Integration** - Product audio samples
+- 🎵 **Media Integration** - YouTube videos, SoundCloud audio, and image uploads
 - 📝 **Blog System** - Content management with categories
 - 🔐 **Authentication** - User accounts and profiles
 - 📧 **Newsletter** - Email subscription system
@@ -116,7 +116,31 @@ Create a `.env.local` file:
 ```env
 NODE_ENV=development
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Supabase Configuration (Required)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+# Media Integration APIs (Optional)
+YOUTUBE_API_KEY=your-youtube-api-key
+YOUTUBE_CHANNEL_ID=your-youtube-channel-id
+SOUNDCLOUD_CLIENT_ID=your-soundcloud-client-id
+SOUNDCLOUD_CLIENT_SECRET=your-soundcloud-client-secret
+SOUNDCLOUD_ACCESS_TOKEN=your-soundcloud-access-token
+GOOGLE_DRIVE_CLIENT_ID=your-google-drive-client-id
+GOOGLE_DRIVE_CLIENT_SECRET=your-google-drive-client-secret
+GOOGLE_DRIVE_API_KEY=your-google-drive-api-key
+GOOGLE_DRIVE_FOLDER_ID=your-google-drive-folder-id
 ```
+
+### Database Setup
+
+1. **Create Supabase project** at [supabase.com](https://supabase.com)
+2. **Run the schema**: Copy `scripts/supabase-schema.sql` to Supabase SQL Editor
+3. **Configure environment variables** with your Supabase credentials
+
+See [Supabase Setup Instructions](./docs/supabase-setup-instructions.md) for detailed setup.
 
 ### Customization
 

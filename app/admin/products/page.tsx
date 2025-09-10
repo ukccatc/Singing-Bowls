@@ -1,8 +1,16 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -12,20 +20,74 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Product } from '@/lib/types';
+import { Edit, Eye, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye } from 'lucide-react';
-import { sampleProducts } from '@/lib/data/products';
+import { useEffect, useState } from 'react';
 
 export default function AdminProducts() {
   const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Transform Supabase data to match our Product interface
+  const transformSupabaseProduct = (supabaseProduct: any): Product => {
+    return {
+      id: supabaseProduct.id,
+      slug: supabaseProduct.slug,
+      name: supabaseProduct.name,
+      description: supabaseProduct.description,
+      price: supabaseProduct.price,
+      currency: supabaseProduct.currency,
+      images: supabaseProduct.images || [],
+      audioSample: supabaseProduct.audio_sample,
+      youtubeVideo: supabaseProduct.youtube_video,
+      soundcloudAudio: supabaseProduct.soundcloud_audio,
+      category: supabaseProduct.category,
+      specifications: supabaseProduct.specifications || [],
+      inventory: supabaseProduct.inventory,
+      sku: supabaseProduct.sku,
+      weight: supabaseProduct.weight,
+      dimensions: supabaseProduct.dimensions || { unit: 'cm' },
+      materials: supabaseProduct.materials || [],
+      origin: supabaseProduct.origin,
+      craftsman: supabaseProduct.craftsman,
+      isHandmade: supabaseProduct.is_handmade,
+      isFeatured: supabaseProduct.is_featured,
+      isAvailable: supabaseProduct.is_available,
+      tags: supabaseProduct.tags || [],
+      createdAt: supabaseProduct.created_at,
+      updatedAt: supabaseProduct.updated_at,
+      seo: supabaseProduct.seo || {},
+    };
+  };
+
+  // Fetch products from API
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/products');
+      
+      if (!response.ok) {
+        console.error('Failed to fetch products:', response.statusText);
+        return;
+      }
+      
+      const result = await response.json();
+      if (result.success && result.data) {
+        const transformedProducts = result.data.map((product: any) => transformSupabaseProduct(product));
+        setProducts(transformedProducts);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
   
   return (
     <div className="space-y-6">
@@ -48,7 +110,7 @@ export default function AdminProducts() {
             <CardTitle className="text-sm font-medium">Total Products</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sampleProducts.length}</div>
+            <div className="text-2xl font-bold">{loading ? '...' : products.length}</div>
           </CardContent>
         </Card>
         <Card>
@@ -56,7 +118,7 @@ export default function AdminProducts() {
             <CardTitle className="text-sm font-medium">Active Products</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sampleProducts.length}</div>
+            <div className="text-2xl font-bold">{loading ? '...' : products.filter(p => p.isAvailable).length}</div>
           </CardContent>
         </Card>
         <Card>
@@ -109,7 +171,20 @@ export default function AdminProducts() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sampleProducts.map((product) => (
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    Loading products...
+                  </TableCell>
+                </TableRow>
+              ) : products.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8">
+                    No products found. <Button variant="link" onClick={() => router.push('/admin/products/new')}>Add your first product</Button>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                products.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>
                     <div className="flex items-center space-x-3">
@@ -162,7 +237,8 @@ export default function AdminProducts() {
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
-              ))}
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>

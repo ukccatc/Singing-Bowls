@@ -1,29 +1,26 @@
 'use client';
 
-import React, { useState } from 'react';
+import { MediaEmbed } from '@/components/media/MediaEmbed';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { getLocaleFromPathname, t } from '@/lib/translations';
+import { Product } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import {
+    Award,
+    ChevronLeft,
+    ChevronRight,
+    Heart,
+    Share2,
+    Shield,
+    ShoppingCart,
+    Truck
+} from 'lucide-react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { 
-  ShoppingCart, 
-  Heart, 
-  Share2, 
-  Truck, 
-  Shield, 
-  Award,
-  ChevronLeft,
-  ChevronRight,
-  Ruler,
-  Weight,
-  Package
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
+import React, { useState } from 'react';
 import AudioPlayer from './AudioPlayer';
-import { cn } from '@/lib/utils';
-import { Product } from '@/lib/types';
-import { t, getLocaleFromPathname } from '@/lib/translations';
 
 interface ProductDetailProps {
   product: Product;
@@ -255,8 +252,65 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
             ))}
           </div>
 
-          {/* Audio Player */}
-          {product.audioSample && (
+          {/* Media Section */}
+          {(product.youtubeVideo || product.soundcloudAudio) && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-charcoal-900">Media</h3>
+              
+              {/* YouTube Video */}
+              {product.youtubeVideo && (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-charcoal-700">Video</h4>
+                  <MediaEmbed
+                    media={{
+                      id: product.youtubeVideo.id,
+                      type: 'video',
+                      title: product.youtubeVideo.title,
+                      description: product.youtubeVideo.description,
+                      url: product.youtubeVideo.url,
+                      platform: 'youtube',
+                      thumbnail: product.youtubeVideo.thumbnail,
+                      duration: product.youtubeVideo.duration,
+                      size: 0,
+                      metadata: { videoId: product.youtubeVideo.videoId },
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                    }}
+                    width={560}
+                    height={315}
+                  />
+                </div>
+              )}
+
+              {/* SoundCloud Audio */}
+              {product.soundcloudAudio && (
+                <div className="space-y-2">
+                  <h4 className="font-medium text-charcoal-700">Audio Sample</h4>
+                  <MediaEmbed
+                    media={{
+                      id: product.soundcloudAudio.id,
+                      type: 'audio',
+                      title: product.soundcloudAudio.title,
+                      description: product.soundcloudAudio.description,
+                      url: product.soundcloudAudio.streamUrl,
+                      platform: 'soundcloud',
+                      thumbnail: product.soundcloudAudio.artworkUrl,
+                      duration: product.soundcloudAudio.duration,
+                      size: 0,
+                      metadata: { trackId: product.soundcloudAudio.trackId },
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                    }}
+                    width={560}
+                    height={166}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Legacy Audio Player */}
+          {product.audioSample && !product.soundcloudAudio && (
             <AudioPlayer
               audioUrl={product.audioSample}
               title={productName}

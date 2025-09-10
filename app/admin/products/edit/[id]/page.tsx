@@ -1,17 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MediaEmbed } from '@/components/media/MediaEmbed';
+import { MediaUploader } from '@/components/media/MediaUploader';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Save, Plus, X } from 'lucide-react';
-import { ProductCategory } from '@/lib/types';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { sampleProducts } from '@/lib/data/products';
+import { MediaFile } from '@/lib/media-manager';
+import { ProductAudio, ProductCategory, ProductVideo } from '@/lib/types';
+import { extractYouTubeVideoId, isValidYouTubeUrl } from '@/lib/utils';
+import { ArrowLeft, Image, Music, Plus, Save, Video, X } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function EditProduct() {
   const router = useRouter();
@@ -39,6 +44,10 @@ export default function EditProduct() {
     images: [] as any[],
     specifications: [] as any[],
     tags: [] as string[],
+    // New media fields
+    youtubeVideo: null as ProductVideo | null,
+    soundcloudAudio: null as ProductAudio | null,
+    youtubeUrl: '', // New field for YouTube URL
   });
 
   const [newTag, setNewTag] = useState('');
@@ -69,6 +78,9 @@ export default function EditProduct() {
         images: foundProduct.images,
         specifications: foundProduct.specifications,
         tags: foundProduct.tags,
+        // Load media data
+        youtubeVideo: foundProduct.youtubeVideo || null,
+        soundcloudAudio: foundProduct.soundcloudAudio || null,
       });
     }
   }, [productId]);
@@ -126,6 +138,104 @@ export default function EditProduct() {
     setFormData(prev => ({
       ...prev,
       specifications: prev.specifications.filter((_, i) => i !== index)
+    }));
+  };
+
+  // Media handling functions
+  const handleYouTubeUrl = () => {
+    const url = formData.youtubeUrl.trim();
+    if (!url) return;
+    
+    if (!isValidYouTubeUrl(url)) {
+      alert('Please enter a valid YouTube URL');
+      return;
+    }
+    
+    const videoId = extractYouTubeVideoId(url);
+    if (!videoId) {
+      alert('Could not extract video ID from URL');
+      return;
+    }
+    
+    const video: ProductVideo = {
+      id: `youtube_${videoId}`,
+      videoId: videoId,
+      title: `YouTube Video ${videoId}`,
+      description: 'Product demonstration video',
+      thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+      duration: '',
+      url: `https://www.youtube.com/watch?v=${videoId}`,
+      platform: 'youtube',
+      isEmbeddable: true,
+      privacyStatus: 'public',
+      createdAt: new Date().toISOString(),
+    };
+    
+    setFormData(prev => ({
+      ...prev,
+      youtubeVideo: video,
+      youtubeUrl: '' // Clear the input after processing
+    }));
+  };
+
+  const handleSoundCloudUpload = (media: MediaFile) => {
+    const audio: ProductAudio = {
+      id: media.id,
+      trackId: media.metadata?.trackId || media.id,
+      title: media.title,
+      description: media.description,
+      streamUrl: media.url,
+      artworkUrl: media.thumbnail,
+      duration: media.duration || 0,
+      genre: 'Meditation',
+      tags: media.metadata?.tags || [],
+      platform: 'soundcloud',
+      isPublic: true,
+      downloadable: false,
+      createdAt: new Date().toISOString(),
+    };
+    
+    setFormData(prev => ({
+      ...prev,
+      soundcloudAudio: audio
+    }));
+  };
+
+  const handleImageUpload = (media: MediaFile) => {
+    const image = {
+      id: media.id,
+      url: media.url,
+      alt: { en: media.title, ru: '', uk: '' },
+      width: 800,
+      height: 600,
+      isPrimary: formData.images.length === 0,
+      is360: false,
+    };
+    
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, image]
+    }));
+  };
+
+  const removeYouTubeVideo = () => {
+    setFormData(prev => ({
+      ...prev,
+      youtubeVideo: null
+    }));
+  };
+
+  const removeSoundCloudAudio = () => {
+    setFormData(prev => ({
+      ...prev,
+      soundcloudAudio: null
+    }));
+  };
+
+  const removeImage = (imageId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter(img => img.id !== imageId)
     }));
   };
 
@@ -417,6 +527,174 @@ export default function EditProduct() {
                   </Button>
                 </div>
               ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Media Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Product Media</CardTitle>
+            <CardDescription>Manage YouTube videos, SoundCloud audio, and product images</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* YouTube Video */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Video className="h-5 w-5 text-red-500" />
+                <h3 className="font-medium">YouTube Video</h3>
+              </div>
+              {formData.youtubeVideo ? (
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium">{formData.youtubeVideo.title}</h4>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={removeYouTubeVideo}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <MediaEmbed
+                    media={{
+                      id: formData.youtubeVideo.id,
+                      type: 'video',
+                      title: formData.youtubeVideo.title,
+                      description: formData.youtubeVideo.description,
+                      url: formData.youtubeVideo.url,
+                      platform: 'youtube',
+                      thumbnail: formData.youtubeVideo.thumbnail,
+                      duration: formData.youtubeVideo.duration,
+                      size: 0,
+                      metadata: { videoId: formData.youtubeVideo.videoId },
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                    }}
+                    width={400}
+                    height={225}
+                  />
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="youtube-url">YouTube Video URL</Label>
+                    <div className="flex space-x-2">
+                      <Input
+                        id="youtube-url"
+                        type="url"
+                        value={formData.youtubeUrl}
+                        onChange={(e) => setFormData(prev => ({ ...prev, youtubeUrl: e.target.value }))}
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleYouTubeUrl}
+                        disabled={!formData.youtubeUrl.trim()}
+                        variant="outline"
+                      >
+                        Add Video
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Supports: youtube.com/watch?v=, youtu.be/, youtube.com/embed/
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <Separator />
+
+            {/* SoundCloud Audio */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Music className="h-5 w-5 text-orange-500" />
+                <h3 className="font-medium">SoundCloud Audio</h3>
+              </div>
+              {formData.soundcloudAudio ? (
+                <div className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium">{formData.soundcloudAudio.title}</h4>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={removeSoundCloudAudio}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <MediaEmbed
+                    media={{
+                      id: formData.soundcloudAudio.id,
+                      type: 'audio',
+                      title: formData.soundcloudAudio.title,
+                      description: formData.soundcloudAudio.description,
+                      url: formData.soundcloudAudio.streamUrl,
+                      platform: 'soundcloud',
+                      thumbnail: formData.soundcloudAudio.artworkUrl,
+                      duration: formData.soundcloudAudio.duration,
+                      size: 0,
+                      metadata: { trackId: formData.soundcloudAudio.trackId },
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                    }}
+                    width={400}
+                    height={166}
+                  />
+                </div>
+              ) : (
+                <MediaUploader
+                  onUploadComplete={handleSoundCloudUpload}
+                  allowedTypes={['audio']}
+                  maxFileSize={500 * 1024 * 1024} // 500MB
+                />
+              )}
+            </div>
+
+            <Separator />
+
+            {/* Product Images */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Image className="h-5 w-5 text-blue-500" />
+                <h3 className="font-medium">Product Images</h3>
+              </div>
+              {formData.images.length > 0 && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                  {formData.images.map((image, index) => (
+                    <div key={image.id} className="relative group">
+                      <img
+                        src={image.url}
+                        alt={image.alt.en}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded-lg flex items-center justify-center">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeImage(image.id)}
+                          className="opacity-0 group-hover:opacity-100 text-white hover:text-red-300"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      {image.isPrimary && (
+                        <Badge className="absolute top-2 left-2 text-xs">Primary</Badge>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <MediaUploader
+                onUploadComplete={handleImageUpload}
+                allowedTypes={['image']}
+                maxFileSize={10 * 1024 * 1024} // 10MB
+              />
             </div>
           </CardContent>
         </Card>

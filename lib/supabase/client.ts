@@ -23,8 +23,18 @@ export type Database = {
           specifications: any[];
           tags: string[];
           audio_sample?: string;
+          youtube_video?: any; // ProductVideo object
+          soundcloud_audio?: any; // ProductAudio object
+          sku: string;
+          weight: number;
+          dimensions: any;
+          materials: string[];
+          origin: string;
+          craftsman?: string;
+          is_handmade: boolean;
           is_featured: boolean;
           is_available: boolean;
+          seo: any;
           created_at: string;
           updated_at: string;
         };

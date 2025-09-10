@@ -1,30 +1,25 @@
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import { Locale } from '@/lib/types';
-import { t } from '@/lib/translations';
-import { sampleProducts } from '@/lib/data/products';
-import ProductDetail from '@/components/product/ProductDetail';
-import ProductReviews from '@/components/product/ProductReviews';
-import AudioPlayer from '@/components/product/AudioPlayer';
 import { MediaEmbed } from '@/components/media/MediaEmbed';
-import { MediaFile } from '@/lib/media-manager';
+import ProductReviews from '@/components/product/ProductReviews';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Package, 
-  Truck, 
-  Shield, 
-  Star, 
-  Heart,
-  ShoppingCart,
-  Play,
-  Pause,
-  Volume2,
-  Video,
-  Image
+import { MediaFile } from '@/lib/media-manager';
+import { t } from '@/lib/translations';
+import { Locale, Product } from '@/lib/types';
+import {
+    Heart,
+    Image,
+    Package,
+    Shield,
+    ShoppingCart,
+    Star,
+    Truck,
+    Video,
+    Volume2
 } from 'lucide-react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 interface ProductPageProps {
   params: {
@@ -33,8 +28,71 @@ interface ProductPageProps {
   };
 }
 
+// Transform Supabase data to match our Product interface
+function transformSupabaseProduct(supabaseProduct: any): Product {
+  return {
+    id: supabaseProduct.id,
+    slug: supabaseProduct.slug,
+    name: supabaseProduct.name,
+    description: supabaseProduct.description,
+    price: supabaseProduct.price,
+    currency: supabaseProduct.currency,
+    images: supabaseProduct.images || [],
+    audioSample: supabaseProduct.audio_sample,
+    youtubeVideo: supabaseProduct.youtube_video,
+    soundcloudAudio: supabaseProduct.soundcloud_audio,
+    category: supabaseProduct.category,
+    specifications: supabaseProduct.specifications || [],
+    inventory: supabaseProduct.inventory,
+    sku: supabaseProduct.sku,
+    weight: supabaseProduct.weight,
+    dimensions: supabaseProduct.dimensions || { unit: 'cm' },
+    materials: supabaseProduct.materials || [],
+    origin: supabaseProduct.origin,
+    craftsman: supabaseProduct.craftsman,
+    isHandmade: supabaseProduct.is_handmade,
+    isFeatured: supabaseProduct.is_featured,
+    isAvailable: supabaseProduct.is_available,
+    tags: supabaseProduct.tags || [],
+    createdAt: supabaseProduct.created_at,
+    updatedAt: supabaseProduct.updated_at,
+    seo: supabaseProduct.seo || {},
+  };
+}
+
+// Fetch all products from API
+async function getAllProducts(): Promise<Product[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/products`, {
+      cache: 'no-store', // Always fetch fresh data
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to fetch products:', response.statusText);
+      return [];
+    }
+    
+    const result = await response.json();
+    if (result.success && result.data) {
+      return result.data.map((product: any) => transformSupabaseProduct(product));
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
+}
+
+// Fetch product from API
+async function getProduct(slug: string): Promise<Product | null> {
+  const products = await getAllProducts();
+  return products.find(p => p.slug === slug) || null;
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = sampleProducts.find(p => p.slug === params.slug);
+  const product = await getProduct(params.slug);
   
   if (!product) {
     return {
@@ -59,22 +117,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export async function generateStaticParams() {
-  const params: { locale: Locale; slug: string }[] = [];
-  
-  ['en', 'ru', 'uk'].forEach((locale) => {
-    sampleProducts.forEach((product) => {
-      params.push({
-        locale: locale as Locale,
-        slug: product.slug,
-      });
-    });
-  });
-  
-  return params;
+  // For now, return empty array to use dynamic rendering
+  // In production, you might want to pre-generate popular products
+  return [];
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const product = sampleProducts.find(p => p.slug === params.slug);
+export default async function ProductPage({ params }: ProductPageProps) {
+  const [product, allProducts] = await Promise.all([
+    getProduct(params.slug),
+    getAllProducts()
+  ]);
   
   if (!product) {
     notFound();
@@ -125,8 +177,47 @@ export default function ProductPage({ params }: ProductPageProps) {
     updatedAt: new Date(),
   } : null;
 
-  // Mock video media (if product had video)
-  const videoMedia: MediaFile | null = null; // Could be added to product data
+  // Convert YouTube video to MediaFile format
+  const videoMedia: MediaFile | null = product.youtubeVideo ? {
+    id: product.youtubeVideo.id,
+    type: 'video',
+    title: product.youtubeVideo.title,
+    description: product.youtubeVideo.description || '',
+    url: product.youtubeVideo.url,
+    platform: 'youtube',
+    thumbnail: product.youtubeVideo.thumbnail,
+    duration: product.youtubeVideo.duration ? parseInt(product.youtubeVideo.duration.replace(/[^\d]/g, '')) : 0,
+    size: 0,
+    metadata: { 
+      videoId: product.youtubeVideo.videoId,
+      isEmbeddable: product.youtubeVideo.isEmbeddable,
+      privacyStatus: product.youtubeVideo.privacyStatus,
+    },
+    createdAt: new Date(product.youtubeVideo.createdAt),
+    updatedAt: new Date(),
+  } : null;
+
+  // Convert SoundCloud audio to MediaFile format
+  const soundcloudMedia: MediaFile | null = product.soundcloudAudio ? {
+    id: product.soundcloudAudio.id,
+    type: 'audio',
+    title: product.soundcloudAudio.title,
+    description: product.soundcloudAudio.description || '',
+    url: product.soundcloudAudio.streamUrl,
+    platform: 'soundcloud',
+    thumbnail: product.soundcloudAudio.artworkUrl,
+    duration: product.soundcloudAudio.duration,
+    size: 0,
+    metadata: {
+      trackId: product.soundcloudAudio.trackId,
+      genre: product.soundcloudAudio.genre,
+      tags: product.soundcloudAudio.tags,
+      isPublic: product.soundcloudAudio.isPublic,
+      downloadable: product.soundcloudAudio.downloadable,
+    },
+    createdAt: new Date(product.soundcloudAudio.createdAt),
+    updatedAt: new Date(),
+  } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
@@ -386,7 +477,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {sampleProducts
+                  {allProducts
                     .filter(p => p.category === product.category && p.id !== product.id)
                     .slice(0, 3)
                     .map((relatedProduct) => (
