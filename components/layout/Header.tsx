@@ -1,26 +1,27 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ShoppingCart, Search, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import { Menu, Search, ShoppingCart, X } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import LanguageChanger from './LanguageChanger';
 
 interface HeaderProps {
-  cartItemCount?: number;
   locale: Locale;
 }
 
-const Header: React.FC<HeaderProps> = ({ cartItemCount = 0, locale }) => {
+const Header: React.FC<HeaderProps> = ({ locale }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  const { getItemCount } = useCart();
+  const cartItemCount = getItemCount();
 
   const pathname = usePathname();
 

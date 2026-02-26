@@ -1,11 +1,13 @@
-import '../globals.css';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
+import { Toaster } from '@/components/ui/sonner';
+import { CartProvider } from '@/lib/context/CartContext';
+import { getAvailableLocales } from '@/lib/translations';
+import { Locale } from '@/lib/types';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import { getAvailableLocales, getLocaleDisplayName } from '@/lib/translations';
-import { Locale } from '@/lib/types';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import '../globals.css';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -131,13 +133,16 @@ export default function LocaleLayout({
         <meta name="theme-color" content="#d4b27a" />
       </head>
       <body className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100 font-sans antialiased">
-        <div className="flex flex-col min-h-screen">
-          <Header locale={locale} />
-          <main className="flex-1 pt-16 lg:pt-20">
-            {children}
-          </main>
-          <Footer locale={locale} />
-        </div>
+        <CartProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header locale={locale} />
+            <main className="flex-1 pt-16 lg:pt-20">
+              {children}
+            </main>
+            <Footer locale={locale} />
+          </div>
+          <Toaster position="top-right" />
+        </CartProvider>
       </body>
     </html>
   );

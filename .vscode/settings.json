@@ -139,5 +139,7 @@
   "prettier.proseWrap": "preserve",
   "prettier.quoteProps": "as-needed",
   "prettier.requirePragma": false,
-  "prettier.vueIndentScriptAndStyle": false
+  "prettier.vueIndentScriptAndStyle": false,
+  "kiroAgent.configureMCP": "Disabled",
+  "typescript.autoClosingTags": false
 }

@@ -21,6 +21,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, locale, showAudio = false, viewMode = 'grid' }: ProductCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
+  const { addItem } = useCart();
 
   const productName = product.name[locale as keyof typeof product.name] || product.name.en;
   const productDescription = product.description[locale as keyof typeof product.description] || product.description.en;
@@ -45,8 +46,8 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
   } : null;
 
   const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    console.log('Add to cart:', product.id);
+    addItem(product, 1);
+    toast.success(`${productName} added to cart!`);
   };
 
   const handleToggleWishlist = () => {
