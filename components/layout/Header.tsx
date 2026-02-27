@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useCart } from '@/lib/hooks/useCart';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -54,22 +55,37 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
     <header className={cn(
       'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
       isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-md' 
-        : 'bg-transparent'
+        ? 'bg-white/95 backdrop-blur-lg shadow-lg py-2' 
+        : 'bg-white/80 backdrop-blur-sm shadow-sm py-0'
     )}>
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className={cn(
+          "flex items-center justify-between transition-all duration-300",
+          isScrolled ? "h-16" : "h-20"
+        )}>
           
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center space-x-2 group">
-            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm lg:text-base">H</span>
+          <Link href={`/${locale}`} className="flex items-center space-x-3 group">
+            <div className={cn(
+              "bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110",
+              isScrolled ? "w-10 h-10" : "w-12 h-12"
+            )}>
+              <span className={cn(
+                "text-white font-bold transition-all duration-300",
+                isScrolled ? "text-base" : "text-lg"
+              )}>H</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg lg:text-xl text-charcoal-900 group-hover:text-gold-600 transition-colors">
+              <span className={cn(
+                "font-bold text-charcoal-900 group-hover:text-gold-600 transition-all duration-300",
+                isScrolled ? "text-lg" : "text-xl"
+              )}>
                 Himalayan Sound
               </span>
-              <span className="text-xs text-charcoal-600 -mt-1 hidden sm:block">
+              <span className={cn(
+                "text-charcoal-600 -mt-1 hidden sm:block transition-all duration-300",
+                isScrolled ? "text-xs" : "text-sm"
+              )}>
                 Authentic Sound Healing
               </span>
             </div>
@@ -138,10 +154,10 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
 
             {/* Cart */}
             <Link href={`/${locale}/cart`} className="relative group">
-              <Button variant="ghost" size="sm" className="p-2" aria-label="Cart">
-                <ShoppingCart className="h-4 w-4" />
+              <Button variant="ghost" size="sm" className="p-2 hover:bg-gold-50 transition-colors" aria-label="Cart">
+                <ShoppingCart className="h-5 w-5 group-hover:text-gold-600 transition-colors" />
                 {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-gold-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-gradient-to-br from-gold-500 to-gold-600 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-md animate-bounce-gentle">
                     {cartItemCount > 9 ? '9+' : cartItemCount}
                   </span>
                 )}

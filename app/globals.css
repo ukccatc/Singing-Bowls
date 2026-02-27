@@ -62,24 +62,45 @@
 }
 
 @layer components {
-  /* Metal-inspired button styles */
+  /* Modern Button Styles */
   .btn-primary {
-    @apply bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:scale-98;
   }
 
   .btn-secondary {
-    @apply bg-gradient-to-r from-bronze-500 to-bronze-600 hover:from-bronze-600 hover:to-bronze-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-bronze-500 to-bronze-600 hover:from-bronze-600 hover:to-bronze-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:scale-98;
   }
 
   .btn-accent {
-    @apply bg-gradient-to-r from-copper-500 to-copper-600 hover:from-copper-600 hover:to-copper-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply bg-gradient-to-r from-copper-500 to-copper-600 hover:from-copper-600 hover:to-copper-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:scale-98;
   }
 
   .btn-outline {
-    @apply border-2 border-gold-500 text-gold-700 hover:bg-gold-50 font-medium py-2 px-4 rounded-lg transition-all duration-200;
+    @apply border-2 border-gold-500 text-gold-700 hover:bg-gold-50 font-medium py-2 px-4 rounded-lg transition-all duration-200 active:scale-98;
   }
 
-  /* Metal texture backgrounds */
+  .btn-ghost {
+    @apply text-charcoal-700 hover:bg-charcoal-100 font-medium py-2 px-4 rounded-lg transition-all duration-200 active:scale-98;
+  }
+
+  /* Glassmorphism Effects */
+  .glass {
+    @apply bg-white/30 backdrop-blur-md border border-white/20 rounded-xl;
+  }
+
+  .glass-gold {
+    @apply bg-gold-50/30 backdrop-blur-md border border-gold-100/30 rounded-xl;
+  }
+
+  .glass-bronze {
+    @apply bg-bronze-50/30 backdrop-blur-md border border-bronze-100/30 rounded-xl;
+  }
+
+  .glass-copper {
+    @apply bg-copper-50/30 backdrop-blur-md border border-copper-100/30 rounded-xl;
+  }
+
+  /* Metal-inspired backgrounds */
   .bg-metal-light {
     @apply bg-gradient-to-br from-cream-50 to-cream-100;
   }
@@ -92,7 +113,11 @@
     @apply bg-gradient-to-br from-copper-50 to-copper-100;
   }
 
-  /* Card styles with metal inspiration */
+  /* Modern Card Styles */
+  .card-modern {
+    @apply bg-white rounded-xl shadow-md border border-cream-200 hover:shadow-lg transition-all duration-300 hover:border-gold-300;
+  }
+
   .card-metal {
     @apply bg-white rounded-xl shadow-lg border border-cream-200 hover:shadow-xl transition-all duration-300 hover:border-gold-300;
   }
@@ -107,6 +132,10 @@
 
   .card-metal-copper {
     @apply bg-gradient-to-br from-copper-50 to-copper-100 rounded-xl shadow-lg border border-copper-200 hover:shadow-xl transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:scale-102 hover:-translate-y-1;
   }
 
   /* Text styles */
@@ -148,17 +177,25 @@
     @apply hover:shadow-lg hover:shadow-copper-200 transition-all duration-300;
   }
 
+  .hover-lift {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .hover-scale {
+    @apply transition-all duration-300 hover:scale-105;
+  }
+
   /* Badge styles */
   .badge-gold {
-    @apply bg-gold-100 text-gold-800 border border-gold-200;
+    @apply bg-gold-100 text-gold-800 border border-gold-200 rounded-full px-3 py-1 text-sm font-medium;
   }
 
   .badge-bronze {
-    @apply bg-bronze-100 text-bronze-800 border border-bronze-200;
+    @apply bg-bronze-100 text-bronze-800 border border-bronze-200 rounded-full px-3 py-1 text-sm font-medium;
   }
 
   .badge-copper {
-    @apply bg-copper-100 text-copper-800 border border-copper-200;
+    @apply bg-copper-100 text-copper-800 border border-copper-200 rounded-full px-3 py-1 text-sm font-medium;
   }
 
   /* Input styles */
@@ -166,23 +203,51 @@
     @apply bg-white border border-cream-300 focus:border-gold-500 focus:ring-2 focus:ring-gold-200 rounded-lg transition-all duration-200;
   }
 
-  /* Loading animations */
-  .animate-pulse-gold {
-    animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .input-modern {
+    @apply bg-white border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 rounded-lg transition-all duration-200 placeholder-charcoal-400;
   }
 
-  @keyframes pulse-gold {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
+  /* Loading animations */
+  .animate-pulse-gold {
+    animation: pulseGold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply bg-cream-200 rounded-lg animate-pulse;
+  }
+
+  .skeleton-text {
+    @apply h-4 bg-cream-200 rounded animate-pulse;
+  }
+
+  .skeleton-circle {
+    @apply w-12 h-12 bg-cream-200 rounded-full animate-pulse;
+  }
+
+  /* Focus states */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2;
+  }
+
+  .focus-ring-gold {
+    @apply focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2;
+  }
+
+  .focus-ring-bronze {
+    @apply focus:outline-none focus:ring-2 focus:ring-bronze-500 focus:ring-offset-2;
   }
 
   /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
@@ -190,11 +255,43 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-gold-300 rounded-full;
+    @apply bg-gold-300 rounded-full transition-colors duration-200;
   }
 
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gold-400;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-smooth;
+  }
+
+  .transition-fast {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .transition-slow {
+    @apply transition-all duration-500 ease-out;
+  }
+
+  /* Backdrop blur utilities - removed circular dependencies as Tailwind already provides these */
+
+  /* Responsive utilities */
+  @media (max-width: 640px) {
+    .mobile-full-width {
+      @apply w-full;
+    }
+
+    .mobile-hidden {
+      @apply hidden;
+    }
+  }
+
+  @media (min-width: 641px) {
+    .desktop-only {
+      @apply block;
+    }
   }
 }
 
@@ -202,5 +299,34 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  /* Animation delays */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+  
+  .animation-delay-1000 {
+    animation-delay: 1000ms;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2000ms;
   }
 }

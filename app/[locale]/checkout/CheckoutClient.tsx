@@ -179,7 +179,10 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100 flex items-center justify-center">
-        <p className="text-charcoal-700">Loading checkout...</p>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-600 mx-auto mb-4"></div>
+          <p className="text-charcoal-700">Loading checkout...</p>
+        </div>
       </div>
     );
   }
@@ -191,90 +194,110 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">
       {/* Header */}
-      <section className="bg-gradient-to-br from-gold-50 to-cream-100 py-12">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-gradient-to-br from-gold-50 via-cream-50 to-bronze-50 py-16 overflow-hidden">
+        {/* Decorative gradient orbs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-gold-400/20 to-bronze-400/20 rounded-full blur-3xl animate-pulse-slow" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-copper-400/20 to-gold-400/20 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
             <Link 
               href={`/${locale}/cart`}
-              className="inline-flex items-center space-x-2 text-gold-600 hover:text-gold-700 mb-6"
+              className="inline-flex items-center space-x-2 text-gold-600 hover:text-gold-700 mb-8 transition-all duration-200 hover:translate-x-[-4px] animate-fade-in-up group"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back to Cart</span>
+              <ArrowLeft className="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" />
+              <span className="font-medium">Back to Cart</span>
             </Link>
             
-            <h1 className="text-4xl lg:text-5xl font-bold text-charcoal-900 mb-4">
-              Checkout
-            </h1>
-            <p className="text-lg text-charcoal-700">
-              Complete your order securely
-            </p>
+            <div className="animate-fade-in-up animation-delay-100">
+              <h1 className="text-5xl lg:text-6xl font-bold text-charcoal-900 mb-4">
+                Secure Checkout
+              </h1>
+              <p className="text-xl text-charcoal-700 flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-gold-600" />
+                Complete your order with confidence
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Checkout Form */}
-      <section className="py-12">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
               
               {/* Left Column - Forms */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-6 animate-fade-in-up animation-delay-200">
                 
                 {/* Contact Information */}
-                <Card className="border-0 shadow-md">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Lock className="h-5 w-5 text-gold-600" />
-                      Contact Information
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-gold-50 to-cream-50 border-b border-gold-100">
+                    <CardTitle className="flex items-center gap-3 text-xl">
+                      <div className="p-2 bg-gold-100 rounded-lg">
+                        <Lock className="h-5 w-5 text-gold-600" />
+                      </div>
+                      <span>Contact Information</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 pt-6">
                     <div>
-                      <Label htmlFor="email">Email Address *</Label>
+                      <Label htmlFor="email" className="text-sm font-medium text-charcoal-700">
+                        Email Address *
+                      </Label>
                       <Input
                         id="email"
                         type="email"
                         {...register('email')}
                         placeholder="your@email.com"
-                        className="mt-1"
+                        className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                       />
                       {errors.email && (
-                        <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
+                        <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                          <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
+                          {errors.email.message}
+                        </p>
                       )}
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Billing Address */}
-                <Card className="border-0 shadow-md">
-                  <CardHeader>
-                    <CardTitle>Billing Address</CardTitle>
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-bronze-50 to-cream-50 border-b border-bronze-100">
+                    <CardTitle className="text-xl">Billing Address</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-5 pt-6">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="billingFirstName">First Name *</Label>
+                        <Label htmlFor="billingFirstName" className="text-sm font-medium text-charcoal-700">
+                          First Name *
+                        </Label>
                         <Input
                           id="billingFirstName"
                           {...register('billingAddress.firstName')}
-                          className="mt-1"
+                          className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                         />
                         {errors.billingAddress?.firstName && (
-                          <p className="text-sm text-red-600 mt-1">
+                          <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                            <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                             {errors.billingAddress.firstName.message}
                           </p>
                         )}
                       </div>
                       <div>
-                        <Label htmlFor="billingLastName">Last Name *</Label>
+                        <Label htmlFor="billingLastName" className="text-sm font-medium text-charcoal-700">
+                          Last Name *
+                        </Label>
                         <Input
                           id="billingLastName"
                           {...register('billingAddress.lastName')}
-                          className="mt-1"
+                          className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                         />
                         {errors.billingAddress?.lastName && (
-                          <p className="text-sm text-red-600 mt-1">
+                          <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                            <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                             {errors.billingAddress.lastName.message}
                           </p>
                         )}
@@ -282,61 +305,74 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                     </div>
 
                     <div>
-                      <Label htmlFor="billingCompany">Company (Optional)</Label>
+                      <Label htmlFor="billingCompany" className="text-sm font-medium text-charcoal-700">
+                        Company (Optional)
+                      </Label>
                       <Input
                         id="billingCompany"
                         {...register('billingAddress.company')}
-                        className="mt-1"
+                        className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="billingAddress1">Address *</Label>
+                      <Label htmlFor="billingAddress1" className="text-sm font-medium text-charcoal-700">
+                        Address *
+                      </Label>
                       <Input
                         id="billingAddress1"
                         {...register('billingAddress.address1')}
                         placeholder="Street address"
-                        className="mt-1"
+                        className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                       />
                       {errors.billingAddress?.address1 && (
-                        <p className="text-sm text-red-600 mt-1">
+                        <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                          <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                           {errors.billingAddress.address1.message}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <Label htmlFor="billingAddress2">Apartment, suite, etc. (Optional)</Label>
+                      <Label htmlFor="billingAddress2" className="text-sm font-medium text-charcoal-700">
+                        Apartment, suite, etc. (Optional)
+                      </Label>
                       <Input
                         id="billingAddress2"
                         {...register('billingAddress.address2')}
-                        className="mt-1"
+                        className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="billingCity">City *</Label>
+                        <Label htmlFor="billingCity" className="text-sm font-medium text-charcoal-700">
+                          City *
+                        </Label>
                         <Input
                           id="billingCity"
                           {...register('billingAddress.city')}
-                          className="mt-1"
+                          className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                         />
                         {errors.billingAddress?.city && (
-                          <p className="text-sm text-red-600 mt-1">
+                          <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                            <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                             {errors.billingAddress.city.message}
                           </p>
                         )}
                       </div>
                       <div>
-                        <Label htmlFor="billingProvince">State/Province *</Label>
+                        <Label htmlFor="billingProvince" className="text-sm font-medium text-charcoal-700">
+                          State/Province *
+                        </Label>
                         <Input
                           id="billingProvince"
                           {...register('billingAddress.province')}
-                          className="mt-1"
+                          className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                         />
                         {errors.billingAddress?.province && (
-                          <p className="text-sm text-red-600 mt-1">
+                          <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                            <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                             {errors.billingAddress.province.message}
                           </p>
                         )}
@@ -345,11 +381,13 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="billingCountry">Country *</Label>
+                        <Label htmlFor="billingCountry" className="text-sm font-medium text-charcoal-700">
+                          Country *
+                        </Label>
                         <Select
                           onValueChange={(value) => setValue('billingAddress.country', value)}
                         >
-                          <SelectTrigger className="mt-1">
+                          <SelectTrigger className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200">
                             <SelectValue placeholder="Select country" />
                           </SelectTrigger>
                           <SelectContent>
@@ -361,20 +399,24 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                           </SelectContent>
                         </Select>
                         {errors.billingAddress?.country && (
-                          <p className="text-sm text-red-600 mt-1">
+                          <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                            <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                             {errors.billingAddress.country.message}
                           </p>
                         )}
                       </div>
                       <div>
-                        <Label htmlFor="billingZip">Postal Code *</Label>
+                        <Label htmlFor="billingZip" className="text-sm font-medium text-charcoal-700">
+                          Postal Code *
+                        </Label>
                         <Input
                           id="billingZip"
                           {...register('billingAddress.zip')}
-                          className="mt-1"
+                          className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                         />
                         {errors.billingAddress?.zip && (
-                          <p className="text-sm text-red-600 mt-1">
+                          <p className="text-sm text-red-600 mt-2 flex items-center gap-1 animate-fade-in">
+                            <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
                             {errors.billingAddress.zip.message}
                           </p>
                         )}
@@ -382,33 +424,36 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                     </div>
 
                     <div>
-                      <Label htmlFor="billingPhone">Phone (Optional)</Label>
+                      <Label htmlFor="billingPhone" className="text-sm font-medium text-charcoal-700">
+                        Phone (Optional)
+                      </Label>
                       <Input
                         id="billingPhone"
                         type="tel"
                         {...register('billingAddress.phone')}
                         placeholder="+1 (555) 123-4567"
-                        className="mt-1"
+                        className="mt-2 h-12 border-2 border-cream-200 focus:border-gold-500 focus:ring-2 focus:ring-gold-100 transition-all duration-200"
                       />
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Shipping Address */}
-                <Card className="border-0 shadow-md">
-                  <CardHeader>
-                    <CardTitle>Shipping Address</CardTitle>
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-copper-50 to-cream-50 border-b border-copper-100">
+                    <CardTitle className="text-xl">Shipping Address</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center space-x-2">
+                  <CardContent className="space-y-4 pt-6">
+                    <div className="flex items-center space-x-3 p-4 bg-cream-50 rounded-lg border border-cream-200 hover:border-gold-300 transition-colors duration-200">
                       <Checkbox
                         id="sameAsShipping"
                         checked={sameAsShipping}
                         onCheckedChange={(checked) => 
                           setValue('sameAsShipping', checked as boolean)
                         }
+                        className="border-2"
                       />
-                      <Label htmlFor="sameAsShipping" className="cursor-pointer">
+                      <Label htmlFor="sameAsShipping" className="cursor-pointer font-medium text-charcoal-800">
                         Same as billing address
                       </Label>
                     </div>
@@ -425,14 +470,16 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                 </Card>
 
                 {/* Shipping Method */}
-                <Card className="border-0 shadow-md">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Truck className="h-5 w-5 text-gold-600" />
-                      Shipping Method
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-gold-50 to-cream-50 border-b border-gold-100">
+                    <CardTitle className="flex items-center gap-3 text-xl">
+                      <div className="p-2 bg-gold-100 rounded-lg">
+                        <Truck className="h-5 w-5 text-gold-600" />
+                      </div>
+                      <span>Shipping Method</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-6">
                     <RadioGroup
                       value={shippingMethod}
                       onValueChange={(value) => 
@@ -443,18 +490,24 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                       {Object.entries(shippingRates).map(([key, rate]) => (
                         <div
                           key={key}
-                          className="flex items-center space-x-3 border border-charcoal-200 rounded-lg p-4 hover:border-gold-400 transition-colors"
+                          className="flex items-center space-x-3 border-2 border-cream-200 rounded-xl p-5 hover:border-gold-400 hover:bg-gold-50/30 transition-all duration-200 cursor-pointer group"
                         >
-                          <RadioGroupItem value={key} id={key} />
+                          <RadioGroupItem value={key} id={key} className="border-2" />
                           <Label htmlFor={key} className="flex-1 cursor-pointer">
                             <div className="flex justify-between items-start">
                               <div>
-                                <p className="font-medium text-charcoal-900">{rate.name}</p>
-                                <p className="text-sm text-charcoal-600">{rate.estimatedDays}</p>
-                                <p className="text-xs text-charcoal-500">{rate.description}</p>
+                                <p className="font-semibold text-charcoal-900 group-hover:text-gold-700 transition-colors">
+                                  {rate.name}
+                                </p>
+                                <p className="text-sm text-charcoal-600 mt-1">{rate.estimatedDays}</p>
+                                <p className="text-xs text-charcoal-500 mt-1">{rate.description}</p>
                               </div>
-                              <p className="font-bold text-charcoal-900">
-                                {subtotal >= 200 && key === 'standard' ? 'FREE' : `$${rate.price}`}
+                              <p className="font-bold text-lg text-charcoal-900 group-hover:text-gold-700 transition-colors">
+                                {subtotal >= 200 && key === 'standard' ? (
+                                  <span className="text-green-600">FREE</span>
+                                ) : (
+                                  `$${rate.price}`
+                                )}
                               </p>
                             </div>
                           </Label>
@@ -462,20 +515,25 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                       ))}
                     </RadioGroup>
                     {errors.shippingMethod && (
-                      <p className="text-sm text-red-600 mt-2">{errors.shippingMethod.message}</p>
+                      <p className="text-sm text-red-600 mt-3 flex items-center gap-1 animate-fade-in">
+                        <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
+                        {errors.shippingMethod.message}
+                      </p>
                     )}
                   </CardContent>
                 </Card>
 
                 {/* Payment Method */}
-                <Card className="border-0 shadow-md">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CreditCard className="h-5 w-5 text-gold-600" />
-                      Payment Method
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="bg-gradient-to-r from-bronze-50 to-cream-50 border-b border-bronze-100">
+                    <CardTitle className="flex items-center gap-3 text-xl">
+                      <div className="p-2 bg-bronze-100 rounded-lg">
+                        <CreditCard className="h-5 w-5 text-bronze-600" />
+                      </div>
+                      <span>Payment Method</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-6">
                     <RadioGroup
                       defaultValue="card"
                       onValueChange={(value) => 
@@ -483,63 +541,75 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                       }
                       className="space-y-3"
                     >
-                      <div className="flex items-center space-x-3 border border-charcoal-200 rounded-lg p-4">
-                        <RadioGroupItem value="card" id="card" />
+                      <div className="flex items-center space-x-3 border-2 border-cream-200 rounded-xl p-5 hover:border-bronze-400 hover:bg-bronze-50/30 transition-all duration-200 cursor-pointer group">
+                        <RadioGroupItem value="card" id="card" className="border-2" />
                         <Label htmlFor="card" className="flex-1 cursor-pointer">
-                          <p className="font-medium text-charcoal-900">Credit Card</p>
-                          <p className="text-sm text-charcoal-600">Pay with Visa, Mastercard, or Amex</p>
+                          <p className="font-semibold text-charcoal-900 group-hover:text-bronze-700 transition-colors">
+                            Credit Card
+                          </p>
+                          <p className="text-sm text-charcoal-600 mt-1">Pay with Visa, Mastercard, or Amex</p>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-3 border border-charcoal-200 rounded-lg p-4">
-                        <RadioGroupItem value="paypal" id="paypal" />
+                      <div className="flex items-center space-x-3 border-2 border-cream-200 rounded-xl p-5 hover:border-bronze-400 hover:bg-bronze-50/30 transition-all duration-200 cursor-pointer group">
+                        <RadioGroupItem value="paypal" id="paypal" className="border-2" />
                         <Label htmlFor="paypal" className="flex-1 cursor-pointer">
-                          <p className="font-medium text-charcoal-900">PayPal</p>
-                          <p className="text-sm text-charcoal-600">Pay with your PayPal account</p>
+                          <p className="font-semibold text-charcoal-900 group-hover:text-bronze-700 transition-colors">
+                            PayPal
+                          </p>
+                          <p className="text-sm text-charcoal-600 mt-1">Pay with your PayPal account</p>
                         </Label>
                       </div>
                     </RadioGroup>
                     {errors.paymentMethod && (
-                      <p className="text-sm text-red-600 mt-2">{errors.paymentMethod.message}</p>
+                      <p className="text-sm text-red-600 mt-3 flex items-center gap-1 animate-fade-in">
+                        <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
+                        {errors.paymentMethod.message}
+                      </p>
                     )}
                     
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm text-blue-800">
-                        <ShieldCheck className="h-4 w-4 inline mr-1" />
-                        Your payment information is secure and encrypted
+                    <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl">
+                      <p className="text-sm text-blue-900 flex items-center gap-2">
+                        <ShieldCheck className="h-5 w-5 text-blue-600" />
+                        <span className="font-medium">Your payment information is secure and encrypted</span>
                       </p>
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Terms and Newsletter */}
-                <Card className="border-0 shadow-md">
-                  <CardContent className="pt-6 space-y-4">
-                    <div className="flex items-start space-x-2">
+                <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardContent className="pt-6 space-y-5">
+                    <div className="flex items-start space-x-3 p-4 bg-cream-50 rounded-lg border border-cream-200">
                       <Checkbox
                         id="acceptTerms"
                         {...register('acceptTerms')}
+                        className="border-2 mt-0.5"
                       />
-                      <Label htmlFor="acceptTerms" className="cursor-pointer text-sm">
+                      <Label htmlFor="acceptTerms" className="cursor-pointer text-sm leading-relaxed">
                         I accept the{' '}
-                        <Link href="/terms" className="text-gold-600 hover:underline">
+                        <Link href="/terms" className="text-gold-600 hover:text-gold-700 font-medium underline">
                           terms and conditions
                         </Link>
                         {' '}and{' '}
-                        <Link href="/privacy" className="text-gold-600 hover:underline">
+                        <Link href="/privacy" className="text-gold-600 hover:text-gold-700 font-medium underline">
                           privacy policy
                         </Link>
                       </Label>
                     </div>
                     {errors.acceptTerms && (
-                      <p className="text-sm text-red-600">{errors.acceptTerms.message}</p>
+                      <p className="text-sm text-red-600 flex items-center gap-1 animate-fade-in">
+                        <span className="inline-block w-1 h-1 bg-red-600 rounded-full" />
+                        {errors.acceptTerms.message}
+                      </p>
                     )}
 
-                    <div className="flex items-start space-x-2">
+                    <div className="flex items-start space-x-3 p-4 bg-gold-50/30 rounded-lg border border-gold-200">
                       <Checkbox
                         id="subscribeNewsletter"
                         {...register('subscribeNewsletter')}
+                        className="border-2 mt-0.5"
                       />
-                      <Label htmlFor="subscribeNewsletter" className="cursor-pointer text-sm">
+                      <Label htmlFor="subscribeNewsletter" className="cursor-pointer text-sm leading-relaxed">
                         Subscribe to our newsletter for exclusive offers and updates
                       </Label>
                     </div>
@@ -548,14 +618,14 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
               </div>
 
               {/* Right Column - Order Summary */}
-              <div className="lg:col-span-1">
-                <Card className="border-0 shadow-lg sticky top-24">
-                  <CardHeader>
-                    <CardTitle>Order Summary</CardTitle>
+              <div className="lg:col-span-1 animate-fade-in-up animation-delay-400">
+                <Card className="border-0 shadow-xl sticky top-24">
+                  <CardHeader className="bg-gradient-to-r from-gold-50 to-bronze-50 border-b border-gold-100">
+                    <CardTitle className="text-xl">Order Summary</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-6 pt-6">
                     {/* Cart Items */}
-                    <div className="space-y-3 max-h-64 overflow-y-auto">
+                    <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
                       {items.map((item) => {
                         const product = products[item.productId];
                         if (!product) return null;
@@ -563,9 +633,9 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                         const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
 
                         return (
-                          <div key={item.productId} className="flex gap-3">
+                          <div key={item.productId} className="flex gap-4 p-3 bg-cream-50 rounded-lg hover:bg-cream-100 transition-colors duration-200">
                             {primaryImage && (
-                              <div className="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden">
+                              <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-cream-200">
                                 <Image
                                   src={primaryImage.url}
                                   alt={product.name[locale]}
@@ -575,13 +645,13 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                               </div>
                             )}
                             <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-charcoal-900 truncate">
+                              <p className="text-sm font-semibold text-charcoal-900 truncate">
                                 {product.name[locale]}
                               </p>
-                              <p className="text-sm text-charcoal-600">
+                              <p className="text-sm text-charcoal-600 mt-1">
                                 Qty: {item.quantity}
                               </p>
-                              <p className="text-sm font-bold text-charcoal-900">
+                              <p className="text-base font-bold text-gold-700 mt-1">
                                 ${(product.price * item.quantity).toFixed(2)}
                               </p>
                             </div>
@@ -593,27 +663,33 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                     <Separator />
 
                     {/* Totals */}
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="flex justify-between text-charcoal-700">
-                        <span>Subtotal</span>
-                        <span>${subtotal.toFixed(2)}</span>
+                        <span className="font-medium">Subtotal</span>
+                        <span className="font-semibold">${subtotal.toFixed(2)}</span>
                       </div>
                       
                       <div className="flex justify-between text-charcoal-700">
-                        <span>Tax (10%)</span>
-                        <span>${tax.toFixed(2)}</span>
+                        <span className="font-medium">Tax (10%)</span>
+                        <span className="font-semibold">${tax.toFixed(2)}</span>
                       </div>
                       
                       <div className="flex justify-between text-charcoal-700">
-                        <span>Shipping</span>
-                        <span>{shippingCost === 0 ? 'FREE' : `$${shippingCost.toFixed(2)}`}</span>
+                        <span className="font-medium">Shipping</span>
+                        <span className="font-semibold">
+                          {shippingCost === 0 ? (
+                            <span className="text-green-600">FREE</span>
+                          ) : (
+                            `$${shippingCost.toFixed(2)}`
+                          )}
+                        </span>
                       </div>
 
                       <Separator />
 
-                      <div className="flex justify-between text-xl font-bold text-charcoal-900">
+                      <div className="flex justify-between text-2xl font-bold text-charcoal-900 pt-2">
                         <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                        <span className="text-gold-700">${total.toFixed(2)}</span>
                       </div>
                     </div>
 
@@ -621,12 +697,38 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                       type="submit"
                       size="lg"
                       disabled={submitting}
-                      className="w-full bg-gold-600 hover:bg-gold-700"
+                      className="w-full h-14 bg-gradient-to-r from-gold-600 to-gold-700 hover:from-gold-700 hover:to-gold-800 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {submitting ? 'Processing...' : 'Place Order'}
+                      {submitting ? (
+                        <span className="flex items-center gap-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          Processing...
+                        </span>
+                      ) : (
+                        <span className="flex items-center gap-2">
+                          <Lock className="h-5 w-5" />
+                          Place Order
+                        </span>
+                      )}
                     </Button>
 
-                    <p className="text-xs text-center text-charcoal-600">
+                    {/* Trust Signals */}
+                    <div className="space-y-3 pt-4 border-t border-cream-200">
+                      <div className="flex items-center gap-3 text-sm text-charcoal-600">
+                        <ShieldCheck className="h-5 w-5 text-green-600 flex-shrink-0" />
+                        <span>Secure SSL encrypted checkout</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-charcoal-600">
+                        <Truck className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                        <span>Free shipping on orders over $200</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm text-charcoal-600">
+                        <CreditCard className="h-5 w-5 text-purple-600 flex-shrink-0" />
+                        <span>30-day money-back guarantee</span>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-center text-charcoal-500 pt-4">
                       By placing your order, you agree to our terms and conditions
                     </p>
                   </CardContent>

@@ -10,7 +10,6 @@ import { useCart } from '@/lib/hooks/useCart';
 import { Locale, Product } from '@/lib/types';
 import {
     ArrowLeft,
-    Check,
     Heart,
     Minus,
     Play,
@@ -88,16 +87,17 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">
+    <div className="min-h-screen bg-gradient-to-br from-cream-50 via-white to-cream-100">
       {/* Breadcrumb */}
-      <section className="bg-white border-b border-cream-200 py-4">
+      <section className="bg-gradient-to-r from-white to-cream-50 border-b border-cream-200 py-4 animate-fade-in">
         <div className="container mx-auto px-4">
-          <div className="flex items-center space-x-2 text-sm text-charcoal-600">
-            <Link href={`/${locale}`} className="hover:text-gold-600">
-              Home
-            </Link>
-            <span>/</span>
-            <Link href={`/${locale}/shop`} className="hover:text-gold-600">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-sm text-charcoal-600">
+              <Link href={`/${locale}`} className="hover:text-gold-600 transition-colors">
+                Home
+              </Link>
+              <span>/</span>
+              <Link href={`/${locale}/shop`} className="hover:text-gold-600 transition-colors">
               Shop
             </Link>
             <span>/</span>
@@ -120,35 +120,46 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               {/* Image Gallery */}
-              <div className="space-y-4">
+              <div className="space-y-4 animate-fade-in-left">
                 {/* Main Image */}
-                <div className="aspect-square relative overflow-hidden rounded-lg bg-white shadow-lg">
+                <div className="aspect-square relative overflow-hidden rounded-2xl bg-white shadow-2xl group">
                   {product.images[selectedImage] ? (
-                    <Image
-                      src={product.images[selectedImage].url}
-                      alt={product.images[selectedImage].alt[locale] || productName}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
+                    <>
+                      <Image
+                        src={product.images[selectedImage].url}
+                        alt={product.images[selectedImage].alt[locale] || productName}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        priority
+                      />
+                      {/* Overlay gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-cream-100">
                       <span className="text-cream-400">No image</span>
+                    </div>
+                  )}
+                  
+                  {/* Image counter */}
+                  {product.images.length > 1 && (
+                    <div className="absolute bottom-4 right-4 bg-charcoal-900/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {selectedImage + 1} / {product.images.length}
                     </div>
                   )}
                 </div>
 
                 {/* Thumbnail Gallery */}
                 {product.images.length > 1 && (
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-4 gap-3">
                     {product.images.map((image, index) => (
                       <button
                         key={image.id}
                         onClick={() => setSelectedImage(index)}
-                        className={`aspect-square relative overflow-hidden rounded-lg border-2 transition-all ${
+                        className={`aspect-square relative overflow-hidden rounded-xl border-2 transition-all duration-300 ${
                           selectedImage === index
-                            ? 'border-gold-600 ring-2 ring-gold-200'
-                            : 'border-cream-200 hover:border-gold-400'
+                            ? 'border-gold-600 ring-4 ring-gold-200 scale-105 shadow-lg'
+                            : 'border-cream-200 hover:border-gold-400 hover:scale-105 shadow-md'
                         }`}
                       >
                         <Image
@@ -164,26 +175,26 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
               </div>
 
               {/* Product Info */}
-              <div className="space-y-6">
+              <div className="space-y-6 animate-fade-in-right">
                 {/* Title and Badges */}
                 <div>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h1 className="text-3xl lg:text-4xl font-bold text-charcoal-900 mb-2">
+                      <h1 className="text-4xl lg:text-5xl font-bold text-gradient-gold mb-4 font-serif">
                         {productName}
                       </h1>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <Badge className="badge-gold">
+                        <Badge className="badge-gold shadow-sm">
                           {product.category}
                         </Badge>
                         {product.isFeatured && (
-                          <Badge className="badge-bronze">
-                            Featured
+                          <Badge className="badge-bronze shadow-sm">
+                            ⭐ Featured
                           </Badge>
                         )}
                         {product.isHandmade && (
-                          <Badge className="badge-copper">
-                            Handmade
+                          <Badge className="badge-copper shadow-sm">
+                            ✋ Handmade
                           </Badge>
                         )}
                       </div>
@@ -193,7 +204,7 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
                         variant="outline"
                         size="icon"
                         onClick={handleToggleWishlist}
-                        className={isInWishlist ? 'text-red-600 border-red-600' : ''}
+                        className={`transition-all duration-300 hover:scale-110 ${isInWishlist ? 'text-red-600 border-red-600 bg-red-50' : 'hover:bg-gold-50'}`}
                       >
                         <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-600' : ''}`} />
                       </Button>
@@ -208,61 +219,67 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
                   </div>
 
                   {/* Price */}
-                  <div className="flex items-baseline gap-4">
-                    <span className="text-4xl font-bold text-gradient-gold">
-                      ${product.price.toFixed(2)}
-                    </span>
-                    <span className="text-charcoal-600">
-                      {product.currency}
-                    </span>
+                  <div className="bg-gradient-to-br from-gold-50 to-bronze-50 rounded-2xl p-6 border-2 border-gold-200 shadow-lg">
+                    <div className="flex items-baseline gap-4 mb-2">
+                      <span className="text-5xl font-bold text-gradient-gold">
+                        ${product.price.toFixed(2)}
+                      </span>
+                      <span className="text-xl text-charcoal-600">
+                        {product.currency}
+                      </span>
+                    </div>
+                    <p className="text-sm text-charcoal-600">
+                      Free shipping on orders over $200
+                    </p>
                   </div>
                 </div>
 
                 {/* Stock Status */}
-                <div>
+                <div className="bg-white rounded-xl p-4 border border-cream-200 shadow-sm">
                   {product.inventory > 0 ? (
-                    <div className="flex items-center gap-2 text-green-600">
-                      <Check className="h-5 w-5" />
-                      <span className="font-medium">
+                    <div className="flex items-center gap-3 text-green-600">
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="font-semibold text-lg">
                         In Stock ({product.inventory} available)
                       </span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 text-red-600">
-                      <span className="font-medium">Out of Stock</span>
+                    <div className="flex items-center gap-3 text-red-600">
+                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                      <span className="font-semibold text-lg">Out of Stock</span>
                     </div>
                   )}
                   {cartItem && (
-                    <p className="text-sm text-charcoal-600 mt-2">
-                      {cartItem.quantity} already in cart
+                    <p className="text-sm text-charcoal-600 mt-2 ml-6">
+                      ✓ {cartItem.quantity} already in cart
                     </p>
                   )}
                 </div>
 
                 {/* Description */}
-                <div className="prose prose-charcoal">
-                  <p className="text-charcoal-700 leading-relaxed">
+                <div className="prose prose-lg prose-charcoal">
+                  <p className="text-charcoal-700 leading-relaxed text-lg">
                     {productDescription}
                   </p>
                 </div>
 
                 {/* Quantity and Add to Cart */}
-                <div className="space-y-4">
+                <div className="space-y-4 bg-white rounded-2xl p-6 border border-cream-200 shadow-lg">
                   <div className="flex items-center gap-4">
-                    <span className="text-sm font-medium text-charcoal-700">
+                    <span className="text-base font-semibold text-charcoal-900">
                       Quantity:
                     </span>
-                    <div className="flex items-center gap-2 border-2 border-charcoal-200 rounded-lg">
+                    <div className="flex items-center gap-2 border-2 border-gold-300 rounded-xl bg-white shadow-sm">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={decrementQuantity}
                         disabled={quantity <= 1}
-                        className="h-10 w-10 p-0"
+                        className="h-12 w-12 p-0 hover:bg-gold-50 transition-colors"
                       >
-                        <Minus className="h-4 w-4" />
+                        <Minus className="h-5 w-5" />
                       </Button>
-                      <span className="w-12 text-center font-medium text-lg">
+                      <span className="w-16 text-center font-bold text-xl text-charcoal-900">
                         {quantity}
                       </span>
                       <Button
@@ -270,9 +287,9 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
                         size="sm"
                         onClick={incrementQuantity}
                         disabled={quantity >= product.inventory}
-                        className="h-10 w-10 p-0"
+                        className="h-12 w-12 p-0 hover:bg-gold-50 transition-colors"
                       >
-                        <Plus className="h-4 w-4" />
+                        <Plus className="h-5 w-5" />
                       </Button>
                     </div>
                   </div>
@@ -281,9 +298,9 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
                     onClick={handleAddToCart}
                     disabled={product.inventory === 0}
                     size="lg"
-                    className="w-full bg-gold-600 hover:bg-gold-700 text-lg py-6"
+                    className="w-full btn-primary text-xl py-7 shadow-xl hover:shadow-2xl group"
                   >
-                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    <ShoppingCart className="h-6 w-6 mr-3 group-hover:scale-110 transition-transform" />
                     Add to Cart
                   </Button>
                 </div>

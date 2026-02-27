@@ -132,22 +132,25 @@ export default function CartPage({ params }: { params: { locale: Locale } }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">
+    <div className="min-h-screen bg-gradient-to-br from-cream-50 via-white to-cream-100">
       {/* Header */}
-      <section className="bg-gradient-to-br from-gold-50 to-cream-100 py-16">
-        <div className="container mx-auto px-4">
+      <section className="bg-gradient-to-br from-gold-50 via-bronze-50 to-copper-50 py-16 lg:py-20 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gold-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse-slow"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-center space-x-4 mb-6">
-              <Link href={`/${locale}/shop`} className="flex items-center space-x-2 text-gold-600 hover:text-gold-700">
-                <ArrowLeft className="h-5 w-5" />
-                <span>{t('common.back', locale)}</span>
+            <div className="flex items-center space-x-4 mb-6 animate-fade-in-left">
+              <Link href={`/${locale}/shop`} className="flex items-center space-x-2 text-gold-600 hover:text-gold-700 transition-colors group">
+                <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+                <span className="font-medium">{t('common.back', locale)}</span>
               </Link>
             </div>
             
-            <h1 className="text-4xl lg:text-5xl font-bold text-charcoal-900 mb-6">
+            <h1 className="text-4xl lg:text-5xl font-bold text-gradient-gold mb-4 font-serif animate-fade-in-up">
               {t('cart.title', locale)}
             </h1>
-            <p className="text-lg text-charcoal-700">
+            <p className="text-lg text-charcoal-700 animate-fade-in-up animation-delay-200">
               {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
             </p>
           </div>
@@ -162,40 +165,40 @@ export default function CartPage({ params }: { params: { locale: Locale } }) {
               
               {/* Cart Items */}
               <div className="lg:col-span-2 space-y-4">
-                {items.map((item) => {
+                {items.map((item, index) => {
                   const product = products[item.productId];
                   if (!product) return null;
 
                   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
 
                   return (
-                    <Card key={item.productId} className="border-0 shadow-md">
+                    <Card key={item.productId} className="border-0 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                       <CardContent className="p-6">
                         <div className="flex gap-6">
                           {/* Product Image */}
                           {primaryImage && (
-                            <div className="relative w-24 h-24 flex-shrink-0">
+                            <div className="relative w-28 h-28 flex-shrink-0 rounded-lg overflow-hidden bg-cream-50">
                               <Image
                                 src={primaryImage.url}
                                 alt={primaryImage.alt[locale] || product.name[locale]}
                                 fill
-                                className="object-cover rounded-lg"
+                                className="object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                             </div>
                           )}
 
                           {/* Product Details */}
-                          <div className="flex-1">
+                          <div className="flex-1 min-w-0">
                             <Link 
                               href={`/${locale}/product/${product.slug}`}
-                              className="text-lg font-semibold text-charcoal-900 hover:text-gold-600 transition-colors"
+                              className="text-lg font-semibold text-charcoal-900 hover:text-gold-600 transition-colors block mb-2"
                             >
                               {product.name[locale]}
                             </Link>
-                            <p className="text-sm text-charcoal-600 mt-1">
+                            <p className="text-sm text-charcoal-600 mb-3">
                               SKU: {product.sku}
                             </p>
-                            <p className="text-lg font-bold text-gold-600 mt-2">
+                            <p className="text-xl font-bold text-gradient-gold">
                               ${product.price.toFixed(2)}
                             </p>
                           </div>
@@ -206,22 +209,22 @@ export default function CartPage({ params }: { params: { locale: Locale } }) {
                               variant="ghost"
                               size="sm"
                               onClick={() => removeItem(item.productId)}
-                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
 
-                            <div className="flex items-center gap-2 border border-charcoal-200 rounded-lg">
+                            <div className="flex items-center gap-2 border-2 border-cream-200 rounded-lg bg-white shadow-sm">
                               <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                                 disabled={item.quantity <= 1}
-                                className="h-8 w-8 p-0"
+                                className="h-9 w-9 p-0 hover:bg-gold-50 transition-colors"
                               >
                                 <Minus className="h-4 w-4" />
                               </Button>
-                              <span className="w-8 text-center font-medium">
+                              <span className="w-10 text-center font-semibold text-charcoal-900">
                                 {item.quantity}
                               </span>
                               <Button
@@ -229,13 +232,13 @@ export default function CartPage({ params }: { params: { locale: Locale } }) {
                                 size="sm"
                                 onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                                 disabled={item.quantity >= product.inventory}
-                                className="h-8 w-8 p-0"
+                                className="h-9 w-9 p-0 hover:bg-gold-50 transition-colors"
                               >
                                 <Plus className="h-4 w-4" />
                               </Button>
                             </div>
 
-                            <p className="text-lg font-bold text-charcoal-900 mt-2">
+                            <p className="text-xl font-bold text-charcoal-900 mt-2">
                               ${(product.price * item.quantity).toFixed(2)}
                             </p>
                           </div>

@@ -4,12 +4,14 @@ import { MediaEmbed } from '@/components/media/MediaEmbed';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useCart } from '@/lib/hooks/useCart';
 import { MediaFile } from '@/lib/media-manager';
 import { Product } from '@/lib/types';
 import { Heart, ShoppingCart, Volume2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product;
@@ -189,81 +191,112 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
 
   // Grid view (original)
   return (
-    <Card className="card-metal hover-glow-gold group overflow-hidden">
-      <CardHeader className="p-0">
+    <Card className="card-modern group overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-gold-300">
+      <CardHeader className="p-0 relative">
         <Link href={`/${locale}/product/${product.slug}`}>
-          <div className="aspect-square relative overflow-hidden">
+          <div className="aspect-square relative overflow-hidden bg-cream-50">
             {primaryImage ? (
-              <Image
-                src={primaryImage.url}
-                alt={primaryImage.alt[locale as keyof typeof primaryImage.alt] || primaryImage.alt.en}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-              />
+              <>
+                <Image
+                  src={primaryImage.url}
+                  alt={primaryImage.alt[locale as keyof typeof primaryImage.alt] || primaryImage.alt.en}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                />
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </>
             ) : (
               <div className="w-full h-full bg-cream-100 flex items-center justify-center">
                 <span className="text-cream-400">No image</span>
               </div>
             )}
             
-            {/* Quick Actions Overlay */}
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleToggleWishlist}
-                className="bg-white/90 hover:bg-white text-charcoal-700"
-              >
-                <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
-              </Button>
-            </div>
-
             {/* Badges */}
-            <div className="absolute top-2 left-2 flex flex-col gap-1">
+            <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
               {product.isFeatured && (
-                <Badge className="badge-bronze text-xs">
-                  Featured
+                <Badge className="badge-gold shadow-md animate-fade-in">
+                  ⭐ Featured
                 </Badge>
               )}
               {product.isHandmade && (
-                <Badge className="badge-copper text-xs">
-                  Handmade
+                <Badge className="badge-bronze shadow-md animate-fade-in animation-delay-100">
+                  ✋ Handmade
                 </Badge>
               )}
+            </div>
+            
+            {/* Wishlist button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.preventDefault();
+                handleToggleWishlist();
+              }}
+              className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm hover:bg-white text-charcoal-600 hover:text-red-500 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 shadow-md"
+            >
+              <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+            </Button>
+            
+            {/* Quick add to cart button */}
+            <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-10">
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleAddToCart();
+                }}
+                disabled={product.inventory === 0}
+                className="w-full btn-primary shadow-lg"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Quick Add
+              </Button>
             </div>
           </div>
         </Link>
       </CardHeader>
 
-      <CardContent className="p-4">
-        <div className="space-y-3">
+      <CardContent className="p-5">
+        <div className="space-y-4">
           <div>
             <Link href={`/${locale}/product/${product.slug}`}>
-              <h3 className="font-semibold text-charcoal-900 hover:text-gold-600 transition-colors line-clamp-2">
+              <h3 className="font-semibold text-lg text-charcoal-900 hover:text-gold-600 transition-colors line-clamp-2 mb-2">
                 {productName}
               </h3>
             </Link>
-            <p className="text-sm text-charcoal-600 mt-1 line-clamp-2">
+            <p className="text-sm text-charcoal-600 line-clamp-2 leading-relaxed">
               {productDescription}
             </p>
           </div>
 
-          <div className="flex items-center justify-between">
-            <span className="text-lg font-bold text-gradient-gold">
-              ${product.price}
-            </span>
+          <div className="flex items-center justify-between pt-2 border-t border-cream-200">
+            <div>
+              <span className="text-2xl font-bold text-gradient-gold">
+                ${product.price}
+              </span>
+              <span className="text-sm text-charcoal-500 ml-1">USD</span>
+            </div>
             <Badge className="badge-gold text-xs">
               {product.category}
             </Badge>
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <span className={product.inventory > 0 ? 'text-green-600' : 'text-red-600'}>
-              {product.inventory > 0 ? `In Stock (${product.inventory})` : 'Out of Stock'}
-            </span>
+            {product.inventory > 0 ? (
+              <span className="flex items-center text-green-600 font-medium">
+                <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                In Stock ({product.inventory})
+              </span>
+            ) : (
+              <span className="flex items-center text-red-600 font-medium">
+                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                Out of Stock
+              </span>
+            )}
             {product.craftsman && (
-              <span className="text-charcoal-600">
+              <span className="text-charcoal-600 text-xs">
                 by {product.craftsman}
               </span>
             )}
@@ -271,25 +304,15 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
 
           {/* Audio Sample */}
           {showAudio && audioMedia && (
-            <div className="bg-cream-50 rounded-lg p-2">
+            <div className="bg-gradient-to-r from-gold-50 to-bronze-50 rounded-lg p-3 border border-gold-100">
               <div className="flex items-center space-x-2">
                 <Volume2 className="h-4 w-4 text-gold-600" />
-                <span className="text-xs text-charcoal-600">
-                  Audio Sample
+                <span className="text-xs font-medium text-gold-800">
+                  🎵 Audio Sample Available
                 </span>
               </div>
-              {/* Mini audio player could be added here */}
             </div>
           )}
-
-          <Button
-            onClick={handleAddToCart}
-            disabled={product.inventory === 0}
-            className="btn-primary w-full"
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
         </div>
       </CardContent>
     </Card>
