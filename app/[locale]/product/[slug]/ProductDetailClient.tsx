@@ -98,10 +98,11 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
               </Link>
               <span>/</span>
               <Link href={`/${locale}/shop`} className="hover:text-gold-600 transition-colors">
-              Shop
-            </Link>
-            <span>/</span>
-            <span className="text-charcoal-900">{productName}</span>
+                Shop
+              </Link>
+              <span>/</span>
+              <span className="text-charcoal-900">{productName}</span>
+            </div>
           </div>
         </div>
       </section>

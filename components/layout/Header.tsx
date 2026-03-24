@@ -39,6 +39,7 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
   const navigationItems = [
     { href: `/${locale}`, label: t('nav.home', locale) },
     { href: `/${locale}/shop`, label: t('nav.shop', locale) },
+    { href: `/${locale}/gallery`, label: t('gallery.title', locale) },
     { href: `/${locale}/about`, label: t('nav.about', locale) },
     { href: `/${locale}/blog`, label: t('nav.blog', locale) },
     { href: `/${locale}/contact`, label: t('nav.contact', locale) },

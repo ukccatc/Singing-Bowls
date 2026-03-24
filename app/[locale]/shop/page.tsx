@@ -1,3 +1,4 @@
+import { sampleProducts } from '@/lib/data/products';
 import { t } from '@/lib/translations';
 import { Locale, Product } from '@/lib/types';
 import ShopPageClient from './ShopPageClient';
@@ -60,21 +61,18 @@ async function getProducts(): Promise<Product[]> {
       cache: 'no-store', // Always fetch fresh data
     });
     
-    if (!response.ok) {
-      console.error('Failed to fetch products:', response.statusText);
-      return [];
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success && result.data) {
+        return result.data.map((product: any) => transformSupabaseProduct(product));
+      }
     }
-    
-    const result = await response.json();
-    if (result.success && result.data) {
-      return result.data.map((product: any) => transformSupabaseProduct(product));
-    }
-    
-    return [];
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
+    console.error('Error fetching products from API:', error);
   }
+
+  // Fallback to sample products
+  return sampleProducts;
 }
 
 export default async function ShopPage({ params }: { params: { locale: Locale } }) {

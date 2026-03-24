@@ -6,7 +6,8 @@
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
     "build": "NODE_OPTIONS=\"--max-old-space-size=4096\" next build",
     "start": "NODE_OPTIONS=\"--max-old-space-size=4096\" next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",

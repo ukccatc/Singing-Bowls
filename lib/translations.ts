@@ -1149,6 +1149,83 @@ const translations: Translations = {
     ru: 'Попробовать Снова',
     uk: 'Спробувати Знову',
   },
+
+  // Gallery translations
+  'gallery.title': {
+    en: 'Gallery',
+    ru: 'Галерея',
+    uk: 'Галерея',
+  },
+  'gallery.subtitle': {
+    en: 'Explore moments from our past sound healing meditation events and retreats',
+    ru: 'Исследуйте моменты из наших прошлых событий звукового исцеления и медитации',
+    uk: 'Дослідіть моменти з наших минулих подій звукового зцілення та медитації',
+  },
+  'gallery.allEvents': {
+    en: 'All Events',
+    ru: 'Все события',
+    uk: 'Всі події',
+  },
+  'gallery.meditation': {
+    en: 'Meditation',
+    ru: 'Медитация',
+    uk: 'Медитація',
+  },
+  'gallery.workshops': {
+    en: 'Workshops',
+    ru: 'Мастер-классы',
+    uk: 'Майстер-класи',
+  },
+  'gallery.retreats': {
+    en: 'Retreats',
+    ru: 'Ретриты',
+    uk: 'Ретрити',
+  },
+  'gallery.ceremonies': {
+    en: 'Ceremonies',
+    ru: 'Церемонии',
+    uk: 'Церемонії',
+  },
+  'gallery.event': {
+    en: 'Event',
+    ru: 'Событие',
+    uk: 'Подія',
+  },
+  'gallery.location': {
+    en: 'Location',
+    ru: 'Место',
+    uk: 'Місце',
+  },
+  'gallery.date': {
+    en: 'Date',
+    ru: 'Дата',
+    uk: 'Дата',
+  },
+  'gallery.image': {
+    en: 'Image',
+    ru: 'Изображение',
+    uk: 'Зображення',
+  },
+  'gallery.photographer': {
+    en: 'Photographer',
+    ru: 'Фотограф',
+    uk: 'Фотограф',
+  },
+  'gallery.noImages': {
+    en: 'No images found',
+    ru: 'Изображения не найдены',
+    uk: 'Зображення не знайдені',
+  },
+  'gallery.viewMore': {
+    en: 'View Gallery',
+    ru: 'Просмотреть Галерею',
+    uk: 'Переглянути Галерею',
+  },
+  'gallery.pastEvents': {
+    en: 'Past Sound Healing Events',
+    ru: 'Прошлые события звукового исцеления',
+    uk: 'Минулі події звукового зцілення',
+  },
 };
 
 // Translation function

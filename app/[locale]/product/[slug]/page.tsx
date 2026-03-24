@@ -1,3 +1,4 @@
+import { sampleProducts } from '@/lib/data/products';
 import { Locale, Product } from '@/lib/types';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -29,7 +30,7 @@ export async function generateMetadata({
       title: productName,
       description: productDescription,
       images: primaryImage ? [{ url: primaryImage.url }] : [],
-      type: 'product',
+      type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
@@ -43,46 +44,50 @@ export async function generateMetadata({
 // Fetch product by slug
 async function getProduct(slug: string): Promise<Product | null> {
   try {
+    // First try to fetch from API (Supabase)
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/products`, {
       cache: 'no-store',
     });
     
-    if (!response.ok) {
-      return null;
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success && result.data) {
+        const product = result.data.find((p: Product) => p.slug === slug);
+        if (product) return product;
+      }
     }
-    
-    const result = await response.json();
-    if (result.success && result.data) {
-      const product = result.data.find((p: Product) => p.slug === slug);
-      return product || null;
-    }
-    
-    return null;
   } catch (error) {
-    console.error('Error fetching product:', error);
-    return null;
+    console.error('Error fetching product from API:', error);
   }
+
+  // Fallback to sample products
+  return sampleProducts.find(p => p.slug === slug) || null;
 }
 
 // Generate static params for all products
 export async function generateStaticParams() {
   try {
+    // Try to fetch from API first
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const response = await fetch(`${baseUrl}/api/products`);
-    const result = await response.json();
     
-    if (result.success && result.data) {
-      return result.data.map((product: Product) => ({
-        slug: product.slug,
-      }));
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success && result.data) {
+        return result.data.map((product: Product) => ({
+          slug: product.slug,
+        }));
+      }
     }
-    
-    return [];
   } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
+    console.error('Error generating static params from API:', error);
   }
+
+  // Fallback to sample products
+  return sampleProducts.map(product => ({
+    slug: product.slug,
+  }));
 }
 
 export default async function ProductPage({ 
