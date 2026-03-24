@@ -73,8 +73,11 @@ export default function ProductForm({ product, isNew = true }: ProductFormProps)
         materials: formData.materials.split(',').map(m => m.trim()),
       };
 
-      const response = await fetch('/api/products', {
-        method: 'POST',
+      const method = isNew ? 'POST' : 'PUT';
+      const url = isNew ? '/api/products' : `/api/products/${product?.id}`;
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });

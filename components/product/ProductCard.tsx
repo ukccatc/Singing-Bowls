@@ -23,6 +23,7 @@ interface ProductCardProps {
 export default function ProductCard({ product, locale, showAudio = false, viewMode = 'grid' }: ProductCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { addItem } = useCart();
 
   const productName = product.name[locale as keyof typeof product.name] || product.name.en;
@@ -72,13 +73,15 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
           <div className="md:w-48 lg:w-64 flex-shrink-0">
             <Link href={`/${locale}/product/${product.slug}`}>
               <div className="aspect-square relative overflow-hidden">
-                {primaryImage ? (
+                {primaryImage && !imageError ? (
                   <Image
                     src={primaryImage.url}
                     alt={primaryImage.alt[locale as keyof typeof primaryImage.alt] || primaryImage.alt.en}
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    onError={() => setImageError(true)}
+                    priority={false}
                   />
                 ) : (
                   <div className="w-full h-full bg-cream-100 flex items-center justify-center">
@@ -195,7 +198,7 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
       <CardHeader className="p-0 relative">
         <Link href={`/${locale}/product/${product.slug}`}>
           <div className="aspect-square relative overflow-hidden bg-cream-50">
-            {primaryImage ? (
+            {primaryImage && !imageError ? (
               <>
                 <Image
                   src={primaryImage.url}
@@ -203,6 +206,8 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  onError={() => setImageError(true)}
+                  priority={false}
                 />
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

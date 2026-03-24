@@ -99,7 +99,7 @@ export default function AdminProducts() {
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <div className="flex gap-2">
-                      <Link href={`/admin/products/${product.id}`}>
+                      <Link href={`/admin/products/edit/${product.id}`}>
                         <button className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors">
                           <Edit2 className="w-4 h-4" />
                         </button>

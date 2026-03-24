@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { adminAuth } from '@/lib/auth/admin';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,25 +23,19 @@ export default function AdminLogin() {
     setIsLoading(true);
     setError('');
 
-    // Mock authentication - в реальном проекте это будет API call
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Mock validation
-      if (email === 'admin@himalayansound.com' && password === 'admin123') {
-        // Store auth token (в реальном проекте это будет JWT)
-        localStorage.setItem('adminToken', 'mock-jwt-token');
-        localStorage.setItem('adminUser', JSON.stringify({
-          id: 1,
-          email: 'admin@himalayansound.com',
-          name: 'Admin User',
-          role: 'admin'
-        }));
+      // Validate credentials
+      if (adminAuth.validateCredentials(username, password)) {
+        // Create session
+        adminAuth.createSession(username);
         
+        // Redirect to dashboard
         router.push('/admin');
       } else {
-        setError('Invalid email or password');
+        setError('Invalid username or password');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -80,15 +75,15 @@ export default function AdminLogin() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="admin@himalayansound.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="username"
+                    type="text"
+                    placeholder="demo123"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="pl-10"
                     required
                   />
@@ -102,7 +97,7 @@ export default function AdminLogin() {
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder="demo123"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-10 pr-10"
@@ -135,7 +130,7 @@ export default function AdminLogin() {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Demo credentials: admin@himalayansound.com / admin123
+                Demo credentials: demo123 / demo123
               </p>
             </div>
           </CardContent>
