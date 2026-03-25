@@ -8,10 +8,10 @@ import { Locale, Product } from '@/lib/types';
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
-export default function CartPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default function CartPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = use(params);
   const { items, removeItem, updateQuantity } = useCart();
   const [products, setProducts] = useState<Record<string, Product>>({});
   const [loading, setLoading] = useState(true);

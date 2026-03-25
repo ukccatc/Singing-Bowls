@@ -7,9 +7,9 @@ import ShopPageClient from './ShopPageClient';
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }) {
-  const locale = params.locale;
+  const { locale } = await params;
   
   return {
     title: t('shop.title', locale),
@@ -75,8 +75,9 @@ async function getProducts(): Promise<Product[]> {
   return sampleProducts;
 }
 
-export default async function ShopPage({ params }: { params: { locale: Locale } }) {
+export default async function ShopPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
   const products = await getProducts();
   
-  return <ShopPageClient locale={params.locale} products={products} />;
+  return <ShopPageClient locale={locale} products={products} />;
 }

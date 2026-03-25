@@ -1,34 +1,18 @@
-import { Metadata } from 'next';
-import { Locale } from '@/lib/types';
-import { t } from '@/lib/translations';
-import { Card, CardContent } from '@/components/ui/card';
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { t } from '@/lib/translations';
+import { Locale } from '@/lib/types';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { use } from 'react';
 
-// Generate metadata for the contact page
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: { locale: Locale } 
-}): Promise<Metadata> {
-  const locale = params.locale;
-  
-  return {
-    title: t('contact.title', locale),
-    description: t('contact.subtitle', locale),
-    openGraph: {
-      title: t('contact.title', locale),
-      description: t('contact.subtitle', locale),
-    },
-  };
-}
-
-export default function ContactPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = use(params);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">

@@ -19,9 +19,9 @@ const inter = Inter({
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
   
   if (!getAvailableLocales().includes(locale)) {
     notFound();
@@ -110,14 +110,14 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function LocaleLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }) {
-  const locale = params.locale;
+  const { locale } = await params;
   
   // Validate locale
   if (!getAvailableLocales().includes(locale)) {

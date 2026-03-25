@@ -11,9 +11,9 @@ import Link from 'next/link';
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
   
   return {
     title: t('home.title', locale),
@@ -25,8 +25,8 @@ export async function generateMetadata({
   };
 }
 
-export default function HomePage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
 
   return (
     <div className="min-h-screen bg-metal-light">

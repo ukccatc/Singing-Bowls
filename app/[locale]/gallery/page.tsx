@@ -53,12 +53,14 @@ const translations = {
   },
 };
 
+import { use } from 'react';
+
 export default function GalleryPage({
   params,
 }: {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }) {
-  const locale = params.locale;
+  const { locale } = use(params);
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<GalleryCategory>('all');

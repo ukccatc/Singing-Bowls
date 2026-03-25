@@ -7,9 +7,9 @@ import CheckoutClient from './CheckoutClient';
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
   
   return {
     title: t('checkout.orderSummary', locale),
@@ -21,6 +21,7 @@ export async function generateMetadata({
   };
 }
 
-export default function CheckoutPage({ params }: { params: { locale: Locale } }) {
-  return <CheckoutClient locale={params.locale} />;
+export default async function CheckoutPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  return <CheckoutClient locale={locale} />;
 }

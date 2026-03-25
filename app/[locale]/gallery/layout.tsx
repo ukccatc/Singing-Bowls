@@ -4,9 +4,9 @@ import { Metadata } from 'next';
 export async function generateMetadata({
   params,
 }: {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
 
   const titles: Record<Locale, string> = {
     en: 'Gallery - Past Sound Healing Events',

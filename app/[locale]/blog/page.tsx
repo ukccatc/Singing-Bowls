@@ -1,16 +1,16 @@
-import { Metadata } from 'next';
-import { Locale } from '@/lib/types';
-import { t } from '@/lib/translations';
-import { sampleArticles } from '@/lib/data/articles';
 import ArticleCard from '@/components/content/ArticleCard';
+import { sampleArticles } from '@/lib/data/articles';
+import { t } from '@/lib/translations';
+import { Locale } from '@/lib/types';
+import { Metadata } from 'next';
 
 // Generate metadata for the blog page
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
   
   return {
     title: t('blog.title', locale),
@@ -22,8 +22,8 @@ export async function generateMetadata({
   };
 }
 
-export default function BlogPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default async function BlogPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">

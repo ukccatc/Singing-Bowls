@@ -6,10 +6,10 @@ import { Locale } from '@/lib/types';
 import { ArrowRight, CheckCircle, Mail, Package } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
-export default function OrderConfirmationPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default function OrderConfirmationPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = use(params);
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId') || 'N/A';
   const [email, setEmail] = useState('');

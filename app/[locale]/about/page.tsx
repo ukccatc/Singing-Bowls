@@ -1,16 +1,16 @@
-import { Metadata } from 'next';
-import { Locale } from '@/lib/types';
-import { t } from '@/lib/translations';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { t } from '@/lib/translations';
+import { Locale } from '@/lib/types';
+import { Metadata } from 'next';
 
 // Generate metadata for the about page
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
   
   return {
     title: t('nav.about', locale),
@@ -22,8 +22,8 @@ export async function generateMetadata({
   };
 }
 
-export default function AboutPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">

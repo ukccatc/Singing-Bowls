@@ -1,20 +1,20 @@
-import { Metadata } from 'next';
-import { Locale } from '@/lib/types';
-import { t } from '@/lib/translations';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { t } from '@/lib/translations';
+import { Locale } from '@/lib/types';
 import { ArrowLeft } from 'lucide-react';
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 // Generate metadata for the signin page
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale } 
+  params: Promise<{ locale: Locale }> 
 }): Promise<Metadata> {
-  const locale = params.locale;
+  const { locale } = await params;
   
   return {
     title: 'Sign In',
@@ -26,8 +26,12 @@ export async function generateMetadata({
   };
 }
 
-export default function SignInPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
+'use client';
+
+import { use } from 'react';
+
+export default function SignInPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = use(params);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100 flex items-center justify-center py-16">

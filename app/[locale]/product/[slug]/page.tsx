@@ -8,17 +8,10 @@ import ProductDetailClient from './ProductDetailClient';
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { locale: Locale; slug: string } 
+  params: Promise<{ locale: Locale; slug: string }> 
 }): Promise<Metadata> {
-  const product = await getProduct(params.slug);
-  
-  if (!product) {
-    return {
-      title: 'Product Not Found',
-    };
-  }
-
-  const locale = params.locale;
+  const { locale, slug } = await params;
+  const product = await getProduct(slug);
   const productName = product.name[locale] || product.name.en;
   const productDescription = product.description[locale] || product.description.en;
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
@@ -93,13 +86,14 @@ export async function generateStaticParams() {
 export default async function ProductPage({ 
   params 
 }: { 
-  params: { locale: Locale; slug: string } 
+  params: Promise<{ locale: Locale; slug: string }> 
 }) {
-  const product = await getProduct(params.slug);
+  const { locale, slug } = await params;
+  const product = await getProduct(slug);
   
   if (!product) {
     notFound();
   }
 
-  return <ProductDetailClient product={product} locale={params.locale} />;
+  return <ProductDetailClient product={product} locale={locale} />;
 }
