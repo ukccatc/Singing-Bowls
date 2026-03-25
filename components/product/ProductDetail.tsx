@@ -270,7 +270,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                       url: product.youtubeVideo.url,
                       platform: 'youtube',
                       thumbnail: product.youtubeVideo.thumbnail,
-                      duration: product.youtubeVideo.duration,
+                      duration: product.youtubeVideo.duration || 0,
                       size: 0,
                       metadata: { videoId: product.youtubeVideo.videoId },
                       createdAt: new Date(),

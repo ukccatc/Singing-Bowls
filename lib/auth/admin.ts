@@ -1,69 +1,41 @@
-// Admin authentication utilities
-const ADMIN_CREDENTIALS = {
-  username: 'demo123',
-  password: 'demo123',
-};
+import { createClient } from '@supabase/supabase-js';
 
-const ADMIN_TOKEN_KEY = 'adminToken';
-const ADMIN_USER_KEY = 'adminUser';
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-export interface AdminUser {
-  id: string;
-  username: string;
-  name: string;
-  role: 'admin';
+// List of admin emails - update this with your admin emails
+export const ADMIN_EMAILS = [
+  'ukccatc@gmail.com',
+];
+
+export async function isAdmin(userId: string): Promise<boolean> {
+  try {
+    const { data: user, error } = await supabase.auth.admin.getUserById(userId);
+    
+    if (error || !user) return false;
+    
+    return ADMIN_EMAILS.includes(user.user_metadata?.email || user.email || '');
+  } catch (error) {
+    console.error('Admin check error:', error);
+    return false;
+  }
 }
 
-export const adminAuth = {
-  // Validate credentials
-  validateCredentials: (username: string, password: string): boolean => {
-    return username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password;
-  },
-
-  // Create session
-  createSession: (username: string): AdminUser => {
-    const user: AdminUser = {
-      id: '1',
-      username,
-      name: 'Admin User',
-      role: 'admin',
-    };
+export async function getAdminUser(token: string) {
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser(token);
     
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(ADMIN_TOKEN_KEY, 'admin-token-' + Date.now());
-      localStorage.setItem(ADMIN_USER_KEY, JSON.stringify(user));
-    }
+    if (error || !user) return null;
+    
+    const adminCheck = await isAdmin(user.id);
+    
+    if (!adminCheck) return null;
     
     return user;
-  },
-
-  // Get current session
-  getSession: (): AdminUser | null => {
-    if (typeof window === 'undefined') return null;
-    
-    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
-    const userStr = localStorage.getItem(ADMIN_USER_KEY);
-    
-    if (!token || !userStr) return null;
-    
-    try {
-      return JSON.parse(userStr);
-    } catch {
-      return null;
-    }
-  },
-
-  // Check if authenticated
-  isAuthenticated: (): boolean => {
-    if (typeof window === 'undefined') return false;
-    return !!localStorage.getItem(ADMIN_TOKEN_KEY);
-  },
-
-  // Logout
-  logout: (): void => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(ADMIN_TOKEN_KEY);
-      localStorage.removeItem(ADMIN_USER_KEY);
-    }
-  },
-};
+  } catch (error) {
+    console.error('Get admin user error:', error);
+    return null;
+  }
+}

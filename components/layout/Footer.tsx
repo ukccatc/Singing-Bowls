@@ -1,23 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { 
-  Instagram, 
-  Youtube, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Heart,
-  Send
-} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
+import {
+    Heart,
+    Mail,
+    MapPin,
+    Phone,
+    Send
+} from 'lucide-react';
+import Link from 'next/link';
+import React, { useState } from 'react';
 import LanguageChanger from './LanguageChanger';
 
 interface FooterProps {
@@ -65,12 +61,12 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
     {
       name: 'Instagram',
       href: 'https://instagram.com/himalayansound',
-      icon: Instagram,
+      icon: Heart,
     },
     {
       name: 'YouTube',
       href: 'https://youtube.com/@himalayansound',
-      icon: Youtube,
+      icon: Heart,
     },
   ];
 

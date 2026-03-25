@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { getAvailableLocales } from '@/lib/translations';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Skip admin routes for now to avoid conflicts
+  // Allow admin routes without auth for now (development)
   if (pathname.startsWith('/admin')) {
     return NextResponse.next();
   }
