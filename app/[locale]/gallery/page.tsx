@@ -1,12 +1,18 @@
 'use client';
 
-import { GalleryFilter } from '@/components/gallery/GalleryFilter';
-import { GalleryGrid } from '@/components/gallery/GalleryGrid';
-import { galleryImages } from '@/lib/data/gallery';
 import { Locale } from '@/lib/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type GalleryCategory = 'meditation' | 'workshop' | 'retreat' | 'ceremony' | 'all';
+
+interface GalleryImage {
+  id: string;
+  image_url: string;
+  title: { en: string; ru: string; uk?: string };
+  description: { en: string; ru: string; uk?: string };
+  display_order: number;
+  is_active: boolean;
+}
 
 const translations = {
   en: {
@@ -53,14 +59,42 @@ export default function GalleryPage({
   params: { locale: Locale };
 }) {
   const locale = params.locale;
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<GalleryCategory>('all');
   const t = (key: keyof typeof translations.en) => translations[locale][key];
+
+  useEffect(() => {
+    const loadGallery = async () => {
+      try {
+        const response = await fetch('/api/gallery');
+        if (response.ok) {
+          const data = await response.json();
+          setGalleryImages(data.data || []);
+        }
+      } catch (error) {
+        console.error('Failed to load gallery:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGallery();
+  }, []);
 
   // Filter images based on active category
   const filteredImages =
     activeFilter === 'all'
       ? galleryImages
-      : galleryImages.filter((img) => img.category === activeFilter);
+      : galleryImages.filter((img) => img.title.en.toLowerCase().includes(activeFilter));
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100 flex items-center justify-center">
+        <p className="text-gray-600">Loading gallery...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">
@@ -84,15 +118,32 @@ export default function GalleryPage({
       {/* Gallery Section */}
       <section className="py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Filter */}
-          <GalleryFilter
-            onFilterChange={(category) => setActiveFilter(category)}
-            locale={locale}
-          />
-
           {/* Gallery Grid */}
           {filteredImages.length > 0 ? (
-            <GalleryGrid images={filteredImages} locale={locale} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredImages.map((image) => (
+                <div
+                  key={image.id}
+                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <img
+                    src={image.image_url}
+                    alt={image.title[locale] || image.title.en}
+                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-end">
+                    <div className="p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <h3 className="font-semibold text-lg">
+                        {image.title[locale] || image.title.en}
+                      </h3>
+                      <p className="text-sm text-gray-200">
+                        {image.description[locale] || image.description.en}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600 text-lg">
@@ -103,7 +154,7 @@ export default function GalleryPage({
 
           {/* Stats */}
           <div className="mt-16 pt-12 border-t border-gray-300">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
               <div>
                 <div className="text-4xl font-bold text-gold-600 mb-2">
                   {galleryImages.length}
@@ -114,18 +165,10 @@ export default function GalleryPage({
               </div>
               <div>
                 <div className="text-4xl font-bold text-gold-600 mb-2">
-                  {new Set(galleryImages.map((img) => img.category)).size}
+                  {galleryImages.length > 0 ? '∞' : '0'}
                 </div>
                 <p className="text-gray-600">
-                  {t('eventTypes')}
-                </p>
-              </div>
-              <div>
-                <div className="text-4xl font-bold text-gold-600 mb-2">
-                  {new Set(galleryImages.map((img) => img.location[locale])).size}
-                </div>
-                <p className="text-gray-600">
-                  {t('locations')}
+                  Moments Shared
                 </p>
               </div>
             </div>

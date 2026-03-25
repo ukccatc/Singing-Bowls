@@ -30,6 +30,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             🖼️ Media Library
           </Link>
           <Link
+            href="/admin/gallery"
+            className="block px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+          >
+            🎨 Gallery Manager
+          </Link>
+          <Link
             href="/admin/orders"
             className="block px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
           >
