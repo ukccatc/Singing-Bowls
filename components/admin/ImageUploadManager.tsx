@@ -1,15 +1,9 @@
 'use client';
 
-import { createClient } from '@supabase/supabase-js';
 import { Check, Copy, Trash2 } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 interface UploadedImage {
   url: string;
@@ -85,8 +79,7 @@ export function ImageUploadManager() {
   const filteredImages = filter === 'recent' ? images.slice(0, 10) : images;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">Media Library</h1>
@@ -248,7 +241,6 @@ export function ImageUploadManager() {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 }

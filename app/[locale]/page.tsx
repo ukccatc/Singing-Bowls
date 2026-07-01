@@ -2,6 +2,7 @@ import ProductCard from '@/components/product/ProductCard';
 import { Button } from '@/components/ui/button';
 import { sampleProducts } from '@/lib/data/products';
 import { transformSupabaseProduct } from '@/lib/supabase/transforms';
+import { getSiteUrl } from '@/lib/site';
 import { t } from '@/lib/translations';
 import { Locale, Product } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
@@ -28,7 +29,7 @@ export async function generateMetadata({
 
 async function getFeaturedProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const response = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
 
     if (response.ok) {

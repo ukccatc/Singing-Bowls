@@ -1,10 +1,11 @@
 import { sampleArticles } from '@/lib/data/articles';
 import { transformSupabaseArticle } from '@/lib/supabase/transforms';
+import { getSiteUrl } from '@/lib/site';
 import { Article } from '@/lib/types';
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const response = await fetch(`${baseUrl}/api/articles`, {
       cache: 'no-store',
     });
@@ -24,7 +25,7 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const response = await fetch(`${baseUrl}/api/articles/${encodeURIComponent(slug)}`, {
       cache: 'no-store',
     });

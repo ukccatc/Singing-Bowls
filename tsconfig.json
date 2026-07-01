@@ -41,6 +41,7 @@
     "temp_codegen",
     ".next",
     "out",
-    "dist"
+    "dist",
+    "scripts"
   ]
 }

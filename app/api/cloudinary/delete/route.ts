@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { requireAdminSession } from '@/lib/auth/require-admin-session';
 import { v2 as cloudinary } from 'cloudinary';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,20 +8,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function POST(request: NextRequest) {
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
+
   try {
     const { publicId } = await request.json();
 
     if (!publicId) {
-      return NextResponse.json(
-        { error: 'Public ID is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Public ID is required' }, { status: 400 });
     }
 
     const result = await cloudinary.uploader.destroy(publicId);
@@ -31,17 +26,11 @@ export async function POST(request: NextRequest) {
         { success: true, message: 'Image deleted successfully' },
         { status: 200 }
       );
-    } else {
-      return NextResponse.json(
-        { error: 'Failed to delete image' },
-        { status: 400 }
-      );
     }
+
+    return NextResponse.json({ error: 'Failed to delete image' }, { status: 400 });
   } catch (error) {
     console.error('Delete error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete image' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete image' }, { status: 500 });
   }
 }

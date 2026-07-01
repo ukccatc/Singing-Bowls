@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { formatAdminDate } from '@/lib/format';
 import { Edit2, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -162,7 +163,7 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
                     {product.category}
                   </span>
                   <span className="inline-block px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">
-                    {new Date(product.created_at).toLocaleDateString()}
+                    {formatAdminDate(product.created_at)}
                   </span>
                 </div>
               </div>

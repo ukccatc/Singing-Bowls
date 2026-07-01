@@ -1,5 +1,6 @@
 import { sampleProducts } from '@/lib/data/products';
 import { transformSupabaseProduct } from '@/lib/supabase/transforms';
+import { getSiteUrl } from '@/lib/site';
 import { t } from '@/lib/translations';
 import { Locale, Product } from '@/lib/types';
 import ShopPageClient from './ShopPageClient';
@@ -25,7 +26,7 @@ export async function generateMetadata({
 // Fetch products from API
 async function getProducts(): Promise<Product[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const response = await fetch(`${baseUrl}/api/products`, {
       cache: 'no-store',
     });

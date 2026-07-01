@@ -1,4 +1,35 @@
+import { createOrderInDatabase, formatOrderForAdmin } from '@/lib/orders';
+import { requireAdminSession } from '@/lib/auth/require-admin-session';
+import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(request: NextRequest) {
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
+
+  try {
+    const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? getSupabaseServer()
+      : supabaseServerClient;
+
+    const { data, error } = await client
+      .from('orders')
+      .select('id, email, status, total, currency, created_at, notes')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      return NextResponse.json({ success: true, data: [] });
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: (data || []).map(formatOrderForAdmin),
+    });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    return NextResponse.json({ success: true, data: [] });
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +45,6 @@ export async function POST(request: NextRequest) {
       total,
     } = body;
 
-    // Validate required fields
     if (!items || !shipping || !billing || !paymentMethod) {
       return NextResponse.json(
         { error: 'Missing required order information' },
@@ -22,86 +52,50 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate order ID
-    const orderId = `HS-${new Date().getFullYear()}-${String(Date.now()).slice(-6)}`;
-
-    // In a real application, you would:
-    // 1. Validate payment with Stripe/PayPal
-    // 2. Check inventory availability
-    // 3. Create order in database
-    // 4. Send confirmation emails
-    // 5. Update inventory
-    // 6. Create shipping label
-
-    const order = {
-      id: orderId,
-      customerId: null, // Would be set if user is logged in
+    const savedOrder = await createOrderInDatabase({
       email: billing.email || shipping.email,
-      items: items.map((item: any) => ({
-        productId: item.productId,
-        name: item.product?.name?.en || 'Product',
-        price: item.product?.price || 0,
-        quantity: item.quantity,
-        sku: item.product?.sku || '',
-      })),
-      billing,
-      shipping,
-      paymentStatus: 'paid',
-      fulfillmentStatus: 'pending',
+      billingAddress: billing,
+      shippingAddress: shipping,
+      items: items.map(
+        (item: {
+          productId: string;
+          product?: { price?: number };
+          quantity: number;
+        }) => ({
+          productId: item.productId,
+          price: item.product?.price || 0,
+          quantity: item.quantity,
+        })
+      ),
+      total,
+      paymentMethod,
       subtotal,
       tax,
       shippingCost,
-      total,
-      currency: 'USD',
-      paymentMethod,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      estimatedDelivery: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    };
-
-    // Simulate order processing
-    await processOrder(order);
+    });
 
     return NextResponse.json(
-      { 
+      {
         message: 'Order created successfully',
-        orderId,
-        order 
+        orderId: savedOrder.reference,
+        order: {
+          id: savedOrder.reference,
+          email: savedOrder.email,
+          total: savedOrder.total,
+          items,
+          billing,
+          shipping,
+          paymentMethod,
+          subtotal,
+          tax,
+          shippingCost,
+          createdAt: savedOrder.created_at,
+        },
       },
       { status: 201 }
     );
   } catch (error) {
     console.error('Order creation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create order' },
-      { status: 500 }
-    );
-  }
-}
-
-async function processOrder(order: any) {
-  // Simulate processing delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  console.log('Order processed:', order.id);
-  
-  // Send confirmation email to customer
-  console.log('Order confirmation email sent:', {
-    to: order.email,
-    subject: `Order Confirmation - ${order.id}`,
-    orderId: order.id,
-    total: order.total,
-  });
-  
-  // Send notification to admin
-  console.log('New order notification sent to admin:', {
-    orderId: order.id,
-    customerEmail: order.email,
-    total: order.total,
-  });
-  
-  // Update inventory (simulate)
-  for (const item of order.items) {
-    console.log(`Inventory updated for ${item.sku}: -${item.quantity}`);
+    return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
   }
 }

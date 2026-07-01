@@ -12,10 +12,11 @@ export const ADMIN_EMAILS = [
 
 export async function isAdmin(userId: string): Promise<boolean> {
   try {
-    const { data: user, error } = await supabase.auth.admin.getUserById(userId);
+    const { data, error } = await supabase.auth.admin.getUserById(userId);
     
-    if (error || !user) return false;
+    if (error || !data?.user) return false;
     
+    const user = data.user;
     return ADMIN_EMAILS.includes(user.user_metadata?.email || user.email || '');
   } catch (error) {
     console.error('Admin check error:', error);

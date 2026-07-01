@@ -1,59 +1,38 @@
+import { requireAdminSession } from '@/lib/auth/require-admin-session';
+import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-
-// Mock order data - in a real app, this would come from a database
-const mockOrders = {
-  'HS-2024-001': {
-    id: 'HS-2024-001',
-    email: 'customer@example.com',
-    total: 289.99,
-    currency: 'USD',
-    items: [
-      {
-        name: 'Large Himalayan Bronze Singing Bowl',
-        quantity: 1,
-        price: 289.99,
-      },
-    ],
-    shipping: {
-      firstName: 'John',
-      lastName: 'Doe',
-      address1: '123 Main Street',
-      city: 'New York',
-      country: 'United States',
-    },
-    estimatedDelivery: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
-    status: 'processing',
-    createdAt: new Date().toISOString(),
-  },
-};
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const orderId = params.id;
-    
-    // In a real application, you would:
-    // 1. Validate user authentication
-    // 2. Check if user has access to this order
-    // 3. Fetch from database
-    
-    const order = mockOrders[orderId as keyof typeof mockOrders];
-    
-    if (!order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
+    const { id } = await params;
+    const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? getSupabaseServer()
+      : supabaseServerClient;
+
+    const { data, error } = await client
+      .from('orders')
+      .select('id, email, status, total, currency, created_at, notes, billing_address, shipping_address')
+      .or(`id.eq.${id},notes.eq.${id}`)
+      .maybeSingle();
+
+    if (error || !data) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    return NextResponse.json(order);
+    return NextResponse.json({
+      id: data.notes || data.id,
+      email: data.email,
+      total: data.total,
+      currency: data.currency,
+      shipping: data.shipping_address,
+      status: data.status,
+      createdAt: data.created_at,
+    });
   } catch (error) {
     console.error('Order fetch error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

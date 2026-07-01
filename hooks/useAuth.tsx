@@ -1,18 +1,12 @@
 'use client';
 
-import { useState, useEffect, createContext, useContext } from 'react';
-
-interface AdminUser {
-  id: number;
-  email: string;
-  name: string;
-  role: 'admin' | 'editor' | 'viewer';
-}
+import { AdminUser } from '@/lib/auth/admin-credentials';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
   user: AdminUser | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -24,49 +18,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session on mount
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const token = localStorage.getItem('adminToken');
-        const userData = localStorage.getItem('adminUser');
-        
-        if (token && userData) {
-          const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
-        }
+        const response = await fetch('/api/admin/session');
+        if (response.ok) {
+        const data = await response.json();
+        const nextUser = data.user as AdminUser;
+        localStorage.setItem('adminUser', JSON.stringify(nextUser));
+        setUser(nextUser);
+        return;
+      }
       } catch (error) {
         console.error('Auth check failed:', error);
-        logout();
-      } finally {
-        setIsLoading(false);
       }
+
+      localStorage.removeItem('adminUser');
+      setUser(null);
+      setIsLoading(false);
     };
 
-    checkAuth();
+    checkAuth().finally(() => setIsLoading(false));
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      // Mock API call - в реальном проекте это будет настоящий API
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
 
-      if (email === 'admin@himalayansound.com' && password === 'admin123') {
-        const userData: AdminUser = {
-          id: 1,
-          email: 'admin@himalayansound.com',
-          name: 'Admin User',
-          role: 'admin'
-        };
-
-        // Store in localStorage (в реальном проекте это будет httpOnly cookie)
-        localStorage.setItem('adminToken', 'mock-jwt-token');
-        localStorage.setItem('adminUser', JSON.stringify(userData));
-        
-        setUser(userData);
-        return true;
+      if (!response.ok) {
+        return false;
       }
-      
-      return false;
+
+      const data = await response.json();
+      const nextUser = data.user as AdminUser;
+      localStorage.setItem('adminUser', JSON.stringify(nextUser));
+      setUser(nextUser);
+      return true;
     } catch (error) {
       console.error('Login failed:', error);
       return false;
@@ -74,21 +64,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     setUser(null);
   };
 
-  const value: AuthContextType = {
-    user,
-    isLoading,
-    login,
-    logout,
-    isAuthenticated: !!user,
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        login,
+        logout,
+        isAuthenticated: !!user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

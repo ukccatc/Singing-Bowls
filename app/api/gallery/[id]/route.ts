@@ -1,20 +1,19 @@
-import { createClient } from '@supabase/supabase-js';
+import { requireAdminSession } from '@/lib/auth/require-admin-session';
+import { getSupabaseServer } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
-    const { id } = params;
+    const { id } = await params;
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseServer()
       .from('gallery')
       .update({
         title: body.title,
@@ -27,53 +26,35 @@ export async function PUT(
       .select();
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { success: true, data: data[0] },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, data: data[0] }, { status: 200 });
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to update gallery item' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to update gallery item' }, { status: 500 });
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const { id } = params;
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
 
-    const { error } = await supabase
-      .from('gallery')
-      .delete()
-      .eq('id', id);
+  try {
+    const { id } = await params;
+
+    const { error } = await getSupabaseServer().from('gallery').delete().eq('id', id);
 
     if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { success: true, message: 'Gallery item deleted' },
-      { status: 200 }
-    );
+    return NextResponse.json({ success: true, message: 'Gallery item deleted' }, { status: 200 });
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete gallery item' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to delete gallery item' }, { status: 500 });
   }
 }

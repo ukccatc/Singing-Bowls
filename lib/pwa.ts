@@ -15,8 +15,12 @@ export class PWAManager {
     }
   }
 
-  // Initialize service worker
+  // Initialize service worker (production only — SW + HMR causes reload loops in dev)
   private async initializeServiceWorker() {
+    if (process.env.NODE_ENV === 'development') {
+      return;
+    }
+
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js');
@@ -34,9 +38,13 @@ export class PWAManager {
           }
         });
 
-        // Service worker activated
+        // Reload only once when user explicitly accepts an update
+        let isReloading = false;
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          window.location.reload();
+          if (!isReloading) {
+            isReloading = true;
+            window.location.reload();
+          }
         });
 
       } catch (error) {

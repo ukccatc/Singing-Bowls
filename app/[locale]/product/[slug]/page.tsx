@@ -1,4 +1,5 @@
 import { sampleProducts } from '@/lib/data/products';
+import { getSiteUrl } from '@/lib/site';
 import { Locale, Product } from '@/lib/types';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -12,6 +13,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const product = await getProduct(slug);
+  if (!product) {
+    return { title: 'Product Not Found' };
+  }
   const productName = product.name[locale] || product.name.en;
   const productDescription = product.description[locale] || product.description.en;
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
@@ -38,7 +42,7 @@ export async function generateMetadata({
 async function getProduct(slug: string): Promise<Product | null> {
   try {
     // First try to fetch from API (Supabase)
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const response = await fetch(`${baseUrl}/api/products`, {
       cache: 'no-store',
     });
@@ -62,7 +66,7 @@ async function getProduct(slug: string): Promise<Product | null> {
 export async function generateStaticParams() {
   try {
     // Try to fetch from API first
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const baseUrl = getSiteUrl();
     const response = await fetch(`${baseUrl}/api/products`);
     
     if (response.ok) {

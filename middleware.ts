@@ -1,3 +1,7 @@
+import {
+  ADMIN_SESSION_COOKIE,
+  ADMIN_SESSION_TOKEN,
+} from '@/lib/auth/admin-credentials';
 import { getAvailableLocales } from '@/lib/translations';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -5,22 +9,30 @@ import { NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Allow admin routes without auth for now (development)
   if (pathname.startsWith('/admin')) {
+    const isLoginPage = pathname === '/admin/login';
+    const session = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+
+    if (!isLoginPage && session !== ADMIN_SESSION_TOKEN) {
+      const loginUrl = new URL('/admin/login', request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (isLoginPage && session === ADMIN_SESSION_TOKEN) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
+
     return NextResponse.next();
   }
 
-  // Locale detection and redirection
   const availableLocales = getAvailableLocales();
-  
-  // Check if the pathname starts with a locale
+
   const pathnameHasLocale = availableLocales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
   if (pathnameHasLocale) return NextResponse.next();
 
-  // Redirect to default locale if no locale is present
   const defaultLocale = 'en';
   const newUrl = new URL(`/${defaultLocale}${pathname}`, request.url);
   return NextResponse.redirect(newUrl);
@@ -28,7 +40,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
-    '/((?!_next|api|favicon.ico).*)',
+    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|manifest.json|sw.js|offline.html).*)',
   ],
 };

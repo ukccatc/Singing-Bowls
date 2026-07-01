@@ -1,19 +1,12 @@
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import { LocaleHtmlLang } from '@/components/layout/LocaleHtmlLang';
 import { Toaster } from '@/components/ui/sonner';
 import { CartProvider } from '@/lib/context/CartContext';
 import { getAvailableLocales } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import '../globals.css';
-
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
 
 // Generate metadata for each locale
 export async function generateMetadata({ 
@@ -125,25 +118,16 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} className={inter.variable}>
-      <head>
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#d4b27a" />
-      </head>
-      <body className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100 font-sans antialiased">
-        <CartProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header locale={locale} />
-            <main className="flex-1 pt-16 lg:pt-20">
-              {children}
-            </main>
-            <Footer locale={locale} />
-          </div>
-          <Toaster position="top-right" />
-        </CartProvider>
-      </body>
-    </html>
+    <>
+      <LocaleHtmlLang locale={locale} />
+      <CartProvider>
+        <div className="flex min-h-screen flex-col bg-gradient-to-br from-cream-50 to-cream-100">
+          <Header locale={locale} />
+          <main className="flex-1 pt-16 lg:pt-20">{children}</main>
+          <Footer locale={locale} />
+        </div>
+        <Toaster position="top-right" />
+      </CartProvider>
+    </>
   );
 }

@@ -34,7 +34,7 @@ export function GalleryManager() {
 
   const loadGalleryImages = async () => {
     try {
-      const response = await fetch('/api/gallery');
+      const response = await fetch('/api/gallery?all=true');
       if (response.ok) {
         const data = await response.json();
         setGalleryImages(data.data || []);
