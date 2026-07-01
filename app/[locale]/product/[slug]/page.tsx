@@ -1,5 +1,7 @@
 import { sampleProducts } from '@/lib/data/products';
 import { getSiteUrl } from '@/lib/site';
+import { buildProductJsonLd } from '@/lib/seo';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { Locale, Product } from '@/lib/types';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -99,5 +101,10 @@ export default async function ProductPage({
     notFound();
   }
 
-  return <ProductDetailClient product={product} locale={locale} />;
+  return (
+    <>
+      <JsonLd data={buildProductJsonLd(product)} />
+      <ProductDetailClient product={product} locale={locale} />
+    </>
+  );
 }

@@ -1,6 +1,8 @@
 import ProductCard from '@/components/product/ProductCard';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { Button } from '@/components/ui/button';
 import { sampleProducts } from '@/lib/data/products';
+import { buildOrganizationJsonLd, buildWebsiteJsonLd } from '@/lib/seo';
 import { transformSupabaseProduct } from '@/lib/supabase/transforms';
 import { getSiteUrl } from '@/lib/site';
 import { t } from '@/lib/translations';
@@ -53,6 +55,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <div className="min-h-screen bg-metal-light">
+      <JsonLd data={buildOrganizationJsonLd()} />
+      <JsonLd data={buildWebsiteJsonLd(locale)} />
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-gold-50 via-bronze-50 to-copper-50 py-20 lg:py-32 relative overflow-hidden">
         {/* Metal texture overlay */}

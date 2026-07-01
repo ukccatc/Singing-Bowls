@@ -1,8 +1,10 @@
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { LocaleHtmlLang } from '@/components/layout/LocaleHtmlLang';
+import { GoogleAnalytics } from '@/components/seo/GoogleAnalytics';
 import { Toaster } from '@/components/ui/sonner';
 import { CartProvider } from '@/lib/context/CartContext';
+import { getDefaultOgImage, getGoogleSiteVerification, getMetadataBase } from '@/lib/seo';
 import { getAvailableLocales } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import type { Metadata } from 'next';
@@ -19,6 +21,9 @@ export async function generateMetadata({
   if (!getAvailableLocales().includes(locale)) {
     notFound();
   }
+
+  const googleVerification = getGoogleSiteVerification();
+  const ogImage = getDefaultOgImage();
 
   return {
     title: {
@@ -43,7 +48,7 @@ export async function generateMetadata({
       address: false,
       telephone: false,
     },
-    metadataBase: new URL('https://himalayansound.com'),
+    metadataBase: getMetadataBase(),
     alternates: {
       canonical: `/${locale}`,
       languages: {
@@ -65,7 +70,7 @@ export async function generateMetadata({
         : 'Відкрийте для себе автентичні рукотворні непальські співаючі чаші та медитативні інструменти.',
       images: [
         {
-          url: '/og-image.jpg',
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: 'Himalayan Sound - Authentic Nepali Singing Bowls',
@@ -80,8 +85,15 @@ export async function generateMetadata({
         : locale === 'ru'
         ? 'Откройте для себя аутентичные рукотворные непальские поющие чаши и медитативные инструменты.'
         : 'Відкрийте для себе автентичні рукотворні непальські співаючі чаші та медитативні інструменти.',
-      images: ['/og-image.jpg'],
+      images: [ogImage],
     },
+    ...(googleVerification
+      ? {
+          verification: {
+            google: googleVerification,
+          },
+        }
+      : {}),
     robots: {
       index: true,
       follow: true,
@@ -120,6 +132,7 @@ export default async function LocaleLayout({
   return (
     <>
       <LocaleHtmlLang locale={locale} />
+      <GoogleAnalytics />
       <CartProvider>
         <div className="flex min-h-screen flex-col bg-gradient-to-br from-cream-50 to-cream-100">
           <Header locale={locale} />
