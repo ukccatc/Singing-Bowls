@@ -1,8 +1,7 @@
-import { sampleArticles } from '@/lib/data/articles';
-import { sampleProducts } from '@/lib/data/products';
-import { supabaseServerClient } from '@/lib/supabase/server';
+import { getArticles } from '@/lib/supabase/content';
+import { getProductSlugs } from '@/lib/supabase/products';
 import { getSiteUrl } from '@/lib/site';
-import { getAvailableLocales } from '@/lib/translations';
+import { getAvailableLocales, getDefaultLocale } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import type { MetadataRoute } from 'next';
 
@@ -25,8 +24,7 @@ function entry(
   options?: { lastModified?: Date; changeFrequency?: MetadataRoute.Sitemap[0]['changeFrequency']; priority?: number }
 ): MetadataRoute.Sitemap[0] {
   const siteUrl = getSiteUrl();
-  const locales = getAvailableLocales();
-  const locale = locales[0] as Locale;
+  const locale = getDefaultLocale();
 
   return {
     url: `${siteUrl}/${locale}${path}`,
@@ -37,41 +35,11 @@ function entry(
   };
 }
 
-async function getProductSlugs(): Promise<string[]> {
-  try {
-    const { data, error } = await supabaseServerClient
-      .from('products')
-      .select('slug')
-      .eq('is_available', true);
-
-    if (!error && data?.length) {
-      return data.map((row) => row.slug);
-    }
-  } catch {
-    // fall through to static data
-  }
-
-  return sampleProducts.map((product) => product.slug);
-}
-
 async function getArticleSlugs(): Promise<string[]> {
-  try {
-    const { data, error } = await supabaseServerClient
-      .from('articles')
-      .select('slug')
-      .eq('is_published', true);
-
-    if (!error && data?.length) {
-      return data.map((row) => {
-        const slug = row.slug as Record<string, string>;
-        return slug.en || slug.ru || slug.uk || Object.values(slug)[0];
-      });
-    }
-  } catch {
-    // fall through to static data
-  }
-
-  return sampleArticles.map((article) => article.slug.en);
+  const articles = await getArticles();
+  return articles.map(
+    (article) => article.slug.en || article.slug.uk || article.slug.ru
+  );
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

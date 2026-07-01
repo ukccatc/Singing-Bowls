@@ -42,6 +42,7 @@
     ".next",
     "out",
     "dist",
-    "scripts"
+    "scripts",
+    "mobile"
   ]
 }

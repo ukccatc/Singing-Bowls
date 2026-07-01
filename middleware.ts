@@ -2,6 +2,7 @@ import {
   ADMIN_SESSION_COOKIE,
   ADMIN_SESSION_TOKEN,
 } from '@/lib/auth/admin-credentials';
+import { getRedirectLocale } from '@/lib/locale-detection';
 import { getAvailableLocales } from '@/lib/translations';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -33,13 +34,13 @@ export function middleware(request: NextRequest) {
 
   if (pathnameHasLocale) return NextResponse.next();
 
-  const defaultLocale = 'en';
-  const newUrl = new URL(`/${defaultLocale}${pathname}`, request.url);
+  const redirectLocale = getRedirectLocale(request);
+  const newUrl = new URL(`/${redirectLocale}${pathname}`, request.url);
   return NextResponse.redirect(newUrl);
 }
 
 export const config = {
   matcher: [
-    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|manifest.json|sw.js|offline.html).*)',
+    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|manifest.json|sw.js|offline.html|\\.well-known).*)',
   ],
 };

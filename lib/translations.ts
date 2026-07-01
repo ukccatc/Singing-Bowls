@@ -1,5 +1,12 @@
 import { ArticleCategory, Locale } from './types';
 
+export const DEFAULT_LOCALE: Locale = 'uk';
+
+/** Fallback when geo/cookie are unavailable (e.g. static generation). */
+export function getDefaultLocale(): Locale {
+  return DEFAULT_LOCALE;
+}
+
 // Translation object structure
 interface Translations {
   [key: string]: {
@@ -34,6 +41,36 @@ const translations: Translations = {
     en: 'Contact',
     ru: 'Контакты',
     uk: 'Контакти',
+  },
+  'nav.cart': {
+    en: 'Cart',
+    ru: 'Корзина',
+    uk: 'Кошик',
+  },
+  'nav.more': {
+    en: 'More',
+    ru: 'Ещё',
+    uk: 'Ще',
+  },
+  'nav.moreDescription': {
+    en: 'About, blog, contact and language',
+    ru: 'О нас, блог, контакты и язык',
+    uk: 'Про нас, блог, контакти та мова',
+  },
+  'nav.language': {
+    en: 'Language',
+    ru: 'Язык',
+    uk: 'Мова',
+  },
+  'native.tagline': {
+    en: 'Authentic Nepali singing bowls',
+    ru: 'Аутентичные непальские поющие чаши',
+    uk: 'Автентичні непальські співаючі чаші',
+  },
+  'native.searchPlaceholder': {
+    en: 'Search bowls, instruments…',
+    ru: 'Поиск чаш, инструментов…',
+    uk: 'Пошук чаш, інструментів…',
   },
 
   // Home page - Main keys
@@ -1229,7 +1266,7 @@ const translations: Translations = {
 };
 
 // Translation function
-export function t(key: string, locale: Locale = 'en', params?: Record<string, any>): string {
+export function t(key: string, locale: Locale = DEFAULT_LOCALE, params?: Record<string, any>): string {
   const translation = translations[key]?.[locale] || translations[key]?.['en'] || key;
   
   // Replace parameters in translation
@@ -1252,13 +1289,12 @@ export function getLocaleFromPathname(pathname: string): Locale {
     return firstSegment as Locale;
   }
   
-  // Default to English
-  return 'en';
+  return DEFAULT_LOCALE;
 }
 
 // Get available locales
 export function getAvailableLocales(): Locale[] {
-  return ['en', 'ru', 'uk'];
+  return ['uk', 'en', 'ru'];
 }
 
 // Get locale display name

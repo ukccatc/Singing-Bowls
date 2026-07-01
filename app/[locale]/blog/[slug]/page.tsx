@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+export const revalidate = 300;
+
 interface ArticlePageProps {
   params: Promise<{
     slug: string;

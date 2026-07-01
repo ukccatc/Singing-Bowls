@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.himalayansound.app",
+        "paths": [
+          "/en/*",
+          "/ru/*",
+          "/uk/*",
+          "/en/product/*",
+          "/en/shop",
+          "/en/cart",
+          "/en/gallery"
+        ]
+      }
+    ]
+  }
+}

@@ -1,8 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { isNativeApp } from '@/lib/native';
 import { Pause, Play } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -13,6 +14,23 @@ interface AudioPlayerProps {
 export default function AudioPlayer({ audioUrl, title, compact = false }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (!isNativeApp()) return;
+
+    let removeListener: (() => void) | undefined;
+
+    import('@capacitor/app').then(async ({ App }) => {
+      const listener = await App.addListener('appStateChange', ({ isActive }) => {
+        if (isActive && audioRef.current && isPlaying) {
+          void audioRef.current.play().catch(() => undefined);
+        }
+      });
+      removeListener = () => listener.remove();
+    });
+
+    return () => removeListener?.();
+  }, [isPlaying]);
 
   const togglePlayback = async () => {
     const audio = audioRef.current;
@@ -43,6 +61,7 @@ export default function AudioPlayer({ audioUrl, title, compact = false }: AudioP
           ref={audioRef}
           src={audioUrl}
           preload="metadata"
+          playsInline
           onEnded={() => setIsPlaying(false)}
           onPause={() => setIsPlaying(false)}
         />

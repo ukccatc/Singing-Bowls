@@ -1,6 +1,7 @@
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import { Metadata } from 'next';
+import { NativeCheckoutGate } from '@/components/native/NativeCheckoutGate';
 import CheckoutClient from './CheckoutClient';
 
 // Generate metadata for the checkout page
@@ -23,5 +24,9 @@ export async function generateMetadata({
 
 export default async function CheckoutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
-  return <CheckoutClient locale={locale} />;
+  return (
+    <NativeCheckoutGate locale={locale}>
+      <CheckoutClient locale={locale} />
+    </NativeCheckoutGate>
+  );
 }

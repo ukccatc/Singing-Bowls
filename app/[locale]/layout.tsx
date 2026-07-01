@@ -1,11 +1,12 @@
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { LocaleHtmlLang } from '@/components/layout/LocaleHtmlLang';
+import { NativeShellLoader } from '@/components/native/NativeShellLoader';
 import { GoogleAnalytics } from '@/components/seo/GoogleAnalytics';
 import { Toaster } from '@/components/ui/sonner';
 import { CartProvider } from '@/lib/context/CartContext';
 import { getDefaultOgImage, getGoogleSiteVerification, getMetadataBase } from '@/lib/seo';
-import { getAvailableLocales } from '@/lib/translations';
+import { getAvailableLocales, getDefaultLocale } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -52,9 +53,10 @@ export async function generateMetadata({
     alternates: {
       canonical: `/${locale}`,
       languages: {
-        'en': '/en',
-        'ru': '/ru', 
-        'uk': '/uk',
+        'x-default': `/${getDefaultLocale()}`,
+        en: '/en',
+        ru: '/ru',
+        uk: '/uk',
       },
     },
     openGraph: {
@@ -134,9 +136,10 @@ export default async function LocaleLayout({
       <LocaleHtmlLang locale={locale} />
       <GoogleAnalytics />
       <CartProvider>
+        <NativeShellLoader locale={locale} />
         <div className="flex min-h-screen flex-col bg-gradient-to-br from-cream-50 to-cream-100">
           <Header locale={locale} />
-          <main className="flex-1 pt-16 lg:pt-20">{children}</main>
+          <main className="site-main flex-1 pt-16 lg:pt-20">{children}</main>
           <Footer locale={locale} />
         </div>
         <Toaster position="top-right" />

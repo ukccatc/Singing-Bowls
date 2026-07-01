@@ -104,6 +104,19 @@ export type Database = {
         Insert: Omit<Database['public']['Tables']['articles']['Row'], 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<Database['public']['Tables']['articles']['Row'], 'id' | 'created_at' | 'updated_at'>>;
       };
+      push_tokens: {
+        Row: {
+          id: string;
+          token: string;
+          platform: 'ios' | 'android';
+          email: string | null;
+          locale: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['push_tokens']['Row'], 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Database['public']['Tables']['push_tokens']['Row'], 'id' | 'created_at' | 'updated_at'>>;
+      };
     };
   };
 };

@@ -1,15 +1,15 @@
 import ProductCard from '@/components/product/ProductCard';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Button } from '@/components/ui/button';
-import { sampleProducts } from '@/lib/data/products';
 import { buildOrganizationJsonLd, buildWebsiteJsonLd } from '@/lib/seo';
-import { transformSupabaseProduct } from '@/lib/supabase/transforms';
-import { getSiteUrl } from '@/lib/site';
+import { getFeaturedProducts } from '@/lib/supabase/products';
 import { t } from '@/lib/translations';
-import { Locale, Product } from '@/lib/types';
+import { Locale } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const revalidate = 300;
 
 // Generate metadata for the home page
 export async function generateMetadata({ 
@@ -27,26 +27,6 @@ export async function generateMetadata({
       description: t('home.subtitle', locale),
     },
   };
-}
-
-async function getFeaturedProducts(): Promise<Product[]> {
-  try {
-    const baseUrl = getSiteUrl();
-    const response = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
-
-    if (response.ok) {
-      const result = await response.json();
-      if (result.success && result.data?.length) {
-        return result.data
-          .map((product: Record<string, unknown>) => transformSupabaseProduct(product))
-          .slice(0, 4);
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching featured products:', error);
-  }
-
-  return sampleProducts.slice(0, 4);
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {

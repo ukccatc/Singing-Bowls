@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Locale } from '@/lib/types';
-import { getAvailableLocales, getLocaleDisplayName, getLocaleFlag, getLocaleFromPathname } from '@/lib/translations';
+import { getLocaleDisplayName, getLocaleFlag, getLocaleFromPathname, getAvailableLocales } from '@/lib/translations';
+import { setLocalePreferenceCookie } from '@/lib/locale-detection';
 
 interface LanguageChangerProps {
   className?: string;
@@ -32,11 +33,10 @@ const LanguageChanger: React.FC<LanguageChangerProps> = ({
       segments.shift();
     }
     
-    // Add new locale (except for English which is default)
-    const newPath = newLocale === 'en' 
-      ? `/${segments.join('/')}`
-      : `/${newLocale}/${segments.join('/')}`;
+    const suffix = segments.length > 0 ? `/${segments.join('/')}` : '';
+    const newPath = `/${newLocale}${suffix}`;
     
+    setLocalePreferenceCookie(newLocale);
     router.push(newPath);
     setIsOpen(false);
   };

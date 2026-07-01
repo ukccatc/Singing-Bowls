@@ -50,29 +50,17 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
     
     setIsAddingToCart(true);
     onAddToCart?.(product.id, quantity);
+    const { triggerHapticLight } = await import('@/lib/native-actions');
+    await triggerHapticLight();
     
-    // Simulate loading
     setTimeout(() => {
       setIsAddingToCart(false);
     }, 1000);
   };
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: productName,
-          text: productDescription.substring(0, 100) + '...',
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.log('Error sharing:', err);
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
-    }
+    const { shareProduct } = await import('@/lib/native-actions');
+    await shareProduct(productName, window.location.href);
   };
 
   const formatPrice = (price: number, currency: string) => {

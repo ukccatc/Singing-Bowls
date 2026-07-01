@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Himalayan Sound</string>
+    <string name="title_activity_main">Himalayan Sound</string>
+    <string name="package_name">com.himalayansound.app</string>
+    <string name="custom_url_scheme">com.himalayansound.app</string>
+</resources>

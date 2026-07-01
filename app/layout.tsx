@@ -1,5 +1,7 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { NativeBootstrap } from '@/components/native/NativeBootstrap';
+import { SpeedInsights } from '@/components/seo/SpeedInsights';
 import './globals.css';
 
 const inter = Inter({
@@ -14,14 +16,26 @@ export const metadata: Metadata = {
     'Discover authentic handcrafted Nepali singing bowls and sound meditation instruments.',
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans antialiased">{children}</body>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <NativeBootstrap />
+      </head>
+      <body className="font-sans antialiased">
+        {children}
+        <SpeedInsights />
+      </body>
     </html>
   );
 }

@@ -1,6 +1,8 @@
 'use client';
 
 import { CartItem, Product } from '@/lib/types';
+import { syncCartToPreferences } from '@/lib/native-actions';
+import { isNativeApp } from '@/lib/native';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface CartContextType {
@@ -24,24 +26,37 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CART_STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setItems(parsed);
+    const loadCart = async () => {
+      try {
+        let stored = localStorage.getItem(CART_STORAGE_KEY);
+
+        if (!stored && isNativeApp()) {
+          const { Preferences } = await import('@capacitor/preferences');
+          const pref = await Preferences.get({ key: CART_STORAGE_KEY });
+          stored = pref.value;
+        }
+
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setItems(parsed);
+        }
+      } catch (error) {
+        console.error('Error loading cart from localStorage:', error);
+      } finally {
+        setIsLoaded(true);
       }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
-    } finally {
-      setIsLoaded(true);
-    }
+    };
+
+    loadCart();
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     if (isLoaded) {
       try {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+        const serialized = JSON.stringify(items);
+        localStorage.setItem(CART_STORAGE_KEY, serialized);
+        void syncCartToPreferences(serialized);
       } catch (error) {
         console.error('Error saving cart to localStorage:', error);
       }

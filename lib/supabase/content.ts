@@ -1,23 +1,26 @@
 import { sampleArticles } from '@/lib/data/articles';
-import { transformSupabaseArticle } from '@/lib/supabase/transforms';
-import { getSiteUrl } from '@/lib/site';
+import { supabaseServerClient } from '@/lib/supabase/server';
+import {
+  articleMatchesSlug,
+  transformSupabaseArticle,
+} from '@/lib/supabase/transforms';
 import { Article } from '@/lib/types';
 
 export async function getArticles(): Promise<Article[]> {
   try {
-    const baseUrl = getSiteUrl();
-    const response = await fetch(`${baseUrl}/api/articles`, {
-      cache: 'no-store',
-    });
+    const { data, error } = await supabaseServerClient
+      .from('articles')
+      .select('*')
+      .eq('is_published', true)
+      .order('published_at', { ascending: false });
 
-    if (response.ok) {
-      const result = await response.json();
-      if (result.success && result.data) {
-        return result.data;
-      }
+    if (!error && data?.length) {
+      return data.map((row) =>
+        transformSupabaseArticle(row as Record<string, unknown>)
+      );
     }
   } catch (error) {
-    console.error('Error fetching articles from API:', error);
+    console.error('Error fetching articles from Supabase:', error);
   }
 
   return sampleArticles;
@@ -25,23 +28,19 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
-    const baseUrl = getSiteUrl();
-    const response = await fetch(`${baseUrl}/api/articles/${encodeURIComponent(slug)}`, {
-      cache: 'no-store',
-    });
+    const { data, error } = await supabaseServerClient
+      .from('articles')
+      .select('*')
+      .eq('is_published', true);
 
-    if (response.ok) {
-      const result = await response.json();
-      if (result.success && result.data) {
-        return result.data;
+    if (!error && data?.length) {
+      const article = data.find((row) => articleMatchesSlug(row, slug));
+      if (article) {
+        return transformSupabaseArticle(article as Record<string, unknown>);
       }
     }
-
-    if (response.status === 404) {
-      return null;
-    }
   } catch (error) {
-    console.error('Error fetching article from API:', error);
+    console.error('Error fetching article from Supabase:', error);
   }
 
   return (

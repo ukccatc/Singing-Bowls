@@ -1,3 +1,4 @@
+import { getDefaultLocale } from '@/lib/translations';
 import { getSiteUrl } from '@/lib/site';
 import { Locale } from '@/lib/types';
 
@@ -81,7 +82,7 @@ export function buildProductJsonLd(product: {
     sku: product.sku,
     offers: {
       '@type': 'Offer',
-      url: `${siteUrl}/en/product/${product.slug}`,
+      url: `${siteUrl}/${getDefaultLocale()}/product/${product.slug}`,
       priceCurrency: product.currency,
       price: product.price,
       availability: product.isAvailable

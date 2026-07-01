@@ -86,9 +86,16 @@ export class PWAManager {
 
   // Check if app is already installed
   public isInstalled(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone === true ||
-           document.referrer.includes('android-app://');
+    if (typeof window === 'undefined') return false;
+
+    const cap = (window as Window & { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor;
+    if (cap?.isNativePlatform?.()) return true;
+
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
+      document.referrer.includes('android-app://')
+    );
   }
 
   // Get install prompt info

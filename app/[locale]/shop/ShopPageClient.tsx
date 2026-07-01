@@ -2,13 +2,16 @@
 
 import ProductCard from '@/components/product/ProductCard';
 import { ShopFilters } from '@/components/shop/ShopFilters';
+import { useNetworkStatus } from '@/components/native/NetworkContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useProductFilters } from '@/hooks/useProductFilters';
+import { OfflineStorage } from '@/lib/pwa';
 import { t } from '@/lib/translations';
 import { Locale, Product } from '@/lib/types';
 import { Filter, Grid, List } from 'lucide-react';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 interface ShopPageClientProps {
   locale: Locale;
@@ -18,9 +21,33 @@ interface ShopPageClientProps {
 export default function ShopPageClient({ locale, products }: ShopPageClientProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
+  const [catalog, setCatalog] = useState<Product[]>(products);
+  const { isOnline } = useNetworkStatus();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setCatalog(products);
+  }, [products]);
+
+  useEffect(() => {
+    if (!isOnline && products.length === 0) {
+      const cached = OfflineStorage.getCachedProducts();
+      if (cached.length > 0) {
+        setCatalog(cached as Product[]);
+      }
+    }
+  }, [isOnline, products.length]);
 
   // Use the filter hook
-  const { filters, filteredProducts, updateFilters } = useProductFilters(products);
+  const { filters, filteredProducts, updateFilters } = useProductFilters(catalog);
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q) {
+      updateFilters({ ...filters, search: q });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 via-white to-cream-100">
@@ -67,7 +94,7 @@ export default function ShopPageClient({ locale, products }: ShopPageClientProps
                   <ShopFilters
                     filters={filters}
                     onFiltersChange={updateFilters}
-                    products={products}
+                    products={catalog}
                     locale={locale}
                   />
                 </div>

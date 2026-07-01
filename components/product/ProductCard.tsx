@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useCart } from '@/lib/hooks/useCart';
+import { triggerHapticLight } from '@/lib/native-actions';
 import { MediaFile } from '@/lib/media-manager';
 import { Product } from '@/lib/types';
 import { Heart, ShoppingCart, Volume2 } from 'lucide-react';
@@ -50,6 +51,7 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
 
   const handleAddToCart = () => {
     addItem(product, 1);
+    void triggerHapticLight();
     toast.success(`${productName} added to cart!`);
   };
 

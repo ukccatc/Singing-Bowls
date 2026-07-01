@@ -4,6 +4,8 @@ import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import { Metadata } from 'next';
 
+export const revalidate = 300;
+
 // Generate metadata for the blog page
 export async function generateMetadata({ 
   params 

@@ -38,3 +38,12 @@ next-env.d.ts
 # Local Netlify folder
 .netlify
 .env*
+
+# Capacitor native builds
+mobile/ios/App/Pods/
+mobile/ios/DerivedData/
+mobile/www
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/.idea/
