@@ -1,14 +1,9 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseServerClient
       .from('gallery')
       .select('*')
       .eq('is_active', true)
@@ -36,9 +31,16 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return NextResponse.json(
+        { error: 'SUPABASE_SERVICE_ROLE_KEY is not configured' },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabaseServer()
       .from('gallery')
       .insert([
         {

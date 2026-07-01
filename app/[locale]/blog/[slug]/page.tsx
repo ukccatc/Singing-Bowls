@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { Locale } from '@/lib/types';
+import { getArticleBySlug, getArticles } from '@/lib/supabase/content';
 import { t } from '@/lib/translations';
-import { sampleArticles } from '@/lib/data/articles';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -21,27 +21,28 @@ import {
 import Link from 'next/link';
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     slug: string;
     locale: Locale;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const article = sampleArticles.find(a => a.id === params.slug);
+  const { slug, locale } = await params;
+  const article = await getArticleBySlug(slug);
   
   if (!article) {
     return {
-      title: t('article.notFound', params.locale),
+      title: t('article.notFound', locale),
     };
   }
 
   return {
-    title: `${article.title[params.locale]} | ${t('site.name', params.locale)}`,
-    description: article.excerpt[params.locale],
+    title: `${article.title[locale]} | ${t('site.name', locale)}`,
+    description: article.excerpt[locale],
     openGraph: {
-      title: article.title[params.locale],
-      description: article.excerpt[params.locale],
+      title: article.title[locale],
+      description: article.excerpt[locale],
       type: 'article',
       publishedTime: article.publishedAt,
       authors: [article.author?.name || 'Sound Healing Expert'],
@@ -51,13 +52,14 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export async function generateStaticParams() {
+  const articles = await getArticles();
   const params: { locale: Locale; slug: string }[] = [];
   
   ['en', 'ru', 'uk'].forEach((locale) => {
-    sampleArticles.forEach((article) => {
+    articles.forEach((article) => {
       params.push({
         locale: locale as Locale,
-        slug: article.id,
+        slug: article.slug[locale as Locale] || article.slug.en,
       });
     });
   });
@@ -65,8 +67,12 @@ export async function generateStaticParams() {
   return params;
 }
 
-export default function ArticlePage({ params }: ArticlePageProps) {
-  const article = sampleArticles.find(a => a.id === params.slug);
+export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { slug, locale } = await params;
+  const [article, allArticles] = await Promise.all([
+    getArticleBySlug(slug),
+    getArticles(),
+  ]);
   
   if (!article) {
     notFound();
@@ -75,7 +81,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat(
-      params.locale === 'en' ? 'en-US' : params.locale === 'ru' ? 'ru-RU' : 'uk-UA',
+      locale === 'en' ? 'en-US' : locale === 'ru' ? 'ru-RU' : 'uk-UA',
       {
         year: 'numeric',
         month: 'long',
@@ -97,19 +103,19 @@ export default function ArticlePage({ params }: ArticlePageProps) {
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm text-gray-600">
             <li>
-              <Link href={`/${params.locale}`} className="hover:text-amber-600">
-                {t('nav.home', params.locale)}
+              <Link href={`/${locale}`} className="hover:text-amber-600">
+                {t('nav.home', locale)}
               </Link>
             </li>
             <li>/</li>
             <li>
-              <Link href={`/${params.locale}/blog`} className="hover:text-amber-600">
-                {t('nav.blog', params.locale)}
+              <Link href={`/${locale}/blog`} className="hover:text-amber-600">
+                {t('nav.blog', locale)}
               </Link>
             </li>
             <li>/</li>
             <li className="text-gray-900 font-medium">
-              {article.title[params.locale]}
+              {article.title[locale]}
             </li>
           </ol>
         </nav>
@@ -120,23 +126,23 @@ export default function ArticlePage({ params }: ArticlePageProps) {
             {/* Article Header */}
             <div className="mb-8">
               <div className="flex items-center space-x-4 mb-4">
-                <Link href={`/${params.locale}/blog`}>
+                <Link href={`/${locale}/blog`}>
                   <Button variant="ghost" size="sm">
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    {t('common.back', params.locale)}
+                    {t('common.back', locale)}
                   </Button>
                 </Link>
                 <Badge variant="secondary">
-                  {t(`article.categories.${article.category}`, params.locale)}
+                  {t(`article.categories.${article.category}`, locale)}
                 </Badge>
               </div>
 
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
-                {article.title[params.locale]}
+                {article.title[locale]}
               </h1>
 
               <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                {article.excerpt[params.locale]}
+                {article.excerpt[locale]}
               </p>
 
               {/* Article Meta */}
@@ -151,11 +157,11 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-4 h-4" />
-                  <span>{readingTime(article.content[params.locale])} {t('article.minRead', params.locale)}</span>
+                  <span>{readingTime(article.content[locale])} {t('article.minRead', locale)}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <BookOpen className="w-4 h-4" />
-                  <span>{article.readingTime || 0} {t('article.readingTime', params.locale)}</span>
+                  <span>{article.readingTime || 0} {t('article.readingTime', locale)}</span>
                 </div>
               </div>
 
@@ -178,7 +184,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 <div className="mb-8">
                   <img
                     src={article.image.url}
-                    alt={article.image.alt[params.locale]}
+                    alt={article.image.alt[locale]}
                     className="w-full h-64 lg:h-96 object-cover rounded-2xl shadow-lg"
                   />
                 </div>
@@ -191,7 +197,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 <div 
                   className="article-content"
                   dangerouslySetInnerHTML={{
-                    __html: article.content[params.locale]
+                    __html: article.content[locale]
                       .split('\n\n')
                       .map(paragraph => {
                         if (paragraph.startsWith('#')) {
@@ -225,16 +231,16 @@ export default function ArticlePage({ params }: ArticlePageProps) {
               <div className="flex items-center space-x-4">
                 <Button variant="outline" size="sm">
                   <Heart className="w-4 h-4 mr-2" />
-                  {t('article.like', params.locale)}
+                  {t('article.like', locale)}
                 </Button>
                 <Button variant="outline" size="sm">
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  {t('article.comment', params.locale)}
+                  {t('article.comment', locale)}
                 </Button>
               </div>
               <Button variant="outline" size="sm">
                 <Share2 className="w-4 h-4 mr-2" />
-                {t('article.share', params.locale)}
+                {t('article.share', locale)}
               </Button>
             </div>
 
@@ -242,7 +248,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
             {article.author && (
               <Card className="mb-12">
                 <CardHeader>
-                  <CardTitle>{t('article.aboutAuthor', params.locale)}</CardTitle>
+                  <CardTitle>{t('article.aboutAuthor', locale)}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-start space-x-4">
@@ -258,7 +264,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                         {article.author.name}
                       </h3>
                       <p className="text-gray-600 mb-2">
-                        {article.author.bio?.[params.locale] || article.author.bio?.en}
+                        {article.author.bio?.[locale] || article.author.bio?.en}
                       </p>
                       {article.author.social && (
                         <div className="flex space-x-2">
@@ -283,10 +289,10 @@ export default function ArticlePage({ params }: ArticlePageProps) {
             {/* Related Articles */}
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                {t('article.relatedArticles', params.locale)}
+                {t('article.relatedArticles', locale)}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sampleArticles
+                {allArticles
                   .filter(a => a.category === article.category && a.id !== article.id)
                   .slice(0, 3)
                   .map((relatedArticle) => (
@@ -295,22 +301,22 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                         {relatedArticle.image && (
                           <img
                             src={relatedArticle.image.url}
-                            alt={relatedArticle.image.alt[params.locale]}
+                            alt={relatedArticle.image.alt[locale]}
                             className="w-full h-48 object-cover rounded-lg mb-4"
                           />
                         )}
                         <Badge variant="secondary" className="mb-2">
-                          {t(`article.categories.${relatedArticle.category}`, params.locale)}
+                          {t(`article.categories.${relatedArticle.category}`, locale)}
                         </Badge>
                         <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                          {relatedArticle.title[params.locale]}
+                          {relatedArticle.title[locale]}
                         </h3>
                         <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                          {relatedArticle.excerpt[params.locale]}
+                          {relatedArticle.excerpt[locale]}
                         </p>
                         <div className="flex items-center justify-between text-sm text-gray-500">
                           <span>{formatDate(relatedArticle.publishedAt)}</span>
-                          <span>{readingTime(relatedArticle.content[params.locale])} {t('article.minRead', params.locale)}</span>
+                          <span>{readingTime(relatedArticle.content[locale])} {t('article.minRead', locale)}</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -324,11 +330,11 @@ export default function ArticlePage({ params }: ArticlePageProps) {
             {/* Table of Contents */}
             <Card>
               <CardHeader>
-                <CardTitle>{t('article.tableOfContents', params.locale)}</CardTitle>
+                <CardTitle>{t('article.tableOfContents', locale)}</CardTitle>
               </CardHeader>
               <CardContent>
                 <nav className="space-y-2">
-                  {article.content[params.locale]
+                  {article.content[locale]
                     .split('\n')
                     .filter(line => line.startsWith('##'))
                     .map((heading, index) => {
@@ -350,11 +356,11 @@ export default function ArticlePage({ params }: ArticlePageProps) {
             {/* Popular Articles */}
             <Card>
               <CardHeader>
-                <CardTitle>{t('article.popularArticles', params.locale)}</CardTitle>
+                <CardTitle>{t('article.popularArticles', locale)}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {sampleArticles
+                  {allArticles
                     .sort((a, b) => (b.readingTime || 0) - (a.readingTime || 0))
                     .slice(0, 5)
                     .map((popularArticle) => (
@@ -362,17 +368,17 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                         {popularArticle.image && (
                           <img
                             src={popularArticle.image.url}
-                            alt={popularArticle.image.alt[params.locale]}
+                            alt={popularArticle.image.alt[locale]}
                             className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
                           />
                         )}
                         <div className="flex-1 min-w-0">
                           <h4 className="font-medium text-sm line-clamp-2">
                             <Link 
-                              href={`/${params.locale}/blog/${popularArticle.id}`}
+                              href={`/${locale}/blog/${popularArticle.slug[locale] || popularArticle.slug.en}`}
                               className="hover:text-amber-600"
                             >
-                              {popularArticle.title[params.locale]}
+                              {popularArticle.title[locale]}
                             </Link>
                           </h4>
                           <p className="text-xs text-gray-500 mt-1">
@@ -388,17 +394,17 @@ export default function ArticlePage({ params }: ArticlePageProps) {
             {/* Categories */}
             <Card>
               <CardHeader>
-                <CardTitle>{t('article.categories', params.locale)}</CardTitle>
+                <CardTitle>{t('article.categories', locale)}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
                   {Object.values(article.category).map((category) => (
                     <Link
                       key={category}
-                      href={`/${params.locale}/blog?category=${category}`}
+                      href={`/${locale}/blog?category=${category}`}
                       className="block text-sm text-gray-600 hover:text-amber-600 py-1"
                     >
-                      {t(`article.categories.${category}`, params.locale)}
+                      {t(`article.categories.${category}`, locale)}
                     </Link>
                   ))}
                 </div>

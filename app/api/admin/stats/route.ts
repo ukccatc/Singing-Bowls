@@ -1,10 +1,13 @@
-import { supabaseServer } from '@/lib/supabase/server';
+import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Get total products
-    const { count: productCount } = await supabaseServer
+    const client = process.env.SUPABASE_SERVICE_ROLE_KEY
+      ? getSupabaseServer()
+      : supabaseServerClient;
+
+    const { count: productCount } = await client
       .from('products')
       .select('*', { count: 'exact', head: true });
 

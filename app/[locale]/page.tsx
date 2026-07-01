@@ -1,8 +1,9 @@
 import ProductCard from '@/components/product/ProductCard';
 import { Button } from '@/components/ui/button';
 import { sampleProducts } from '@/lib/data/products';
+import { transformSupabaseProduct } from '@/lib/supabase/transforms';
 import { t } from '@/lib/translations';
-import { Locale } from '@/lib/types';
+import { Locale, Product } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -25,8 +26,29 @@ export async function generateMetadata({
   };
 }
 
+async function getFeaturedProducts(): Promise<Product[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success && result.data?.length) {
+        return result.data
+          .map((product: Record<string, unknown>) => transformSupabaseProduct(product))
+          .slice(0, 4);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+  }
+
+  return sampleProducts.slice(0, 4);
+}
+
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
+  const featuredProducts = await getFeaturedProducts();
 
   return (
     <div className="min-h-screen bg-metal-light">
@@ -137,7 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-            {sampleProducts.slice(0, 4).map((product, index) => (
+            {featuredProducts.map((product, index) => (
               <div 
                 key={product.id}
                 className="animate-fade-in-up"

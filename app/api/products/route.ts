@@ -1,26 +1,27 @@
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const supabase = getSupabaseServer();
 
     const { data, error } = await supabase
       .from('products')
       .insert([
         {
+          slug: body.slug,
           name: body.name,
           description: body.description,
           price: body.price,
+          currency: body.currency ?? 'USD',
           category: body.category,
-          image_url: body.image_url,
-          stock: body.stock,
-          created_at: new Date().toISOString(),
+          images: body.images ?? [],
+          inventory: body.inventory ?? body.stock ?? 0,
+          sku: body.sku,
+          specifications: body.specifications ?? [],
+          tags: body.tags ?? [],
+          is_available: body.is_available ?? true,
         },
       ])
       .select();
@@ -38,16 +39,17 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to create product';
     return NextResponse.json(
-      { error: 'Failed to create product' },
+      { error: message },
       { status: 500 }
     );
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseServerClient
       .from('products')
       .select('*')
       .order('created_at', { ascending: false });

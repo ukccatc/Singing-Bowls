@@ -7,7 +7,8 @@
     "build": "NODE_OPTIONS=\"--max-old-space-size=4096\" next build",
     "start": "NODE_OPTIONS=\"--max-old-space-size=4096\" next start",
     "lint": "next lint",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "seed:db": "tsx scripts/seed-database.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "latest",
