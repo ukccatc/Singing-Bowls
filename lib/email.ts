@@ -9,7 +9,7 @@ export interface SendEmailOptions {
   replyTo?: string;
 }
 
-function getZohoTransporter() {
+function getSmtpConfig() {
   const user = process.env.ZOHO_SMTP_USER;
   const pass = process.env.ZOHO_SMTP_PASS;
 
@@ -20,32 +20,33 @@ function getZohoTransporter() {
   const host = process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com';
   const port = Number(process.env.ZOHO_SMTP_PORT || 587);
 
+  return { user, pass, host, port };
+}
+
+function getMailTransporter() {
+  const config = getSmtpConfig();
+  if (!config) {
+    return null;
+  }
+
   return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
+    host: config.host,
+    port: config.port,
+    secure: config.port === 465,
+    auth: { user: config.user, pass: config.pass },
   });
 }
 
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.ZOHO_SMTP_USER && process.env.ZOHO_SMTP_PASS);
+  return getSmtpConfig() !== null;
 }
 
 export function getEmailFromAddress(): string {
-  if (process.env.EMAIL_FROM_ADDRESS) {
-    return process.env.EMAIL_FROM_ADDRESS;
-  }
-  const smtpUser = process.env.ZOHO_SMTP_USER;
-  // Zoho uses the mailbox address as SMTP username; Resend uses "resend".
-  if (smtpUser?.includes('@')) {
-    return smtpUser;
-  }
-  return getContactEmail();
+  return process.env.ZOHO_SMTP_USER || getContactEmail();
 }
 
 export async function sendEmail(options: SendEmailOptions): Promise<void> {
-  const transporter = getZohoTransporter();
+  const transporter = getMailTransporter();
 
   if (!transporter) {
     throw new Error('Email is not configured. Set ZOHO_SMTP_USER and ZOHO_SMTP_PASS.');

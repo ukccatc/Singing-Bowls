@@ -35,7 +35,7 @@ const adminSections = [
   {
     title: 'Store Settings',
     href: '/admin/settings',
-    description: 'Contact info, social links, shipping rules — configured via environment variables',
+    description: 'Contact email, Zoho SMTP, social links — via environment variables (docs/zoho-mail-setup.md)',
     status: 'Env-based',
   },
   {
@@ -71,7 +71,8 @@ export default function AdminSettings() {
           <p>3. Write blog articles in <Link href="/admin/content" className="text-blue-600 underline">Content</Link></p>
           <p>4. Curate gallery in <Link href="/admin/gallery" className="text-blue-600 underline">Gallery</Link></p>
           <p>5. Set <code className="rounded bg-gray-100 px-1">ADMIN_USERNAME</code> and <code className="rounded bg-gray-100 px-1">ADMIN_PASSWORD</code> in production env</p>
-          <p>6. Configure Cloudinary, Supabase, and Stripe env vars on Netlify/Vercel</p>
+          <p>6. Configure Cloudinary, Supabase, and Stripe env vars on Vercel</p>
+          <p>7. Set Zoho SMTP (<code className="rounded bg-gray-100 px-1">ZOHO_SMTP_*</code>) — see <code className="rounded bg-gray-100 px-1">docs/zoho-mail-setup.md</code></p>
         </CardContent>
       </Card>
 
