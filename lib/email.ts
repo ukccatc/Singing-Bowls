@@ -33,7 +33,15 @@ export function isEmailConfigured(): boolean {
 }
 
 export function getEmailFromAddress(): string {
-  return process.env.ZOHO_SMTP_USER || getContactEmail();
+  if (process.env.EMAIL_FROM_ADDRESS) {
+    return process.env.EMAIL_FROM_ADDRESS;
+  }
+  const smtpUser = process.env.ZOHO_SMTP_USER;
+  // Zoho uses the mailbox address as SMTP username; Resend uses "resend".
+  if (smtpUser?.includes('@')) {
+    return smtpUser;
+  }
+  return getContactEmail();
 }
 
 export async function sendEmail(options: SendEmailOptions): Promise<void> {

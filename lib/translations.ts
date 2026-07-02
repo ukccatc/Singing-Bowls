@@ -981,6 +981,26 @@ const translations: Translations = {
     ru: 'Условия использования Himalayan Sound и покупки наших товаров по всему миру.',
     uk: 'Умови використання Himalayan Sound та покупки наших товарів у всьому світі.',
   },
+  'legal.shippingDescription': {
+    en: 'Shipping and delivery times, costs, customs, and packaging — including Nova Poshta and Ukrposhta delivery for Ukraine.',
+    ru: 'Сроки и стоимость доставки, таможня и упаковка — включая доставку Новой Почтой и Укрпочтой по Украине.',
+    uk: 'Терміни та вартість доставки, митниця та пакування — включно з доставкою Новою Поштою та Укрпоштою по Україні.',
+  },
+  'legal.returnsDescription': {
+    en: 'Your 14-day right of return, refund procedure, and warranty — compliant with the Law of Ukraine on Consumer Rights and EU/UK law.',
+    ru: '14-дневное право на возврат, порядок возмещения и гарантия — в соответствии с Законом Украины о защите прав потребителей и правом ЕС/UK.',
+    uk: '14-денне право на повернення, порядок відшкодування та гарантія — відповідно до Закону України «Про захист прав споживачів» та законодавства ЄС/UK.',
+  },
+  'legal.faqDescription': {
+    en: 'Answers to frequently asked questions about singing bowls, orders, delivery to Ukraine, payments, returns, and care.',
+    ru: 'Ответы на частые вопросы о поющих чашах, заказах, доставке в Украину, оплате, возврате и уходе.',
+    uk: 'Відповіді на поширені питання про співаючі чаші, замовлення, доставку в Україну, оплату, повернення та догляд.',
+  },
+  'faq.stillHaveQuestions': {
+    en: 'Still have questions? Get in touch — we usually reply within one business day.',
+    ru: 'Остались вопросы? Свяжитесь с нами — обычно отвечаем в течение одного рабочего дня.',
+    uk: 'Залишилися питання? Напишіть нам — зазвичай відповідаємо протягом одного робочого дня.',
+  },
   'checkout.acceptTerms': {
     en: 'I accept the',
     ru: 'Я принимаю',

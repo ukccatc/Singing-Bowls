@@ -1,11 +1,14 @@
 # Zoho Mail Setup for Himalayan Sound
 
-Free Zoho Mail for custom domain **himalayan-sound.com**.
+> **Recommended (free):** [Cloudflare Email Routing + Resend](./email-setup.md) — $0/month, works in EU.  
+> Use this guide only if you prefer a traditional mailbox (webmail + IMAP).
+
+Paid Zoho Mail for custom domain **himalayan-sound.com** (~€0.90/user/month on Mail Lite).
 
 ## 1. Create Zoho Mail account
 
 1. Go to [https://www.zoho.com/mail/zohomail-pricing.html](https://www.zoho.com/mail/zohomail-pricing.html)
-2. Choose **Mail Lite** (free for up to 5 users)
+2. Choose **Mail Lite** (paid; Forever Free is not available in all regions, e.g. EU)
 3. Sign up and select **Add your existing domain**
 4. Enter: `himalayan-sound.com`
 
