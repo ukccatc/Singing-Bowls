@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Package } from 'lucide-react';
 import { formatAdminDate } from '@/lib/format';
 import { useEffect, useState } from 'react';
@@ -13,27 +14,55 @@ interface OrderRow {
   created_at: string;
 }
 
+const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const response = await fetch('/api/orders');
-        if (response.ok) {
-          const data = await response.json();
-          setOrders(data.data || []);
-        }
-      } catch (error) {
-        console.error('Failed to load orders:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadOrders();
   }, []);
+
+  const loadOrders = async () => {
+    try {
+      const response = await fetch('/api/orders');
+      if (response.ok) {
+        const data = await response.json();
+        setOrders(data.data || []);
+      }
+    } catch (error) {
+      console.error('Failed to load orders:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (orderId: string, status: string) => {
+    setUpdating(orderId);
+    try {
+      const response = await fetch(`/api/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+
+      if (response.ok) {
+        setOrders((prev) =>
+          prev.map((order) =>
+            order.id === orderId ? { ...order, status } : order
+          )
+        );
+      } else {
+        alert('Failed to update order status');
+      }
+    } catch (error) {
+      console.error('Status update error:', error);
+    } finally {
+      setUpdating(null);
+    }
+  };
 
   return (
     <div>
@@ -65,7 +94,18 @@ export default function AdminOrdersPage() {
                 <tr key={order.id}>
                   <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{order.id}</td>
                   <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{order.email}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{order.status}</td>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                    <select
+                      value={order.status}
+                      disabled={updating === order.id}
+                      onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                      className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+                    >
+                      {ORDER_STATUSES.map((status) => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </td>
                   <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
                     {order.currency} {Number(order.total).toFixed(2)}
                   </td>

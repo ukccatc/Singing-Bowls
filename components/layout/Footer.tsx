@@ -3,6 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import {
+  getContactAddress,
+  getContactEmail,
+  getContactPhone,
+  getInstagramUrl,
+  getYoutubeUrl,
+} from '@/lib/site';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import {
@@ -46,26 +53,30 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
       { href: `/${locale}/contact`, label: t('nav.contact', locale) },
     ],
     customerService: [
-      { href: `/${locale}/shipping`, label: 'Shipping Info' },
-      { href: `/${locale}/returns`, label: 'Returns' },
-      { href: `/${locale}/faq`, label: 'FAQ' },
+      { href: `/${locale}/shipping`, label: t('footer.shippingInfo', locale) },
+      { href: `/${locale}/returns`, label: t('footer.returns', locale) },
+      { href: `/${locale}/faq`, label: t('footer.faq', locale) },
       { href: `/${locale}/contact`, label: t('nav.contact', locale) },
     ],
     legal: [
-      { href: `/${locale}/privacy`, label: 'Privacy Policy' },
-      { href: `/${locale}/terms`, label: 'Terms of Service' },
+      { href: `/${locale}/privacy`, label: t('footer.privacyPolicy', locale) },
+      { href: `/${locale}/terms`, label: t('footer.termsOfService', locale) },
     ],
   };
+
+  const contactEmail = getContactEmail();
+  const contactPhone = getContactPhone();
+  const contactAddress = getContactAddress();
 
   const socialLinks = [
     {
       name: 'Instagram',
-      href: 'https://instagram.com/himalayansound',
+      href: getInstagramUrl(),
       icon: Heart,
     },
     {
       name: 'YouTube',
-      href: 'https://youtube.com/@himalayansound',
+      href: getYoutubeUrl(),
       icon: Heart,
     },
   ];
@@ -95,18 +106,18 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center space-x-3 text-charcoal-300">
                 <MapPin className="h-4 w-4 text-gold-400 flex-shrink-0" />
-                <span>Kathmandu Valley, Nepal</span>
+                <span>{contactAddress}</span>
               </div>
               <div className="flex items-center space-x-3 text-charcoal-300">
                 <Mail className="h-4 w-4 text-gold-400 flex-shrink-0" />
-                <a href="mailto:info@himalayansound.com" className="hover:text-gold-400 transition-colors">
-                  info@himalayansound.com
+                <a href={`mailto:${contactEmail}`} className="hover:text-gold-400 transition-colors">
+                  {contactEmail}
                 </a>
               </div>
               <div className="flex items-center space-x-3 text-charcoal-300">
                 <Phone className="h-4 w-4 text-gold-400 flex-shrink-0" />
-                <a href="tel:+977-1-234-5678" className="hover:text-gold-400 transition-colors">
-                  +977-1-234-5678
+                <a href={`tel:${contactPhone}`} className="hover:text-gold-400 transition-colors">
+                  {contactPhone}
                 </a>
               </div>
             </div>

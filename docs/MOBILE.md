@@ -4,7 +4,7 @@ Native iOS and Android apps load the production website inside a Capacitor WebVi
 
 ## Architecture
 
-- **UI**: Remote URL (`CAPACITOR_SERVER_URL` / `NEXT_PUBLIC_APP_URL/en`)
+- **UI**: Remote URL (`CAPACITOR_SERVER_URL` / `NEXT_PUBLIC_APP_URL/uk`)
 - **Native shell**: `mobile/ios` and `mobile/android`
 - **Bridge**: `components/native/*` + `lib/native*.ts`
 - **Payments**: Not in-app (v1). Checkout opens in system browser.
@@ -24,8 +24,8 @@ Add to `.env.local` (web) and export before `cap sync`:
 
 ```bash
 CAPACITOR_APP_ID=com.himalayansound.app
-CAPACITOR_SERVER_URL=https://himalayansound.com/en
-NEXT_PUBLIC_APP_URL=https://himalayansound.com
+CAPACITOR_SERVER_URL=https://himalayan-sound.com/uk
+NEXT_PUBLIC_APP_URL=https://himalayan-sound.com
 ```
 
 Local device testing:
@@ -67,7 +67,7 @@ npm run mobile:android
 ## Production build
 
 ```bash
-CAPACITOR_SERVER_URL=https://himalayansound.com/en npm run mobile:sync
+CAPACITOR_SERVER_URL=https://himalayan-sound.com/uk npm run mobile:sync
 ```
 
 Then archive in Xcode (iOS) or build signed AAB in Android Studio.
@@ -91,8 +91,8 @@ Device tokens are stored via `POST /api/push/register`.
 Verify:
 
 ```bash
-curl https://himalayansound.com/.well-known/apple-app-site-association
-curl https://himalayansound.com/.well-known/assetlinks.json
+curl https://himalayan-sound.com/.well-known/apple-app-site-association
+curl https://himalayan-sound.com/.well-known/assetlinks.json
 ```
 
 ## App Store checklist (Apple)

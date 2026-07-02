@@ -50,7 +50,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8 animate-fade-in-down">
               <span className="inline-block px-5 py-2.5 bg-gradient-to-r from-gold-100 to-bronze-100 text-gold-800 rounded-full text-sm font-semibold border border-gold-200 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-                ✨ Authentic Himalayan Instruments
+                ✨ {t('home.hero.badge', locale)}
               </span>
             </div>
             
@@ -87,10 +87,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-4xl lg:text-5xl font-bold text-gradient-bronze mb-6 font-serif">
-              Why Choose Himalayan Sound
+              {t('home.features.title', locale)}
             </h2>
             <p className="text-lg lg:text-xl text-charcoal-600 max-w-2xl mx-auto">
-              We're committed to bringing you the most authentic and highest quality sound healing instruments.
+              {t('home.features.subtitle', locale)}
             </p>
           </div>
 
@@ -99,9 +99,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <div className="w-24 h-24 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                 <span className="text-4xl">🏔️</span>
               </div>
-              <h3 className="text-2xl font-semibold text-gold-800 mb-4">Authentic Craftsmanship</h3>
+              <h3 className="text-2xl font-semibold text-gold-800 mb-4">{t('home.features.authenticity.title', locale)}</h3>
               <p className="text-charcoal-600 leading-relaxed">
-                Handmade by master artisans in the Himalayas using traditional techniques passed down through generations.
+                {t('home.features.authenticity.description', locale)}
               </p>
             </div>
             
@@ -109,9 +109,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <div className="w-24 h-24 bg-gradient-to-br from-bronze-400 to-bronze-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                 <span className="text-4xl">🌍</span>
               </div>
-              <h3 className="text-2xl font-semibold text-bronze-800 mb-4">Worldwide Shipping</h3>
+              <h3 className="text-2xl font-semibold text-bronze-800 mb-4">{t('home.features.shipping.title', locale)}</h3>
               <p className="text-charcoal-600 leading-relaxed">
-                Free shipping on orders over $200. Carefully packaged for safe delivery to your doorstep.
+                {t('home.features.shipping.description', locale)}
               </p>
             </div>
             
@@ -119,9 +119,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <div className="w-24 h-24 bg-gradient-to-br from-copper-400 to-copper-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
                 <span className="text-4xl">✨</span>
               </div>
-              <h3 className="text-2xl font-semibold text-copper-800 mb-4">30-Day Guarantee</h3>
+              <h3 className="text-2xl font-semibold text-copper-800 mb-4">{t('home.features.guarantee.title', locale)}</h3>
               <p className="text-charcoal-600 leading-relaxed">
-                Not satisfied? Return your purchase within 30 days for a full refund, no questions asked.
+                {t('home.features.guarantee.description', locale)}
               </p>
             </div>
           </div>

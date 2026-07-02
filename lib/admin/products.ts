@@ -1,9 +1,29 @@
+import { ProductCategory } from '@/lib/types';
+
 function slugify(value: string): string {
   return value
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
+
+const CATEGORY_ALIASES: Record<string, ProductCategory> = {
+  SINGING_BOWLS: ProductCategory.SINGING_BOWLS,
+  singing_bowls: ProductCategory.SINGING_BOWLS,
+  BELLS: ProductCategory.MEDITATION_BELLS,
+  meditation_bells: ProductCategory.MEDITATION_BELLS,
+  GONGS: ProductCategory.GONGS,
+  gongs: ProductCategory.GONGS,
+  ACCESSORIES: ProductCategory.ACCESSORIES,
+  accessories: ProductCategory.ACCESSORIES,
+  GIFT_SETS: ProductCategory.GIFT_SETS,
+  gift_sets: ProductCategory.GIFT_SETS,
+};
+
+export function normalizeProductCategory(value: unknown): ProductCategory {
+  const key = String(value || ProductCategory.SINGING_BOWLS);
+  return CATEGORY_ALIASES[key] || ProductCategory.SINGING_BOWLS;
 }
 
 export function buildProductImages(imageUrl: string, name: Record<string, string>) {
@@ -31,7 +51,7 @@ export function mapAdminProductCreate(body: Record<string, unknown>) {
     description,
     price: Number(body.price),
     currency: 'USD',
-    category: String(body.category || 'SINGING_BOWLS'),
+    category: normalizeProductCategory(body.category),
     images: imageUrl ? buildProductImages(imageUrl, name) : [],
     inventory: Number(body.inventory ?? body.stock ?? 0),
     sku: String(body.sku || `SKU-${Date.now()}`),
@@ -42,8 +62,8 @@ export function mapAdminProductCreate(body: Record<string, unknown>) {
     materials: [],
     origin: 'Nepal',
     is_handmade: true,
-    is_featured: false,
-    is_available: true,
+    is_featured: Boolean(body.is_featured ?? body.isFeatured),
+    is_available: body.is_available !== false && body.isAvailable !== false,
   };
 }
 
@@ -55,10 +75,18 @@ export function mapAdminProductUpdate(body: Record<string, unknown>, existingIma
     name: body.name,
     description: body.description,
     price: Number(body.price),
-    category: String(body.category),
+    category: normalizeProductCategory(body.category),
     inventory: Number(body.inventory ?? body.stock ?? 0),
     updated_at: new Date().toISOString(),
   };
+
+  if (body.is_featured !== undefined || body.isFeatured !== undefined) {
+    update.is_featured = Boolean(body.is_featured ?? body.isFeatured);
+  }
+
+  if (body.is_available !== undefined || body.isAvailable !== undefined) {
+    update.is_available = Boolean(body.is_available ?? body.isAvailable);
+  }
 
   if (imageUrl) {
     update.images = buildProductImages(imageUrl, name);

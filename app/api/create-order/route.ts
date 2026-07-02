@@ -1,4 +1,5 @@
 import { createOrderInDatabase } from '@/lib/orders';
+import { isEmailConfigured, sendOrderConfirmationEmail } from '@/lib/email';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -36,6 +37,26 @@ export async function POST(request: NextRequest) {
       tax,
       shippingCost,
     });
+
+    if (isEmailConfigured()) {
+      try {
+        const customerName =
+          billingAddress.firstName && billingAddress.lastName
+            ? `${billingAddress.firstName} ${billingAddress.lastName}`
+            : billingAddress.firstName || 'Customer';
+
+        await sendOrderConfirmationEmail({
+          email,
+          customerName,
+          orderId: savedOrder.reference,
+          total: Number(total),
+          currency: savedOrder.currency || 'USD',
+          locale: body.locale || 'en',
+        });
+      } catch (emailError) {
+        console.error('Order confirmation email failed:', emailError);
+      }
+    }
 
     return NextResponse.json({
       success: true,

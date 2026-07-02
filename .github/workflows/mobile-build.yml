@@ -28,7 +28,7 @@ jobs:
       - name: Capacitor sync
         working-directory: mobile
         env:
-          CAPACITOR_SERVER_URL: https://himalayansound.com/en
+          CAPACITOR_SERVER_URL: https://himalayan-sound.com/uk
         run: npx cap sync android
 
       - name: Build Android debug APK
@@ -59,6 +59,6 @@ jobs:
       - name: Capacitor sync iOS
         working-directory: mobile
         env:
-          CAPACITOR_SERVER_URL: https://himalayansound.com/en
+          CAPACITOR_SERVER_URL: https://himalayan-sound.com/uk
         run: npx cap sync ios
         continue-on-error: true

@@ -1,18 +1,22 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { ContactForm } from '@/components/contact/ContactForm';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { t } from '@/lib/translations';
+import {
+  getContactAddress,
+  getContactEmail,
+  getContactPhone,
+} from '@/lib/site';
 import { Locale } from '@/lib/types';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { use } from 'react';
 
 export default function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = use(params);
+  const contactEmail = getContactEmail();
+  const contactPhone = getContactPhone();
+  const contactAddress = getContactAddress();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">
@@ -44,54 +48,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                       {t('contact.form.title', locale)}
                     </h2>
                     
-                    <form className="space-y-6">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="firstName">{t('form.firstName', locale)}</Label>
-                          <Input id="firstName" required />
-                        </div>
-                        <div>
-                          <Label htmlFor="lastName">{t('form.lastName', locale)}</Label>
-                          <Input id="lastName" required />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="email">{t('form.email', locale)}</Label>
-                        <Input id="email" type="email" required />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="subject">{t('form.subject', locale)}</Label>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder={t('contact.form.subject.general', locale)} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="general">{t('contact.form.subject.general', locale)}</SelectItem>
-                            <SelectItem value="product">{t('contact.form.subject.product', locale)}</SelectItem>
-                            <SelectItem value="order">{t('contact.form.subject.order', locale)}</SelectItem>
-                            <SelectItem value="shipping">{t('contact.form.subject.shipping', locale)}</SelectItem>
-                            <SelectItem value="wholesale">{t('contact.form.subject.wholesale', locale)}</SelectItem>
-                            <SelectItem value="custom">{t('contact.form.subject.custom', locale)}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="message">{t('contact.form.message', locale)}</Label>
-                        <Textarea 
-                          id="message" 
-                          placeholder={t('contact.form.message.placeholder', locale)}
-                          rows={6}
-                          required 
-                        />
-                      </div>
-                      
-                      <Button type="submit" className="w-full bg-gold-600 hover:bg-gold-700">
-                        {t('contact.form.send', locale)}
-                      </Button>
-                    </form>
+                    <ContactForm locale={locale} />
                   </CardContent>
                 </Card>
               </div>
@@ -115,8 +72,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                         <p className="text-charcoal-700 mb-2">
                           {t('contact.info.email.description', locale)}
                         </p>
-                        <a href="mailto:info@himalayansound.com" className="text-gold-600 hover:text-gold-700">
-                          info@himalayansound.com
+                        <a href={`mailto:${contactEmail}`} className="text-gold-600 hover:text-gold-700">
+                          {contactEmail}
                         </a>
                       </div>
                     </div>
@@ -132,8 +89,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                         <p className="text-charcoal-700 mb-2">
                           {t('contact.info.phone.description', locale)}
                         </p>
-                        <a href="tel:+977-1-234-5678" className="text-gold-600 hover:text-gold-700">
-                          +977-1-234-5678
+                        <a href={`tel:${contactPhone}`} className="text-gold-600 hover:text-gold-700">
+                          {contactPhone}
                         </a>
                       </div>
                     </div>
@@ -150,7 +107,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                           {t('contact.info.visit.description', locale)}
                         </p>
                         <p className="text-charcoal-700">
-                          Kathmandu Valley, Nepal
+                          {contactAddress}
                         </p>
                       </div>
                     </div>

@@ -2,10 +2,15 @@ import { requireAdminSession } from '@/lib/auth/require-admin-session';
 import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
+const ORDER_STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'] as const;
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
+
   try {
     const { id } = await params;
     const client = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -33,6 +38,41 @@ export async function GET(
     });
   } catch (error) {
     console.error('Order fetch error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
+
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const status = String(body.status || '');
+
+    if (!ORDER_STATUSES.includes(status as (typeof ORDER_STATUSES)[number])) {
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+    }
+
+    const supabase = getSupabaseServer();
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .select('id, email, status, total, currency, created_at')
+      .single();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    return NextResponse.json({ success: true, data });
+  } catch (error) {
+    console.error('Order update error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

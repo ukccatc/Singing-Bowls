@@ -2,6 +2,7 @@
 
 import { cacheProductsForOffline, registerPushToken } from '@/lib/native-actions';
 import { isNativeApp, syncNativeAppClass } from '@/lib/native';
+import { releaseNativeBodyLock } from '@/lib/native-body-lock';
 import { applyNativeSafeAreaInsets, initNativeSafeAreaListeners } from '@/lib/native-safe-area';
 import { Locale } from '@/lib/types';
 import { useRouter } from 'next/navigation';
@@ -18,6 +19,7 @@ export function CapacitorBridge({ locale }: CapacitorBridgeProps) {
     if (!isNativeApp()) return;
 
     syncNativeAppClass(true);
+    releaseNativeBodyLock();
     let cancelled = false;
     let removeSafeAreaListeners: (() => void) | undefined;
     const cleanups: Array<() => void> = [];

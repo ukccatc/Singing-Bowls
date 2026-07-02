@@ -13,15 +13,18 @@ export async function PUT(
     const body = await request.json();
     const { id } = await params;
 
+    const update: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (body.title !== undefined) update.title = body.title;
+    if (body.description !== undefined) update.description = body.description;
+    if (body.display_order !== undefined) update.display_order = body.display_order;
+    if (body.is_active !== undefined) update.is_active = body.is_active;
+
     const { data, error } = await getSupabaseServer()
       .from('gallery')
-      .update({
-        title: body.title,
-        description: body.description,
-        display_order: body.display_order,
-        is_active: body.is_active,
-        updated_at: new Date().toISOString(),
-      })
+      .update(update)
       .eq('id', id)
       .select();
 

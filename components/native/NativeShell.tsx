@@ -1,7 +1,9 @@
 'use client';
 
 import { CapacitorBridge } from '@/components/native/CapacitorBridge';
+import { NativeBodyLockGuard } from '@/components/native/NativeBodyLockGuard';
 import { NativeBottomNav } from '@/components/native/NativeBottomNav';
+import { NativeChromePortal } from '@/components/native/NativeChromePortal';
 import { NativeHeader } from '@/components/native/NativeHeader';
 import { NetworkStatusBanner } from '@/components/native/NetworkStatusBanner';
 import { NetworkProvider, useNetworkStatus } from '@/components/native/NetworkContext';
@@ -39,13 +41,14 @@ function NativeLayoutClasses({ locale }: { locale: Locale }) {
 
 function NativeChrome({ locale }: { locale: Locale }) {
   return (
-    <>
+    <NativeChromePortal>
       <CapacitorBridge locale={locale} />
+      <NativeBodyLockGuard />
       <NativeLayoutClasses locale={locale} />
       <NetworkStatusBanner />
       <NativeHeader locale={locale} />
       <NativeBottomNav locale={locale} />
-    </>
+    </NativeChromePortal>
   );
 }
 

@@ -1,19 +1,25 @@
 'use client';
 
 import { triggerHapticLight, triggerHapticMedium } from '@/lib/native-actions';
-import { releaseNativeBodyLock } from '@/lib/native-body-lock';
+import { nativeNavigate } from '@/lib/native-navigate';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
-import { type ButtonHTMLAttributes, type ReactNode, useRef } from 'react';
+import { type ReactNode } from 'react';
 
 type NativePressableVariant = 'icon' | 'chip' | 'tab';
 
-interface NativePressableProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
+interface NativePressableProps {
   children: ReactNode;
   className?: string;
   variant?: NativePressableVariant;
   haptic?: 'light' | 'medium' | 'none';
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
   onPress?: () => void;
+  'aria-label'?: string;
+  'aria-current'?: 'page' | boolean;
+  role?: string;
+  'aria-selected'?: boolean;
 }
 
 export function NativePressable({
@@ -24,11 +30,11 @@ export function NativePressable({
   onPress,
   disabled,
   type = 'button',
-  onTouchStart,
-  ...rest
+  'aria-label': ariaLabel,
+  'aria-current': ariaCurrent,
+  role,
+  'aria-selected': ariaSelected,
 }: NativePressableProps) {
-  const pressedRef = useRef(false);
-
   const fireHaptic = () => {
     if (disabled || haptic === 'none') return;
     if (haptic === 'medium') void triggerHapticMedium();
@@ -44,6 +50,10 @@ export function NativePressable({
     <button
       type={type}
       disabled={disabled}
+      aria-label={ariaLabel}
+      aria-current={ariaCurrent}
+      role={role}
+      aria-selected={ariaSelected}
       className={cn(
         'native-pressable',
         variant === 'chip' && 'native-pressable--chip',
@@ -51,28 +61,24 @@ export function NativePressable({
         variant === 'icon' && 'native-pressable--icon',
         className
       )}
-      onTouchStart={(e) => {
-        pressedRef.current = true;
-        fireHaptic();
-        onTouchStart?.(e);
-      }}
-      onTouchEnd={(e) => {
-        if (!pressedRef.current) return;
-        pressedRef.current = false;
-        e.preventDefault();
-        activate();
-      }}
-      onTouchCancel={() => {
-        pressedRef.current = false;
-      }}
-      onClick={(e) => {
-        // Mouse / desktop fallback only — touch handled via touchend in WebView
-        if (pressedRef.current) return;
+      onPointerDown={(e) => {
         if (disabled) return;
-        e.preventDefault();
+        if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+          fireHaptic();
+        }
+      }}
+      onPointerUp={(e) => {
+        if (disabled) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
         activate();
       }}
-      {...rest}
+      onKeyDown={(e) => {
+        if (disabled) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          activate();
+        }
+      }}
     >
       {children}
     </button>
@@ -125,9 +131,7 @@ export function NativeNavButton({
       aria-selected={ariaSelected}
       onPress={() => {
         onNavigate?.();
-        releaseNativeBodyLock();
-        if (replace) router.replace(href, { scroll });
-        else router.push(href, { scroll });
+        nativeNavigate(router, href, { replace, scroll });
       }}
     >
       {children}

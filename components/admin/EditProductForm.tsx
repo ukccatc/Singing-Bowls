@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { ProductCategory } from '@/lib/types';
 
 const productSchema = z.object({
   name: z.object({
@@ -19,9 +20,11 @@ const productSchema = z.object({
     uk: z.string().optional(),
   }),
   price: z.number().min(0.01, 'Price must be greater than 0'),
-  category: z.string().min(1, 'Category required'),
+  category: z.nativeEnum(ProductCategory),
   image_url: z.string().url('Valid image URL required'),
   inventory: z.number().min(0, 'Inventory cannot be negative'),
+  is_featured: z.boolean().optional(),
+  is_available: z.boolean().optional(),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -62,6 +65,8 @@ export function EditProductForm({ product, onSuccess, onCancel }: EditProductFor
       category: product.category,
       image_url: product.images?.[0]?.url || '',
       inventory: Number(product.inventory),
+      is_featured: Boolean(product.is_featured ?? product.isFeatured),
+      is_available: Boolean(product.is_available ?? product.isAvailable ?? true),
     },
   });
 
@@ -278,14 +283,35 @@ export function EditProductForm({ product, onSuccess, onCancel }: EditProductFor
                 {...register('category')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="SINGING_BOWLS">Singing Bowls</option>
-                <option value="BELLS">Meditation Bells</option>
-                <option value="ACCESSORIES">Accessories</option>
+                <option value={ProductCategory.SINGING_BOWLS}>Singing Bowls</option>
+                <option value={ProductCategory.MEDITATION_BELLS}>Meditation Bells</option>
+                <option value={ProductCategory.GONGS}>Gongs</option>
+                <option value={ProductCategory.ACCESSORIES}>Accessories</option>
+                <option value={ProductCategory.GIFT_SETS}>Gift Sets</option>
               </select>
               {errors.category && (
                 <p className="text-red-600 text-sm mt-1">{errors.category.message}</p>
               )}
             </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-6">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                {...register('is_featured')}
+                className="rounded border-gray-300"
+              />
+              Featured on homepage
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                {...register('is_available')}
+                className="rounded border-gray-300"
+              />
+              Available for purchase
+            </label>
           </div>
 
           {/* English Description */}

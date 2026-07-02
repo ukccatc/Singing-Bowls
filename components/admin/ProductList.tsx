@@ -20,6 +20,8 @@ interface Product {
     isPrimary?: boolean;
   }>;
   inventory: number;
+  is_featured?: boolean;
+  is_available?: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -158,10 +160,20 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
                   {product.description.en}
                 </p>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
                     {product.category}
                   </span>
+                  {product.is_featured && (
+                    <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">
+                      Featured
+                    </span>
+                  )}
+                  {product.is_available === false && (
+                    <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                      Hidden
+                    </span>
+                  )}
                   <span className="inline-block px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">
                     {formatAdminDate(product.created_at)}
                   </span>

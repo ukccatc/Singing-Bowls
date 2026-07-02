@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { sampleProducts } from '@/lib/data/products';
+import { buildAbsoluteSiteUrl } from '@/lib/site';
 import { useCart } from '@/lib/hooks/useCart';
 import { Locale, Product } from '@/lib/types';
 import {
@@ -29,9 +29,14 @@ import { toast } from 'sonner';
 interface ProductDetailClientProps {
   product: Product;
   locale: Locale;
+  relatedProducts: Product[];
 }
 
-export default function ProductDetailClient({ product, locale }: ProductDetailClientProps) {
+export default function ProductDetailClient({
+  product,
+  locale,
+  relatedProducts,
+}: ProductDetailClientProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isInWishlist, setIsInWishlist] = useState(false);
@@ -53,18 +58,20 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
   };
 
   const handleShare = async () => {
+    const shareUrl = buildAbsoluteSiteUrl(locale, `/product/${product.slug}`);
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: productName,
           text: productDescription,
-          url: window.location.href,
+          url: shareUrl,
         });
       } catch (error) {
         console.error('Error sharing:', error);
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(shareUrl);
       toast.success('Link copied to clipboard!');
     }
   };
@@ -80,11 +87,6 @@ export default function ProductDetailClient({ product, locale }: ProductDetailCl
       setQuantity(quantity - 1);
     }
   };
-
-  // Get related products (same category, excluding current)
-  const relatedProducts = sampleProducts
-    .filter(p => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 via-white to-cream-100">

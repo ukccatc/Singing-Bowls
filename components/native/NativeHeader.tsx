@@ -66,7 +66,7 @@ export function NativeHeader({ locale }: NativeHeaderProps) {
   return (
     <>
       <header
-        className="site-native-header fixed left-0 right-0 z-[90] bg-white shadow-sm"
+        className="site-native-header fixed left-0 right-0 z-[9990] bg-white shadow-sm"
         style={headerStyle}
       >
         <div className="border-b border-cream-200/80">

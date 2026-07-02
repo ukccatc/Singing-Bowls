@@ -5,7 +5,7 @@ import { getAvailableLocales, getDefaultLocale } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import type { MetadataRoute } from 'next';
 
-const STATIC_PAGES = ['', 'shop', 'gallery', 'about', 'blog', 'contact'] as const;
+const STATIC_PAGES = ['', 'shop', 'gallery', 'about', 'blog', 'contact', 'privacy', 'terms'] as const;
 
 function localeAlternates(path: string): Record<string, string> {
   const siteUrl = getSiteUrl();

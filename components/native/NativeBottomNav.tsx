@@ -54,7 +54,7 @@ export function NativeBottomNav({ locale }: NativeBottomNavProps) {
 
   return (
     <nav
-      className="site-native-bottom-nav fixed bottom-0 left-0 right-0 z-[100] bg-white"
+      className="site-native-bottom-nav fixed bottom-0 left-0 right-0 z-[9991] bg-white"
       style={{ paddingBottom: 'var(--safe-area-bottom)' }}
       aria-label="Main navigation"
       role="tablist"

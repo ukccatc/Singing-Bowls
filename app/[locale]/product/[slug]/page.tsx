@@ -3,6 +3,7 @@ import { buildProductJsonLd } from '@/lib/seo';
 import {
   getProductBySlug,
   getProductSlugs,
+  getRelatedProducts,
 } from '@/lib/supabase/products';
 import { Locale } from '@/lib/types';
 import { Metadata } from 'next';
@@ -63,10 +64,16 @@ export default async function ProductPage({
     notFound();
   }
 
+  const relatedProducts = await getRelatedProducts(product);
+
   return (
     <>
       <JsonLd data={buildProductJsonLd(product)} />
-      <ProductDetailClient product={product} locale={locale} />
+      <ProductDetailClient
+        product={product}
+        locale={locale}
+        relatedProducts={relatedProducts}
+      />
     </>
   );
 }

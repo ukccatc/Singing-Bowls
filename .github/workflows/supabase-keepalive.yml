@@ -14,5 +14,4 @@ jobs:
         run: |
           curl -fsS \
             "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/products?select=id&limit=1" \
-            -H "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"
+            -H "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"

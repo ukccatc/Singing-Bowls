@@ -39,6 +39,17 @@ const BOOTSTRAP = `
       if (apply() || ++i > 150) clearInterval(t);
     }, 30);
   }
+  setInterval(function () {
+    if (!document.documentElement.classList.contains('native-app')) return;
+    if (document.body.style.pointerEvents === 'none' || document.body.hasAttribute('data-scroll-locked')) {
+      document.body.style.pointerEvents = '';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.body.removeAttribute('data-scroll-locked');
+      document.documentElement.style.overflow = '';
+      document.documentElement.removeAttribute('data-scroll-locked');
+    }
+  }, 500);
 })();
 `;
 

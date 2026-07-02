@@ -1,11 +1,11 @@
 const CACHE_NAME = 'himalayan-sound-v1.0.0';
 const STATIC_CACHE_URLS = [
-  '/',
-  '/shop',
-  '/about',
-  '/blog',
-  '/contact',
-  '/offline',
+  '/uk',
+  '/uk/shop',
+  '/uk/about',
+  '/uk/blog',
+  '/uk/contact',
+  '/offline.html',
   '/manifest.json',
 ];
 

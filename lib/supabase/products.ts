@@ -52,3 +52,13 @@ export async function getProductSlugs(): Promise<string[]> {
   const products = await getProducts();
   return products.map((product) => product.slug);
 }
+
+export async function getRelatedProducts(
+  product: Product,
+  limit = 4
+): Promise<Product[]> {
+  const products = await getProducts();
+  return products
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .slice(0, limit);
+}

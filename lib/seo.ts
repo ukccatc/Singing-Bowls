@@ -1,5 +1,10 @@
 import { getDefaultLocale } from '@/lib/translations';
-import { getSiteUrl } from '@/lib/site';
+import {
+  getContactEmail,
+  getInstagramUrl,
+  getSiteUrl,
+  getYoutubeUrl,
+} from '@/lib/site';
 import { Locale } from '@/lib/types';
 
 const DEFAULT_OG_IMAGE =
@@ -32,13 +37,13 @@ export function buildOrganizationJsonLd() {
     logo: `${siteUrl}/manifest.json`,
     description:
       'Authentic handcrafted Nepali singing bowls and sound meditation instruments.',
-    email: 'info@himalayansound.com',
+    email: getContactEmail(),
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Kathmandu Valley',
       addressCountry: 'NP',
     },
-    sameAs: [],
+    sameAs: [getInstagramUrl(), getYoutubeUrl()].filter(Boolean),
   };
 }
 

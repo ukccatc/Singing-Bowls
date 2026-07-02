@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/lib/hooks/useCart';
 import { CheckoutFormData, checkoutSchema, countries, shippingRates } from '@/lib/schemas/checkout';
+import { t } from '@/lib/translations';
 import { Locale, Product } from '@/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, CreditCard, Lock, ShieldCheck, Truck } from 'lucide-react';
@@ -586,13 +587,13 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                         className="border-2 mt-0.5"
                       />
                       <Label htmlFor="acceptTerms" className="cursor-pointer text-sm leading-relaxed">
-                        I accept the{' '}
-                        <Link href="/terms" className="text-gold-600 hover:text-gold-700 font-medium underline">
-                          terms and conditions
+                        {t('checkout.acceptTerms', locale)}{' '}
+                        <Link href={`/${locale}/terms`} className="text-gold-600 hover:text-gold-700 font-medium underline">
+                          {t('footer.termsOfService', locale).toLowerCase()}
                         </Link>
-                        {' '}and{' '}
-                        <Link href="/privacy" className="text-gold-600 hover:text-gold-700 font-medium underline">
-                          privacy policy
+                        {' '}{t('checkout.and', locale)}{' '}
+                        <Link href={`/${locale}/privacy`} className="text-gold-600 hover:text-gold-700 font-medium underline">
+                          {t('footer.privacyPolicy', locale).toLowerCase()}
                         </Link>
                       </Label>
                     </div>
@@ -729,7 +730,7 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
                     </div>
 
                     <p className="text-xs text-center text-charcoal-500 pt-4">
-                      By placing your order, you agree to our terms and conditions
+                      {t('checkout.orderAgreement', locale)}
                     </p>
                   </CardContent>
                 </Card>

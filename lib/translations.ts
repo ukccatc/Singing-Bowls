@@ -676,6 +676,16 @@ const translations: Translations = {
     ru: 'Отправка Сообщения...',
     uk: 'Надсилання Повідомлення...',
   },
+  'contact.form.success': {
+    en: 'Message sent! We will reply within 24–48 hours.',
+    ru: 'Сообщение отправлено! Мы ответим в течение 24–48 часов.',
+    uk: 'Повідомлення надіслано! Ми відповімо протягом 24–48 годин.',
+  },
+  'contact.form.error': {
+    en: 'Failed to send message. Please try again or email us directly.',
+    ru: 'Не удалось отправить сообщение. Попробуйте снова или напишите нам на email.',
+    uk: 'Не вдалося надіслати повідомлення. Спробуйте ще раз або напишіть нам на email.',
+  },
   'contact.form.privacy': {
     en: 'We respect your privacy and will never share your information with third parties.',
     ru: 'Мы уважаем вашу конфиденциальность и никогда не передадим вашу информацию третьим лицам.',
@@ -920,6 +930,71 @@ const translations: Translations = {
     en: 'Authentic Himalayan singing bowls and sound healing instruments',
     ru: 'Аутентичные гималайские поющие чаши и инструменты для звукового исцеления',
     uk: 'Автентичні гімалайські співаючі чаші та інструменти для звукового зцілення',
+  },
+  'footer.shippingInfo': {
+    en: 'Shipping Info',
+    ru: 'Доставка',
+    uk: 'Доставка',
+  },
+  'footer.returns': {
+    en: 'Returns',
+    ru: 'Возврат',
+    uk: 'Повернення',
+  },
+  'footer.faq': {
+    en: 'FAQ',
+    ru: 'Частые вопросы',
+    uk: 'Питання та відповіді',
+  },
+  'footer.privacyPolicy': {
+    en: 'Privacy Policy',
+    ru: 'Политика конфиденциальности',
+    uk: 'Політика конфіденційності',
+  },
+  'footer.termsOfService': {
+    en: 'Terms of Service',
+    ru: 'Условия использования',
+    uk: 'Умови використання',
+  },
+  'legal.lastUpdated': {
+    en: 'Last updated',
+    ru: 'Последнее обновление',
+    uk: 'Останнє оновлення',
+  },
+  'legal.tableOfContents': {
+    en: 'Table of Contents',
+    ru: 'Содержание',
+    uk: 'Зміст',
+  },
+  'legal.questions': {
+    en: 'Questions about this document?',
+    ru: 'Вопросы по этому документу?',
+    uk: 'Питання щодо цього документа?',
+  },
+  'legal.privacyDescription': {
+    en: 'How Himalayan Sound collects, uses, and protects your personal data under GDPR and Ukrainian law.',
+    ru: 'Как Himalayan Sound собирает, использует и защищает ваши персональные данные в соответствии с GDPR и украинским законодательством.',
+    uk: 'Як Himalayan Sound збирає, використовує та захищає ваші персональні дані відповідно до GDPR та законодавства України.',
+  },
+  'legal.termsDescription': {
+    en: 'Terms and conditions for using Himalayan Sound and purchasing our products worldwide.',
+    ru: 'Условия использования Himalayan Sound и покупки наших товаров по всему миру.',
+    uk: 'Умови використання Himalayan Sound та покупки наших товарів у всьому світі.',
+  },
+  'checkout.acceptTerms': {
+    en: 'I accept the',
+    ru: 'Я принимаю',
+    uk: 'Я приймаю',
+  },
+  'checkout.and': {
+    en: 'and',
+    ru: 'и',
+    uk: 'та',
+  },
+  'checkout.orderAgreement': {
+    en: 'By placing your order, you agree to our Terms of Service and Privacy Policy.',
+    ru: 'Оформляя заказ, вы соглашаетесь с Условиями использования и Политикой конфиденциальности.',
+    uk: 'Оформлюючи замовлення, ви погоджуєтесь з Умовами використання та Політикою конфіденційності.',
   },
 
   // Checkout translations

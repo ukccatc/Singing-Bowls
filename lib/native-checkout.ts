@@ -1,9 +1,9 @@
-import { getSiteUrl } from '@/lib/site';
+import { buildAbsoluteSiteUrl } from '@/lib/site';
 
 export function getCheckoutBrowserUrl(locale: string): string {
-  return `${getSiteUrl()}/${locale}/checkout`;
+  return buildAbsoluteSiteUrl(locale, '/checkout');
 }
 
 export function getProductShareUrl(locale: string, slug: string): string {
-  return `${getSiteUrl()}/${locale}/product/${slug}`;
+  return buildAbsoluteSiteUrl(locale, `/product/${slug}`);
 }

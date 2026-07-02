@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdminSession } from '@/lib/auth/require-admin-session';
 
 export async function DELETE(request: NextRequest) {
+  const authError = requireAdminSession(request);
+  if (authError) return authError;
+
   try {
     const { id, platform } = await request.json();
 
