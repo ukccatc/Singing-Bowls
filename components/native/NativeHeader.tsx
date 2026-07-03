@@ -5,6 +5,7 @@ import { NativeMoreMenu } from '@/components/native/NativeMoreMenu';
 import { NativeNavButton, NativePressable } from '@/components/native/NativePressable';
 import { NativeSearchSheet } from '@/components/native/NativeSearchSheet';
 import { useCart } from '@/lib/hooks/useCart';
+import { releaseNativeBodyLock } from '@/lib/native-body-lock';
 import {
   getNativeStackTitle,
   getNativeTabTitle,
