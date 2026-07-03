@@ -12,7 +12,7 @@ import {
 } from '@/lib/native-navigation';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
-import { releaseNativeBodyLock } from '@/lib/native-body-lock';
+import { LogoMark } from '@/components/brand/Logo';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, MoreHorizontal, Search, ShoppingCart } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -87,9 +87,9 @@ export function NativeHeader({ locale }: NativeHeaderProps) {
                   variant="icon"
                   isActive={normalizedHome(pathname, locale)}
                   aria-label="Home"
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-gold-400 to-gold-600 shadow-sm"
+                  className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full shadow-sm"
                 >
-                  <span className="text-sm font-bold text-white">H</span>
+                  <LogoMark size={36} className="h-9 w-9" />
                 </NativeNavButton>
               )}
             </div>

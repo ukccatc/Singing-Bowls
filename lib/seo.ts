@@ -1,6 +1,10 @@
+import { BRAND } from '@/components/brand/Logo';
 import { getDefaultLocale } from '@/lib/translations';
 import {
   getContactEmail,
+  getContactCoordinates,
+  getContactMapsUrl,
+  getContactPhones,
   getInstagramUrl,
   getSiteUrl,
   getYoutubeUrl,
@@ -28,21 +32,32 @@ export function getGoogleAnalyticsId(): string | undefined {
 
 export function buildOrganizationJsonLd() {
   const siteUrl = getSiteUrl();
+  const { latitude, longitude } = getContactCoordinates();
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Himalayan Sound',
     url: siteUrl,
-    logo: `${siteUrl}/manifest.json`,
+    logo: `${siteUrl}${BRAND.icon512}`,
     description:
       'Authentic handcrafted Nepali singing bowls and sound meditation instruments.',
     email: getContactEmail(),
+    telephone: getContactPhones(),
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Kathmandu Valley',
-      addressCountry: 'NP',
+      streetAddress: 'RC London, Instytutska St.',
+      addressLocality: 'Odesa',
+      addressRegion: 'Odesa Oblast',
+      postalCode: '65000',
+      addressCountry: 'UA',
     },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude,
+      longitude,
+    },
+    hasMap: getContactMapsUrl(),
     sameAs: [getInstagramUrl(), getYoutubeUrl()].filter(Boolean),
   };
 }

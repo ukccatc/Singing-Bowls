@@ -4,9 +4,10 @@ import { ContactForm } from '@/components/contact/ContactForm';
 import { Card, CardContent } from '@/components/ui/card';
 import { t } from '@/lib/translations';
 import {
-  getContactAddress,
   getContactEmail,
-  getContactPhone,
+  getContactMapsUrl,
+  formatPhoneTel,
+  getContactPhones,
 } from '@/lib/site';
 import { Locale } from '@/lib/types';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
@@ -15,8 +16,8 @@ import { use } from 'react';
 export default function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = use(params);
   const contactEmail = getContactEmail();
-  const contactPhone = getContactPhone();
-  const contactAddress = getContactAddress();
+  const contactPhones = getContactPhones();
+  const contactMapsUrl = getContactMapsUrl();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-50 to-cream-100">
@@ -89,9 +90,17 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                         <p className="text-charcoal-700 mb-2">
                           {t('contact.info.phone.description', locale)}
                         </p>
-                        <a href={`tel:${contactPhone}`} className="text-gold-600 hover:text-gold-700">
-                          {contactPhone}
-                        </a>
+                        <div className="flex flex-col gap-1">
+                          {contactPhones.map((phone) => (
+                            <a
+                              key={phone}
+                              href={`tel:${formatPhoneTel(phone)}`}
+                              className="text-gold-600 hover:text-gold-700"
+                            >
+                              {phone}
+                            </a>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
@@ -106,9 +115,17 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                         <p className="text-charcoal-700 mb-2">
                           {t('contact.info.visit.description', locale)}
                         </p>
-                        <p className="text-charcoal-700">
-                          {contactAddress}
+                        <p className="text-charcoal-700 mb-2">
+                          {t('contact.info.visit.address', locale)}
                         </p>
+                        <a
+                          href={contactMapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gold-600 hover:text-gold-700 font-medium"
+                        >
+                          {t('contact.info.visit.maps', locale)}
+                        </a>
                       </div>
                     </div>
 
@@ -124,7 +141,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: Loca
                           {t('contact.info.hours.description', locale)}
                         </p>
                         <p className="text-charcoal-700">
-                          Monday - Friday: 9:00 AM - 6:00 PM NPT
+                          {t('contact.info.hours.schedule', locale)}
                         </p>
                       </div>
                     </div>

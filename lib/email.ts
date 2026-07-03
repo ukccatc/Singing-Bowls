@@ -1,5 +1,6 @@
+import { Resend } from 'resend';
 import nodemailer from 'nodemailer';
-import { getContactEmail, getSiteName, getSiteUrl } from '@/lib/site';
+import { getAdminNotificationEmail, getContactEmail, getSiteName, getSiteUrl } from '@/lib/site';
 
 export interface SendEmailOptions {
   to: string | string[];
@@ -9,18 +10,30 @@ export interface SendEmailOptions {
   replyTo?: string;
 }
 
-function getSmtpConfig() {
-  const user = process.env.ZOHO_SMTP_USER;
-  const pass = process.env.ZOHO_SMTP_PASS;
+function getResendApiKey(): string | undefined {
+  const key = process.env.RESEND_API_KEY || process.env.SMTP_PASS;
+  return key?.startsWith('re_') ? key : undefined;
+}
 
-  if (!user || !pass) {
+function getSmtpConfig() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!user || !pass || pass.startsWith('re_')) {
     return null;
   }
 
-  const host = process.env.ZOHO_SMTP_HOST || 'smtp.zoho.com';
-  const port = Number(process.env.ZOHO_SMTP_PORT || 587);
+  const host =
+    process.env.SMTP_HOST ||
+    (user.includes('@gmail.com') ? 'smtp.gmail.com' : 'smtp.resend.com');
+  const port = Number(process.env.SMTP_PORT || 465);
 
   return { user, pass, host, port };
+}
+
+function isGmailSmtpConfigured(): boolean {
+  const config = getSmtpConfig();
+  return Boolean(config?.user?.includes('@gmail.com'));
 }
 
 function getMailTransporter() {
@@ -38,18 +51,49 @@ function getMailTransporter() {
 }
 
 export function isEmailConfigured(): boolean {
-  return getSmtpConfig() !== null;
+  const contact = getContactEmail();
+  if (contact.includes('@gmail.com')) {
+    return isGmailSmtpConfigured();
+  }
+  return Boolean(getResendApiKey() || getSmtpConfig());
 }
 
 export function getEmailFromAddress(): string {
-  return process.env.ZOHO_SMTP_USER || getContactEmail();
+  if (process.env.EMAIL_FROM_ADDRESS) {
+    return process.env.EMAIL_FROM_ADDRESS;
+  }
+  return getContactEmail();
 }
 
-export async function sendEmail(options: SendEmailOptions): Promise<void> {
-  const transporter = getMailTransporter();
+async function sendViaResend(options: SendEmailOptions): Promise<void> {
+  const apiKey = getResendApiKey();
+  if (!apiKey) {
+    throw new Error('Resend API key is not configured.');
+  }
 
+  const resend = new Resend(apiKey);
+  const fromName = process.env.EMAIL_FROM_NAME || getSiteName();
+  const fromAddress = getEmailFromAddress();
+  const to = Array.isArray(options.to) ? options.to : [options.to];
+
+  const { error } = await resend.emails.send({
+    from: `${fromName} <${fromAddress}>`,
+    to,
+    subject: options.subject,
+    text: options.text,
+    html: options.html || options.text.replace(/\n/g, '<br>'),
+    replyTo: options.replyTo,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function sendViaSmtp(options: SendEmailOptions): Promise<void> {
+  const transporter = getMailTransporter();
   if (!transporter) {
-    throw new Error('Email is not configured. Set ZOHO_SMTP_USER and ZOHO_SMTP_PASS.');
+    throw new Error('SMTP is not configured.');
   }
 
   const fromName = process.env.EMAIL_FROM_NAME || getSiteName();
@@ -65,6 +109,24 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
   });
 }
 
+export async function sendEmail(options: SendEmailOptions): Promise<void> {
+  if (!isEmailConfigured()) {
+    throw new Error('Email is not configured. Set SMTP_USER/SMTP_PASS (Gmail) or RESEND_API_KEY.');
+  }
+
+  if (isGmailSmtpConfigured()) {
+    await sendViaSmtp(options);
+    return;
+  }
+
+  if (getResendApiKey()) {
+    await sendViaResend(options);
+    return;
+  }
+
+  await sendViaSmtp(options);
+}
+
 export interface ContactFormPayload {
   name: string;
   email: string;
@@ -74,11 +136,11 @@ export interface ContactFormPayload {
 }
 
 export async function sendContactFormEmails(data: ContactFormPayload): Promise<void> {
-  const adminEmail = getContactEmail();
+  const adminInbox = getAdminNotificationEmail();
   const siteName = getSiteName();
 
   await sendEmail({
-    to: adminEmail,
+    to: adminInbox,
     replyTo: data.email,
     subject: `[${siteName}] Contact: ${data.subject}`,
     text: [
@@ -90,11 +152,15 @@ export async function sendContactFormEmails(data: ContactFormPayload): Promise<v
       '',
       'Message:',
       data.message,
+      '',
+      '---',
+      `Reply to this message to reach the customer (${data.email}).`,
     ].join('\n'),
   });
 
   await sendEmail({
     to: data.email,
+    replyTo: getContactEmail(),
     subject: `Thank you for contacting ${siteName}`,
     text: [
       `Dear ${data.name},`,

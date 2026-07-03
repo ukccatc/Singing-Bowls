@@ -114,13 +114,13 @@ export function ContactForm({ locale }: ContactFormProps) {
         />
       </div>
 
-      <div>
+      <div className="relative z-10">
         <Label htmlFor="subject">{t('form.subject', locale)}</Label>
         <Select value={subject} onValueChange={setSubject}>
           <SelectTrigger id="subject">
             <SelectValue placeholder={t('contact.form.subject.general', locale)} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent position="popper" sideOffset={4} className="bg-white">
             {SUBJECT_OPTIONS.map((option) => (
               <SelectItem key={option} value={option}>
                 {t(`contact.form.subject.${option}`, locale)}

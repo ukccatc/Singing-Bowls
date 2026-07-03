@@ -42,6 +42,11 @@ const translations: Translations = {
     ru: 'Контакты',
     uk: 'Контакти',
   },
+  'header.tagline': {
+    en: 'Authentic Sound Healing',
+    ru: 'Аутентичное звуковое исцеление',
+    uk: 'Автентичне звукове зцілення',
+  },
   'nav.cart': {
     en: 'Cart',
     ru: 'Корзина',
@@ -587,19 +592,29 @@ const translations: Translations = {
     uk: 'Зателефонуйте Нам',
   },
   'contact.info.phone.description': {
-    en: 'Mon-Fri, 9AM-6PM NPT',
-    ru: 'Пн-Пт, 9:00-18:00 NPT',
-    uk: 'Пн-Пт, 9:00-18:00 NPT',
+    en: 'Mon–Fri, 9AM–6PM (Kyiv time)',
+    ru: 'Пн–Пт, 9:00–18:00 (по киевскому времени)',
+    uk: 'Пн–Пт, 9:00–18:00 (за київським часом)',
   },
   'contact.info.visit.title': {
-    en: 'Visit Us',
-    ru: 'Посетите Нас',
-    uk: 'Відвідайте Нас',
+    en: 'Showroom',
+    ru: 'Шоурум',
+    uk: 'Шоурум',
   },
   'contact.info.visit.description': {
-    en: 'Workshop tours available',
-    ru: 'Доступны экскурсии по мастерской',
-    uk: 'Доступні екскурсії по майстерні',
+    en: 'RC London, Instytutska St. — visit by appointment',
+    ru: 'ЖК «Лондон», ул. Институтская — по предварительной записи',
+    uk: 'ЖК «Лондон», вул. Інститутська — за попереднім записом',
+  },
+  'contact.info.visit.address': {
+    en: 'RC London, Instytutska St., Odesa, Odesa Oblast, 65000',
+    ru: 'ЖК «Лондон», ул. Институтская, Одесса, Одесская область, 65000',
+    uk: 'ЖК «Лондон», вул. Інститутська, Одеса, Одеська область, 65000',
+  },
+  'contact.info.visit.maps': {
+    en: 'Open in Google Maps',
+    ru: 'Открыть в Google Картах',
+    uk: 'Відкрити в Google Картах',
   },
   'contact.info.hours.title': {
     en: 'Business Hours',
@@ -607,9 +622,14 @@ const translations: Translations = {
     uk: 'Години Роботи',
   },
   'contact.info.hours.description': {
-    en: 'Nepal Time (NPT)',
-    ru: 'Время Непала (NPT)',
-    uk: 'Час Непалу (NPT)',
+    en: 'Eastern European Time (Kyiv)',
+    ru: 'Восточноевропейское время (Киев)',
+    uk: 'Східноєвропейський час (Київ)',
+  },
+  'contact.info.hours.schedule': {
+    en: 'Monday – Friday: 9:00 AM – 6:00 PM',
+    ru: 'Понедельник – пятница: 9:00 – 18:00',
+    uk: 'Понеділок – п\'ятниця: 9:00 – 18:00',
   },
   'contact.form.title': {
     en: 'Send us a Message',
@@ -922,9 +942,9 @@ const translations: Translations = {
     uk: '© 2025 Himalayan Sound. Всі права захищені.',
   },
   'footer.madeWithLove': {
-    en: 'Made with love in Nepal',
-    ru: 'Сделано с любовью в Непале',
-    uk: 'Зроблено з любов\'ю в Непалі',
+    en: 'Based in Odessa, Ukraine',
+    ru: 'Базируемся в Одессе, Украина',
+    uk: 'Базуємось в Одесі, Україна',
   },
   'footer.tagline': {
     en: 'Authentic Himalayan singing bowls and sound healing instruments',

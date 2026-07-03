@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!isEmailConfigured()) {
-      console.warn('Contact form received but Zoho SMTP is not configured:', {
+      console.warn('Contact form received but email is not configured (Gmail SMTP missing):', {
         name,
         email,
         subject,

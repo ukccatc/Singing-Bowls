@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import {
-  getContactAddress,
   getContactEmail,
-  getContactPhone,
+  getContactMapsUrl,
+  formatPhoneTel,
+  getContactPhones,
   getInstagramUrl,
   getYoutubeUrl,
 } from '@/lib/site';
@@ -22,6 +23,7 @@ import {
 import Link from 'next/link';
 import React, { useState } from 'react';
 import LanguageChanger from './LanguageChanger';
+import { Logo } from '@/components/brand/Logo';
 
 interface FooterProps {
   locale: Locale;
@@ -65,8 +67,8 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
   };
 
   const contactEmail = getContactEmail();
-  const contactPhone = getContactPhone();
-  const contactAddress = getContactAddress();
+  const contactPhones = getContactPhones();
+  const contactMapsUrl = getContactMapsUrl();
 
   const socialLinks = [
     {
@@ -88,15 +90,12 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
           
           {/* Brand Section */}
           <div className="lg:col-span-1">
-            <Link href={`/${locale}`} className="flex items-center space-x-2 mb-4 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">H</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-xl text-white group-hover:text-gold-400 transition-colors">
-                  Himalayan Sound
-                </span>
-              </div>
+            <Link href={`/${locale}`} className="mb-4 inline-block group">
+              <Logo
+                markSize={40}
+                wordmarkClassName="text-xl text-white group-hover:text-gold-400 transition-colors"
+                className="items-center"
+              />
             </Link>
             
             <p className="text-charcoal-300 text-sm leading-relaxed mb-6">
@@ -104,9 +103,16 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
             </p>
 
             <div className="space-y-3 text-sm">
-              <div className="flex items-center space-x-3 text-charcoal-300">
-                <MapPin className="h-4 w-4 text-gold-400 flex-shrink-0" />
-                <span>{contactAddress}</span>
+              <div className="flex items-start space-x-3 text-charcoal-300">
+                <MapPin className="h-4 w-4 text-gold-400 flex-shrink-0 mt-0.5" />
+                <a
+                  href={contactMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gold-400 transition-colors"
+                >
+                  {t('contact.info.visit.address', locale)}
+                </a>
               </div>
               <div className="flex items-center space-x-3 text-charcoal-300">
                 <Mail className="h-4 w-4 text-gold-400 flex-shrink-0" />
@@ -114,11 +120,19 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
                   {contactEmail}
                 </a>
               </div>
-              <div className="flex items-center space-x-3 text-charcoal-300">
-                <Phone className="h-4 w-4 text-gold-400 flex-shrink-0" />
-                <a href={`tel:${contactPhone}`} className="hover:text-gold-400 transition-colors">
-                  {contactPhone}
-                </a>
+              <div className="flex items-start space-x-3 text-charcoal-300">
+                <Phone className="h-4 w-4 text-gold-400 flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col gap-1">
+                  {contactPhones.map((phone) => (
+                    <a
+                      key={phone}
+                      href={`tel:${formatPhoneTel(phone)}`}
+                      className="hover:text-gold-400 transition-colors"
+                    >
+                      {phone}
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

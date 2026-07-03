@@ -7,7 +7,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
     title: 'Shipping & Delivery',
     lastUpdated: LAST_UPDATED,
     intro:
-      'This Shipping Policy explains how Himalayan Sound processes, packages, and delivers your order worldwide, with dedicated options for customers in Ukraine via Nova Poshta and Ukrposhta. All singing bowls are hand-selected in Kathmandu Valley, Nepal, and shipped either directly from Nepal or from our EU fulfilment hub, depending on the destination.',
+      'This Shipping Policy explains how Himalayan Sound processes, packages, and delivers your order worldwide, with dedicated options for customers in Ukraine via Nova Poshta and Ukrposhta. We are based in RC London, Instytutska St., Odesa, 65000, Ukraine. Our singing bowls are hand-selected from artisan workshops in Nepal and shipped from our Odessa warehouse for Ukrainian orders, or via partner fulfilment centres for other destinations.',
     sections: [
       {
         id: 'processing',
@@ -22,7 +22,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '2. Destinations We Ship To',
         paragraphs: [
           'We ship worldwide. Ukraine, the European Union, the United Kingdom, Switzerland, Norway, the United States, Canada, and most other countries are supported.',
-          'If your country is not available at checkout, please contact us at info@himalayan-sound.com and we will arrange a custom quote.',
+          'If your country is not available at checkout, please contact us at himalayansound.info@gmail.com and we will arrange a custom quote.',
         ],
       },
       {
@@ -34,8 +34,8 @@ export const shippingPolicy: LocalizedLegalDocument = {
         listItems: [
           'Nova Poshta — delivery to a branch (відділення), parcel locker (поштомат), or courier to your address. Typical last-mile time: 1–2 business days within Ukraine after the parcel arrives.',
           'Ukrposhta — economy option for delivery to a branch in smaller towns and rural areas not covered by Nova Poshta. Typical last-mile time: 2–5 business days.',
-          'International leg (Nepal → Ukraine or EU hub → Ukraine): 5–14 business days depending on route and customs.',
-          'Total delivery time to Ukraine: usually 7–16 business days from the day the order is shipped.',
+          'Domestic dispatch from our Odessa warehouse via Nova Poshta or Ukrposhta: typically 1–5 business days within Ukraine.',
+          'International orders (from Nepal or our EU fulfilment hub): 5–14 business days depending on route and customs.',
         ],
       },
       {
@@ -89,7 +89,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         id: 'delayed',
         title: '9. Delayed, Lost, or Undelivered Parcels',
         paragraphs: [
-          'Occasional delays may occur due to customs clearance, weather, strikes, or force majeure. If your parcel is significantly delayed, contact info@himalayan-sound.com and we will open an investigation with the carrier.',
+          'Occasional delays may occur due to customs clearance, weather, strikes, or force majeure. If your parcel is significantly delayed, contact himalayansound.info@gmail.com and we will open an investigation with the carrier.',
           'A parcel is officially considered lost after 30 calendar days from dispatch for international shipments (or 21 days for domestic Ukrainian shipments). In this case we will either resend the order at no extra cost or issue a full refund, at your choice.',
           'Parcels returned to us as "undelivered" because of an incorrect address, no pickup within the storage period, or refusal to pay customs fees can be resent at the customer\'s expense, or refunded minus the actual shipping and return-shipping cost.',
         ],
@@ -107,7 +107,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '11. Contact Us',
         paragraphs: [
           'For any shipping question, tracking issue, or delivery change request, contact:',
-          'Himalayan Sound — info@himalayan-sound.com — Kathmandu Valley, Nepal',
+          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -116,7 +116,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
     title: 'Доставка',
     lastUpdated: '2 липня 2026',
     intro:
-      'Ця Політика доставки пояснює, як Himalayan Sound обробляє, пакує та доставляє ваше замовлення по всьому світу, з окремими опціями для клієнтів в Україні через Нову Пошту та Укрпошту. Усі співаючі чаші відбираються вручну в долині Катманду (Непал) і надсилаються або напряму з Непалу, або з нашого європейського хабу — залежно від країни отримання.',
+      'Ця Політика доставки пояснює, як Himalayan Sound обробляє, пакує та доставляє ваше замовлення по всьому світу, з окремими опціями для клієнтів в Україні через Нову Пошту та Укрпошту. Ми базуємось в Одесі, Україна. Співаючі чаші відбираються вручну в майстернях Непалу та відправляються з нашого складу в Одесі для замовлень по Україні або через партнерські центри для інших країн.',
     sections: [
       {
         id: 'processing',
@@ -131,7 +131,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '2. Куди ми доставляємо',
         paragraphs: [
           'Ми доставляємо по всьому світу. Доступні Україна, країни ЄС, Велика Британія, Швейцарія, Норвегія, США, Канада та більшість інших країн.',
-          'Якщо вашої країни немає у формі оформлення замовлення, напишіть на info@himalayan-sound.com — підготуємо індивідуальний розрахунок.',
+          'Якщо вашої країни немає у формі оформлення замовлення, напишіть на himalayansound.info@gmail.com — підготуємо індивідуальний розрахунок.',
         ],
       },
       {
@@ -143,8 +143,8 @@ export const shippingPolicy: LocalizedLegalDocument = {
         listItems: [
           'Нова Пошта — доставка у відділення, поштомат або кур\'єром за адресою. Термін по Україні після прибуття посилки: зазвичай 1–2 робочі дні.',
           'Укрпошта — економний варіант для доставки у відділення в невеликих містах та селах, де немає Нової Пошти. Термін по Україні: 2–5 робочих днів.',
-          'Міжнародний етап (Непал → Україна або хаб у ЄС → Україна): 5–14 робочих днів залежно від маршруту та митного оформлення.',
-          'Загальний термін доставки в Україну: зазвичай 7–16 робочих днів з моменту відправлення.',
+          'Відправлення з нашого складу в Одесі через Нову Пошту або Укрпошту: зазвичай 1–5 робочих днів по Україні.',
+          'Міжнародні замовлення (з Непалу або європейського хабу): 5–14 робочих днів залежно від маршруту та митного оформлення.',
         ],
       },
       {
@@ -198,7 +198,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         id: 'delayed',
         title: '9. Затримки, втрачені або недоставлені посилки',
         paragraphs: [
-          'Можливі затримки через митне оформлення, погоду, страйки або форс-мажор. Якщо посилка суттєво затримується, напишіть на info@himalayan-sound.com — ми відкриємо розслідування у перевізника.',
+          'Можливі затримки через митне оформлення, погоду, страйки або форс-мажор. Якщо посилка суттєво затримується, напишіть на himalayansound.info@gmail.com — ми відкриємо розслідування у перевізника.',
           'Посилка офіційно вважається втраченою через 30 календарних днів з дня відправлення для міжнародних замовлень (або 21 день для внутрішніх українських). У такому разі ми або повторно відправляємо замовлення без доплати, або повертаємо повну суму — на ваш вибір.',
           'Посилки, повернуті до нас як «недоставлені» через неправильну адресу, неотримання у термін зберігання або відмову від сплати митних зборів, можуть бути повторно відправлені коштом клієнта або повернуті у сумі за вирахуванням фактичних витрат на доставку та зворотне пересилання.',
         ],
@@ -216,7 +216,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '11. Контакти',
         paragraphs: [
           'З будь-яких питань щодо доставки, відстеження або зміни адреси звертайтесь:',
-          'Himalayan Sound — info@himalayan-sound.com — долина Катманду, Непал',
+          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -225,7 +225,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
     title: 'Доставка',
     lastUpdated: '2 июля 2026',
     intro:
-      'Настоящая Политика доставки объясняет, как Himalayan Sound обрабатывает, упаковывает и доставляет ваш заказ по всему миру, с отдельными опциями для клиентов в Украине через Новую Почту и Укрпочту. Все поющие чаши отбираются вручную в долине Катманду (Непал) и отправляются напрямую из Непала или из нашего европейского хаба — в зависимости от страны получения.',
+      'Настоящая Политика доставки объясняет, как Himalayan Sound обрабатывает, упаковывает и доставляет ваш заказ по всему миру, с отдельными опциями для клиентов в Украине через Новую Почту и Укрпочту. Мы базируемся в Одессе, Украина. Поющие чаши отбираются вручную в мастерских Непала и отправляются со склада в Одессе для заказов по Украине или через партнёрские центры для других стран.',
     sections: [
       {
         id: 'processing',
@@ -240,7 +240,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '2. Куда мы доставляем',
         paragraphs: [
           'Мы доставляем по всему миру. Доступны Украина, страны ЕС, Великобритания, Швейцария, Норвегия, США, Канада и большинство других стран.',
-          'Если вашей страны нет в форме оформления, напишите на info@himalayan-sound.com — подготовим индивидуальный расчёт.',
+          'Если вашей страны нет в форме оформления, напишите на himalayansound.info@gmail.com — подготовим индивидуальный расчёт.',
         ],
       },
       {
@@ -252,8 +252,8 @@ export const shippingPolicy: LocalizedLegalDocument = {
         listItems: [
           'Новая Почта — доставка в отделение, почтомат или курьером по адресу. Срок по Украине после прибытия посылки: обычно 1–2 рабочих дня.',
           'Укрпочта — экономный вариант для доставки в отделение в небольших городах и сёлах, где нет Новой Почты. Срок по Украине: 2–5 рабочих дней.',
-          'Международный этап (Непал → Украина или хаб в ЕС → Украина): 5–14 рабочих дней в зависимости от маршрута и таможни.',
-          'Общий срок доставки в Украину: обычно 7–16 рабочих дней с момента отправки.',
+          'Отправка со склада в Одессе через Новую Почту или Укрпочту: обычно 1–5 рабочих дней по Украине.',
+          'Международные заказы (из Непала или европейского хаба): 5–14 рабочих дней в зависимости от маршрута и таможни.',
         ],
       },
       {
@@ -307,7 +307,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         id: 'delayed',
         title: '9. Задержки, потерянные или недоставленные посылки',
         paragraphs: [
-          'Возможны задержки из-за таможенного оформления, погоды, забастовок или форс-мажора. Если посылка значительно задерживается, напишите на info@himalayan-sound.com — мы откроем расследование у перевозчика.',
+          'Возможны задержки из-за таможенного оформления, погоды, забастовок или форс-мажора. Если посылка значительно задерживается, напишите на himalayansound.info@gmail.com — мы откроем расследование у перевозчика.',
           'Посылка официально считается потерянной через 30 календарных дней с даты отправки для международных заказов (или 21 день для внутренних украинских). В этом случае мы либо повторно отправляем заказ без доплаты, либо возвращаем полную сумму — на ваш выбор.',
           'Посылки, вернувшиеся к нам как «недоставленные» из-за неверного адреса, неполучения в срок хранения или отказа от уплаты таможенных сборов, могут быть повторно отправлены за счёт клиента или возвращены за вычетом фактических расходов на доставку и обратную пересылку.',
         ],
@@ -325,7 +325,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '11. Контакты',
         paragraphs: [
           'По любым вопросам доставки, отслеживания или изменения адреса обращайтесь:',
-          'Himalayan Sound — info@himalayan-sound.com — долина Катманду, Непал',
+          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],

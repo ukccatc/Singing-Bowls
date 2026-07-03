@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Himalayan Sound">
+  <defs>
+    <linearGradient id="hs-gold" x1="64" y1="48" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0d48a"/>
+      <stop offset="0.45" stop-color="#d4b27a"/>
+      <stop offset="1" stop-color="#9a6f1e"/>
+    </linearGradient>
+    <linearGradient id="hs-bowl" x1="156" y1="220" x2="356" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff8ec"/>
+      <stop offset="1" stop-color="#e8d4a8"/>
+    </linearGradient>
+    <filter id="hs-soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#5c3d0a" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <circle cx="256" cy="256" r="236" fill="url(#hs-gold)"/>
+  <circle cx="256" cy="256" r="236" stroke="#f7e7b8" stroke-opacity="0.35" stroke-width="4"/>
+  <g filter="url(#hs-soft)">
+    <ellipse cx="256" cy="318" rx="118" ry="22" fill="#3d2910" fill-opacity="0.18"/>
+    <path
+      d="M148 292c8-78 62-128 108-128s100 50 108 128c-28 18-188 18-216 0Z"
+      fill="url(#hs-bowl)"
+    />
+    <path
+      d="M168 286c6-52 48-86 88-86s82 34 88 86"
+      stroke="#c9a24f"
+      stroke-width="6"
+      stroke-linecap="round"
+    />
+    <ellipse cx="256" cy="214" rx="62" ry="10" fill="#fffdf6" fill-opacity="0.85"/>
+  </g>
+  <path d="M120 196c36-34 76-52 136-52s100 18 136 52" stroke="#fff8ec" stroke-opacity="0.55" stroke-width="7" stroke-linecap="round"/>
+  <path d="M96 156c52-42 104-64 160-64s108 22 160 64" stroke="#fff8ec" stroke-opacity="0.35" stroke-width="6" stroke-linecap="round"/>
+  <path d="M76 118c64-48 124-72 180-72s116 24 180 72" stroke="#fff8ec" stroke-opacity="0.2" stroke-width="5" stroke-linecap="round"/>
+</svg>

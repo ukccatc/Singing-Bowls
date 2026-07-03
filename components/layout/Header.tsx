@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import LanguageChanger from './LanguageChanger';
+import { Logo } from '@/components/brand/Logo';
 
 interface HeaderProps {
   locale: Locale;
@@ -66,30 +67,20 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
         )}>
           
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center space-x-3 group">
-            <div className={cn(
-              "bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110",
-              isScrolled ? "w-10 h-10" : "w-12 h-12"
-            )}>
-              <span className={cn(
-                "text-white font-bold transition-all duration-300",
-                isScrolled ? "text-base" : "text-lg"
-              )}>H</span>
-            </div>
-            <div className="flex flex-col">
-              <span className={cn(
-                "font-bold text-charcoal-900 group-hover:text-gold-600 transition-all duration-300",
-                isScrolled ? "text-lg" : "text-xl"
-              )}>
-                Himalayan Sound
-              </span>
-              <span className={cn(
-                "text-charcoal-600 -mt-1 hidden sm:block transition-all duration-300",
-                isScrolled ? "text-xs" : "text-sm"
-              )}>
-                Authentic Sound Healing
-              </span>
-            </div>
+          <Link href={`/${locale}`} className="group">
+            <Logo
+              markSize={isScrolled ? 40 : 48}
+              tagline={t('header.tagline', locale)}
+              taglineClassName={cn(
+                '-mt-1 hidden sm:block transition-all duration-300',
+                isScrolled ? 'text-xs' : 'text-sm'
+              )}
+              wordmarkClassName={cn(
+                'group-hover:text-gold-600 transition-all duration-300',
+                isScrolled ? 'text-lg' : 'text-xl'
+              )}
+              className="group-hover:[&_img]:scale-110 transition-transform duration-300"
+            />
           </Link>
 
           {/* Desktop Navigation */}

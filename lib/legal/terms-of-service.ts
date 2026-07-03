@@ -13,7 +13,7 @@ export const termsOfService: LocalizedLegalDocument = {
         id: 'about',
         title: '1. About Us',
         paragraphs: [
-          'Himalayan Sound is an e-commerce business specialising in authentic Himalayan singing bowls and meditation instruments, operated from Kathmandu Valley, Nepal.',
+          'Himalayan Sound is an e-commerce business specialising in authentic Himalayan singing bowls and meditation instruments, operated from RC London, Instytutska St., Odesa, 65000, Ukraine.',
           'We sell to customers worldwide, including Ukraine, the European Union, the United Kingdom, and other jurisdictions.',
         ],
       },
@@ -52,7 +52,7 @@ export const termsOfService: LocalizedLegalDocument = {
         id: 'shipping',
         title: '6. Shipping and Delivery',
         paragraphs: [
-          'We ship internationally from Nepal. Delivery times are estimates and vary by destination, customs processing, and carrier. Free shipping may apply to orders over the threshold stated on our website.',
+          'We ship from our warehouse in RC London, Instytutska St., Odesa, 65000, Ukraine. Ukrainian orders are dispatched domestically via Nova Poshta or Ukrposhta. International orders may be fulfilled from partner centres in Nepal or the EU. Delivery times are estimates and vary by destination, customs processing, and carrier. Free shipping may apply to orders over the threshold stated on our website.',
           'Import duties, VAT, and customs fees for international shipments are the responsibility of the recipient unless otherwise stated. For deliveries to Ukraine and the EU, applicable consumer protection laws regarding delivery times may apply.',
           'Risk of loss passes to you upon delivery to the carrier. Please inspect packages upon receipt and report damage within 48 hours.',
         ],
@@ -62,7 +62,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '7. Returns and Refunds',
         paragraphs: [
           'We offer a 30-day satisfaction guarantee. If you are not satisfied with your purchase, you may return unused items in original condition within 30 days of delivery for a full refund of the product price.',
-          'Return shipping costs are borne by the customer unless the item is defective or we shipped the wrong product. To initiate a return, contact info@himalayan-sound.com with your order number.',
+          'Return shipping costs are borne by the customer unless the item is defective or we shipped the wrong product. To initiate a return, contact himalayansound.info@gmail.com with your order number.',
           'Refunds are processed to the original payment method within 14 business days of receiving the returned item. This policy does not affect your statutory rights under Ukrainian consumer law, EU Consumer Rights Directive, or other applicable legislation.',
         ],
       },
@@ -114,7 +114,7 @@ export const termsOfService: LocalizedLegalDocument = {
         paragraphs: [
           'For customers in Ukraine: these Terms are governed by the laws of Ukraine. Disputes shall first be resolved through good-faith negotiation. If unresolved within 30 days, disputes may be submitted to the competent courts of Ukraine or, at your choice as a consumer, to the courts of your place of residence.',
           'For customers in the EU/EEA: mandatory consumer protection laws of your country of residence apply. You may use the EU Online Dispute Resolution platform (ec.europa.eu/odr).',
-          'For other customers: these Terms are governed by the laws of Nepal, without regard to conflict-of-law principles, subject to mandatory consumer protections in your jurisdiction.',
+          'For other customers: these Terms are governed by the laws of Ukraine, without regard to conflict-of-law principles, subject to mandatory consumer protections in your jurisdiction.',
         ],
       },
       {
@@ -129,7 +129,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '15. Contact',
         paragraphs: [
           'For questions about these Terms, contact:',
-          'Himalayan Sound — info@himalayan-sound.com — Kathmandu Valley, Nepal',
+          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -144,7 +144,7 @@ export const termsOfService: LocalizedLegalDocument = {
         id: 'about',
         title: '1. Про нас',
         paragraphs: [
-          'Himalayan Sound — інтернет-магазин автентичних гімалайських співаючих чаш та медитативних інструментів, що працює з долини Катманду, Непал.',
+          'Himalayan Sound — інтернет-магазин автентичних гімалайських співаючих чаш та медитативних інструментів, що працює з Одеси, Україна.',
           'Ми продаємо клієнтам у всьому світі, включно з Україною, ЄС, Великобританією та іншими країнами.',
         ],
       },
@@ -183,7 +183,7 @@ export const termsOfService: LocalizedLegalDocument = {
         id: 'shipping',
         title: '6. Доставка',
         paragraphs: [
-          'Міжнародна доставка з Непалу. Терміни є орієнтовними. Безкоштовна доставка може застосовуватись від порогу, зазначеного на сайті.',
+          'Доставка з нашого складу в Одесі, Україна. Замовлення по Україні відправляються Новою Поштою або Укрпоштою. Міжнародні замовлення можуть виконуватись через партнерські центри в Непалі або ЄС. Терміни є орієнтовними. Безкоштовна доставка може застосовуватись від порогу, зазначеного на сайті.',
           'Мито, ПДВ та митні збори — на одержувача, якщо не вказано інше. Для України та ЄС застосовуються відповідні норми захисту споживачів щодо термінів доставки.',
           'Ризик втрати переходить при передачі перевізнику. Повідомте про пошкодження протягом 48 годин.',
         ],
@@ -193,7 +193,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '7. Повернення та відшкодування',
         paragraphs: [
           '30-денна гарантія задоволення. Невикористаний товар у оригінальному стані можна повернути протягом 30 днів для повного повернення вартості товару.',
-          'Витрати на зворотну доставку несе покупець, якщо товар не бракований. Звертайтесь: info@himalayan-sound.com з номером замовлення.',
+          'Витрати на зворотну доставку несе покупець, якщо товар не бракований. Звертайтесь: himalayansound.info@gmail.com з номером замовлення.',
           'Повернення коштів протягом 14 робочих днів після отримання товару. Це не обмежує ваші законні права споживача в Україні, ЄС та інших юрисдикціях.',
         ],
       },
@@ -244,7 +244,7 @@ export const termsOfService: LocalizedLegalDocument = {
         paragraphs: [
           'Для клієнтів в Україні: застосовується право України. Спочатку — переговори; якщо не вирішено за 30 днів — суди України або за вашим вибором як споживача — суди за місцем проживання.',
           'Для клієнтів ЄС/ЄЕЗ: застосовуються обов\'язкові норми захисту споживачів вашої країни. Платформа ODR: ec.europa.eu/odr.',
-          'Для інших клієнтів: право Непалу з урахуванням обов\'язкового захисту споживачів у вашій юрисдикції.',
+          'Для інших клієнтів: право України з урахуванням обов\'язкового захисту споживачів у вашій юрисдикції.',
         ],
       },
       {
@@ -259,7 +259,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '15. Контакти',
         paragraphs: [
           'З питань Умов:',
-          'Himalayan Sound — info@himalayan-sound.com — долина Катманду, Непал',
+          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -274,7 +274,7 @@ export const termsOfService: LocalizedLegalDocument = {
         id: 'about',
         title: '1. О нас',
         paragraphs: [
-          'Himalayan Sound — интернет-магазин аутентичных гималайских поющих чаш и медитативных инструментов из долины Катманду, Непал.',
+          'Himalayan Sound — интернет-магазин аутентичных гималайских поющих чаш и медитативных инструментов из Одессы, Украина.',
           'Мы продаём клиентам по всему миру, включая Украину, ЕС, Великобританию и другие страны.',
         ],
       },
@@ -313,7 +313,7 @@ export const termsOfService: LocalizedLegalDocument = {
         id: 'shipping',
         title: '6. Доставка',
         paragraphs: [
-          'Международная доставка из Непала. Сроки ориентировочные. Бесплатная доставка от порога на сайте.',
+          'Доставка со склада в Одессе, Украина. Заказы по Украине отправляются Новой Почтой или Укрпочтой. Международные заказы могут выполняться через партнёрские центры в Непале или ЕС. Сроки ориентировочные. Бесплатная доставка от порога на сайте.',
           'Пошлины и НДС — на получателя. Для Украины и ЕС применяются нормы защиты потребителей.',
           'Риск переходит при передаче перевозчику. Сообщите о повреждении в течение 48 часов.',
         ],
@@ -323,7 +323,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '7. Возврат и возмещение',
         paragraphs: [
           '30-дневная гарантия удовлетворения. Неиспользованный товар в оригинальном состоянии можно вернуть в течение 30 дней.',
-          'Расходы на обратную доставку несёт покупатель, если товар не бракованный. info@himalayan-sound.com с номером заказа.',
+          'Расходы на обратную доставку несёт покупатель, если товар не бракованный. himalayansound.info@gmail.com с номером заказа.',
           'Возврат средств в течение 14 рабочих дней. Не ограничивает законные права потребителя в Украине, ЕС и др.',
         ],
       },
@@ -374,7 +374,7 @@ export const termsOfService: LocalizedLegalDocument = {
         paragraphs: [
           'Для клиентов в Украине: право Украины. Сначала переговоры; затем суды Украины или по выбору потребителя — по месту жительства.',
           'Для клиентов ЕС/ЕЭЗ: обязательные нормы защиты потребителей вашей страны. ODR: ec.europa.eu/odr.',
-          'Для остальных: право Непала с учётом обязательной защиты потребителей.',
+          'Для остальных: право Украины с учётом обязательной защиты потребителей.',
         ],
       },
       {
@@ -389,7 +389,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '15. Контакты',
         paragraphs: [
           'По вопросам Условий:',
-          'Himalayan Sound — info@himalayan-sound.com — долина Катманду, Непал',
+          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],

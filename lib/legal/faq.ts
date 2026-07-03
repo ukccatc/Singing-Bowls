@@ -29,7 +29,7 @@ export const faqDocument: LocalizedFaqDocument = {
     title: 'Frequently Asked Questions',
     lastUpdated: LAST_UPDATED_EN,
     intro:
-      'Answers to the most common questions about our Himalayan singing bowls, orders, delivery to Ukraine and worldwide, payments, returns, and care. If you cannot find your answer here, please contact us at info@himalayan-sound.com.',
+      'Answers to the most common questions about our Himalayan singing bowls, orders, delivery to Ukraine and worldwide, payments, returns, and care. If you cannot find your answer here, please contact us at himalayansound.info@gmail.com.',
     categories: [
       {
         id: 'products',
@@ -78,7 +78,7 @@ export const faqDocument: LocalizedFaqDocument = {
           {
             question: 'Is cash on delivery (післяплата) available for Ukraine?',
             answer: [
-              'For standard-price items shipped domestically within Ukraine, we can offer Nova Poshta cash on delivery ("післяплата") on request. For international shipments from Nepal to Ukraine, prepayment is required.',
+              'For standard-price items shipped within Ukraine from our Odessa warehouse, we can offer Nova Poshta cash on delivery ("післяплата") on request.',
               'To enable cash on delivery, mention it in the order comment or contact us before placing the order.',
             ],
           },
@@ -178,7 +178,7 @@ export const faqDocument: LocalizedFaqDocument = {
     title: 'Питання та відповіді',
     lastUpdated: LAST_UPDATED_UK,
     intro:
-      'Відповіді на найпоширеніші питання про наші гімалайські співаючі чаші, замовлення, доставку в Україну та по всьому світу, оплату, повернення та догляд. Якщо ви не знайшли відповіді тут — напишіть на info@himalayan-sound.com.',
+      'Відповіді на найпоширеніші питання про наші гімалайські співаючі чаші, замовлення, доставку в Україну та по всьому світу, оплату, повернення та догляд. Якщо ви не знайшли відповіді тут — напишіть на himalayansound.info@gmail.com.',
     categories: [
       {
         id: 'products',
@@ -227,7 +227,7 @@ export const faqDocument: LocalizedFaqDocument = {
           {
             question: 'Чи доступна оплата післяплатою по Україні?',
             answer: [
-              'Для товарів за стандартною ціною при внутрішньоукраїнській доставці ми можемо запропонувати післяплату Новою Поштою за запитом. Для міжнародних відправлень з Непалу в Україну потрібна передоплата.',
+              'Для товарів за стандартною ціною при доставці по Україні з нашого складу в Одесі ми можемо запропонувати післяплату Новою Поштою за запитом.',
               'Щоб оформити післяплату, вкажіть це у коментарі до замовлення або напишіть нам до оплати.',
             ],
           },
@@ -327,7 +327,7 @@ export const faqDocument: LocalizedFaqDocument = {
     title: 'Часто задаваемые вопросы',
     lastUpdated: LAST_UPDATED_RU,
     intro:
-      'Ответы на самые частые вопросы о наших гималайских поющих чашах, заказах, доставке в Украину и по всему миру, оплате, возврате и уходе. Если вы не нашли ответа здесь — напишите на info@himalayan-sound.com.',
+      'Ответы на самые частые вопросы о наших гималайских поющих чашах, заказах, доставке в Украину и по всему миру, оплате, возврате и уходе. Если вы не нашли ответа здесь — напишите на himalayansound.info@gmail.com.',
     categories: [
       {
         id: 'products',
@@ -376,7 +376,7 @@ export const faqDocument: LocalizedFaqDocument = {
           {
             question: 'Доступна ли оплата наложенным платежом по Украине?',
             answer: [
-              'Для товаров по стандартной цене при внутренней доставке по Украине мы можем предложить наложенный платёж («післяплата») Новой Почтой по запросу. Для международных отправлений из Непала в Украину требуется предоплата.',
+              'Для товаров по стандартной цене при доставке по Украине со склада в Одессе мы можем предложить наложенный платёж («післяплата») Новой Почтой по запросу.',
               'Чтобы оформить наложенный платёж, укажите это в комментарии к заказу или напишите нам до оплаты.',
             ],
           },

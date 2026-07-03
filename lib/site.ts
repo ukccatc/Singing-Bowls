@@ -28,15 +28,61 @@ export function getSiteName(): string {
 }
 
 export function getContactEmail(): string {
-  return process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'info@himalayan-sound.com';
+  return process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'himalayansound.info@gmail.com';
 }
 
-export function getContactPhone(): string {
-  return process.env.NEXT_PUBLIC_CONTACT_PHONE || '+977-1-234-5678';
+/** Inbox for contact-form alerts (defaults to public contact address). */
+export function getAdminNotificationEmail(): string {
+  return process.env.ADMIN_NOTIFICATION_EMAIL || getContactEmail();
 }
+
+const DEFAULT_CONTACT_PHONES = ['+380671318351', '+380662874081'] as const;
+
+/** All public contact phone numbers (comma/semicolon/pipe-separated in env). */
+export function getContactPhones(): string[] {
+  const raw =
+    process.env.NEXT_PUBLIC_CONTACT_PHONES || process.env.NEXT_PUBLIC_CONTACT_PHONE;
+  if (!raw?.trim()) {
+    return [...DEFAULT_CONTACT_PHONES];
+  }
+  return raw
+    .split(/[,;|]/)
+    .map((phone) => phone.trim())
+    .filter(Boolean);
+}
+
+/** Primary contact phone (first in list). */
+export function getContactPhone(): string {
+  return getContactPhones()[0];
+}
+
+/** Normalize for tel: links (digits and leading + only). */
+export function formatPhoneTel(phone: string): string {
+  return phone.replace(/[^\d+]/g, '');
+}
+
+const DEFAULT_SHOWROOM_ADDRESS =
+  'RC London, Instytutska St., Odesa, Odesa Oblast, 65000, Ukraine';
+const DEFAULT_MAPS_URL = 'https://maps.google.com/?q=46.378056,30.700346';
+const DEFAULT_COORDINATES = { latitude: 46.378056, longitude: 30.700346 };
 
 export function getContactAddress(): string {
-  return process.env.NEXT_PUBLIC_CONTACT_ADDRESS || 'Kathmandu Valley, Nepal';
+  return process.env.NEXT_PUBLIC_CONTACT_ADDRESS || DEFAULT_SHOWROOM_ADDRESS;
+}
+
+export function getContactMapsUrl(): string {
+  return process.env.NEXT_PUBLIC_CONTACT_MAPS_URL || DEFAULT_MAPS_URL;
+}
+
+export function getContactCoordinates(): { latitude: number; longitude: number } {
+  const raw = process.env.NEXT_PUBLIC_CONTACT_COORDINATES;
+  if (raw?.trim()) {
+    const [lat, lng] = raw.split(',').map((value) => Number(value.trim()));
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      return { latitude: lat, longitude: lng };
+    }
+  }
+  return DEFAULT_COORDINATES;
 }
 
 export function getInstagramUrl(): string {

@@ -13,8 +13,8 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'controller',
         title: '1. Data Controller',
         paragraphs: [
-          'The data controller responsible for your personal data is Himalayan Sound, operating from Kathmandu Valley, Nepal.',
-          'For privacy-related inquiries, contact us at info@himalayan-sound.com or through our contact form at himalayan-sound.com/contact.',
+          'The data controller responsible for your personal data is Himalayan Sound, operating from RC London, Instytutska St., Odesa, 65000, Ukraine.',
+          'For privacy-related inquiries, contact us at himalayansound.info@gmail.com or through our contact form at himalayan-sound.com/contact.',
         ],
       },
       {
@@ -92,7 +92,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'transfers',
         title: '8. International Data Transfers',
         paragraphs: [
-          'Your data may be processed in Nepal, the European Union, the United States, or other countries where our service providers operate.',
+          'Your data may be processed in Ukraine, the European Union, the United States, Nepal (supplier partners), or other countries where our service providers operate.',
           'Where data is transferred outside the EEA, UK, or Ukraine, we implement appropriate safeguards such as Standard Contractual Clauses (SCCs) approved by the European Commission, or equivalent mechanisms required by applicable law.',
         ],
       },
@@ -125,7 +125,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'rights-note',
         title: '',
         paragraphs: [
-          'To exercise your rights, contact us at info@himalayan-sound.com. We will respond within 30 days, or within the timeframe required by applicable law (e.g. one month under GDPR).',
+          'To exercise your rights, contact us at himalayansound.info@gmail.com. We will respond within 30 days, or within the timeframe required by applicable law (e.g. one month under GDPR).',
         ],
       },
       {
@@ -155,7 +155,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '14. Contact Us',
         paragraphs: [
           'For questions about this Privacy Policy or to exercise your data protection rights, contact:',
-          'Himalayan Sound — info@himalayan-sound.com — Kathmandu Valley, Nepal',
+          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -170,8 +170,8 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'controller',
         title: '1. Контролер даних',
         paragraphs: [
-          'Контролером персональних даних є Himalayan Sound, що працює з долини Катманду, Непал.',
-          'З питань конфіденційності звертайтесь: info@himalayan-sound.com або через форму на himalayan-sound.com/contact.',
+          'Контролером персональних даних є Himalayan Sound, що працює з Одеси, Україна.',
+          'З питань конфіденційності звертайтесь: himalayansound.info@gmail.com або через форму на himalayan-sound.com/contact.',
         ],
       },
       {
@@ -247,7 +247,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'transfers',
         title: '8. Міжнародна передача даних',
         paragraphs: [
-          'Ваші дані можуть оброблятися в Непалі, ЄС, США або інших країнах, де працюють наші постачальники.',
+          'Ваші дані можуть оброблятися в Україні, ЄС, США, Непалі (партнери-постачальники) або інших країнах, де працюють наші постачальники.',
           'При передачі за межі ЄЕЗ, UK або України ми застосовуємо відповідні гарантії, зокрема Стандартні договірні положення (SCC) Європейської комісії.',
         ],
       },
@@ -278,7 +278,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'rights-note',
         title: '',
         paragraphs: [
-          'Для реалізації прав звертайтесь: info@himalayan-sound.com. Відповімо протягом 30 днів або у строк, передбачений законом (наприклад, один місяць за GDPR).',
+          'Для реалізації прав звертайтесь: himalayansound.info@gmail.com. Відповімо протягом 30 днів або у строк, передбачений законом (наприклад, один місяць за GDPR).',
         ],
       },
       {
@@ -308,7 +308,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '14. Контакти',
         paragraphs: [
           'З питань Політики конфіденційності або реалізації прав:',
-          'Himalayan Sound — info@himalayan-sound.com — долина Катманду, Непал',
+          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -323,8 +323,8 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'controller',
         title: '1. Контролёр данных',
         paragraphs: [
-          'Контролёром персональных данных является Himalayan Sound, работающий из долины Катманду, Непал.',
-          'По вопросам конфиденциальности: info@himalayan-sound.com или форма на himalayan-sound.com/contact.',
+          'Контролёром персональных данных является Himalayan Sound, работающий из Одессы, Украина.',
+          'По вопросам конфиденциальности: himalayansound.info@gmail.com или форма на himalayan-sound.com/contact.',
         ],
       },
       {
@@ -400,7 +400,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'transfers',
         title: '8. Международная передача',
         paragraphs: [
-          'Данные могут обрабатываться в Непале, ЕС, США и других странах.',
+          'Данные могут обрабатываться в Украине, ЕС, США, Непале (партнёры-поставщики) и других странах.',
           'При передаче за пределы ЕЭЗ, UK или Украины применяются SCC и иные гарантии по применимому праву.',
         ],
       },
@@ -431,7 +431,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'rights-note',
         title: '',
         paragraphs: [
-          'Для реализации прав: info@himalayan-sound.com. Ответ в течение 30 дней или срока по закону.',
+          'Для реализации прав: himalayansound.info@gmail.com. Ответ в течение 30 дней или срока по закону.',
         ],
       },
       {
@@ -461,7 +461,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '14. Контакты',
         paragraphs: [
           'По вопросам Политики и реализации прав:',
-          'Himalayan Sound — info@himalayan-sound.com — долина Катманду, Непал',
+          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],
