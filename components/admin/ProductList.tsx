@@ -2,13 +2,16 @@
 
 import { Button } from '@/components/ui/button';
 import { formatAdminDate } from '@/lib/format';
-import { Edit2, Plus, Trash2 } from 'lucide-react';
+import { getDefaultLocale } from '@/lib/translations';
+import { Edit2, ExternalLink, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-interface Product {
+export interface AdminProduct {
   id: string;
   slug: string;
+  sku?: string;
   name: { en: string; ru: string; uk?: string };
   description: { en: string; ru: string; uk?: string };
   price: number;
@@ -20,19 +23,27 @@ interface Product {
     isPrimary?: boolean;
   }>;
   inventory: number;
+  weight?: number;
+  materials?: string[] | string;
+  origin?: string;
+  craftsman?: string;
+  is_handmade?: boolean;
   is_featured?: boolean;
   is_available?: boolean;
+  youtube_video?: { url?: string };
+  soundcloud_audio?: { streamUrl?: string };
+  audio_sample?: string;
   created_at: string;
   updated_at: string;
 }
 
 interface ProductListProps {
-  onEdit: (product: Product) => void;
+  onEdit: (product: AdminProduct) => void;
   onRefresh: () => void;
 }
 
 export function ProductList({ onEdit, onRefresh }: ProductListProps) {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
 
@@ -174,6 +185,11 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
                       Hidden
                     </span>
                   )}
+                  {product.inventory === 0 && (
+                    <span className="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
+                      Out of stock
+                    </span>
+                  )}
                   <span className="inline-block px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">
                     {formatAdminDate(product.created_at)}
                   </span>
@@ -181,7 +197,17 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 flex-shrink-0">
+              <div className="flex flex-col gap-2 flex-shrink-0">
+                {product.is_available !== false && (
+                  <Link
+                    href={`/${getDefaultLocale()}/product/${product.slug}`}
+                    target="_blank"
+                    className="inline-flex items-center justify-center gap-1 rounded-md bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-200"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    View
+                  </Link>
+                )}
                 <Button
                   onClick={() => onEdit(product)}
                   className="bg-blue-600 hover:bg-blue-700 px-3"

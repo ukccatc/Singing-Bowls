@@ -1,7 +1,43 @@
 import { mapAdminProductUpdate } from '@/lib/admin/products';
-import { requireAdminSession } from '@/lib/auth/require-admin-session';
-import { getSupabaseServer } from '@/lib/supabase/server';
+import { isAdminSession, requireAdminSession } from '@/lib/auth/require-admin-session';
+import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
+import { transformSupabaseProduct } from '@/lib/supabase/transforms';
 import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const isAdmin = isAdminSession(request);
+
+    let query = supabaseServerClient.from('products').select('*').eq('id', id);
+
+    if (!isAdmin) {
+      query = query.eq('is_available', true);
+    }
+
+    const { data, error } = await query.maybeSingle();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+    if (!data) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    }
+
+    const payload = isAdmin
+      ? data
+      : transformSupabaseProduct(data as Record<string, unknown>);
+
+    return NextResponse.json({ success: true, data: payload }, { status: 200 });
+  } catch (error) {
+    console.error('Error:', error);
+    return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 });
+  }
+}
 
 export async function PUT(
   request: NextRequest,

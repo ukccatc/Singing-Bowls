@@ -1,6 +1,7 @@
 import { mapAdminProductCreate } from '@/lib/admin/products';
-import { requireAdminSession } from '@/lib/auth/require-admin-session';
+import { isAdminSession, requireAdminSession } from '@/lib/auth/require-admin-session';
 import { getSupabaseServer, supabaseServerClient } from '@/lib/supabase/server';
+import { transformSupabaseProduct } from '@/lib/supabase/transforms';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -26,18 +27,31 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data, error } = await supabaseServerClient
+    const isAdmin = isAdminSession(request);
+
+    let query = supabaseServerClient
       .from('products')
       .select('*')
       .order('created_at', { ascending: false });
+
+    if (!isAdmin) {
+      query = query.eq('is_available', true);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json({ success: true, data }, { status: 200 });
+    const rows = data || [];
+    const payload = isAdmin
+      ? rows
+      : rows.map((row) => transformSupabaseProduct(row as Record<string, unknown>));
+
+    return NextResponse.json({ success: true, data: payload }, { status: 200 });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });

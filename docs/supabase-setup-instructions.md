@@ -66,7 +66,7 @@ This will create:
 ### Test API Endpoints
 
 1. Start your development server: `npm run dev`
-2. Go to http://localhost:3000/admin/products/new
+2. Go to http://localhost:3000/admin/products
 3. Try creating a product with YouTube video
 4. Check the `products` table in Supabase to see the new product
 

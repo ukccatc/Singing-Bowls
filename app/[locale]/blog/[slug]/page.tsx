@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { Locale } from '@/lib/types';
+import { ArticleCategory, Locale } from '@/lib/types';
 import { getArticleBySlug, getArticles } from '@/lib/supabase/content';
-import { t } from '@/lib/translations';
+import { getArticleCategoryTranslationKey, t } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -400,13 +400,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {Object.values(article.category).map((category) => (
+                  {Object.values(ArticleCategory).map((category) => (
                     <Link
                       key={category}
                       href={`/${locale}/blog?category=${category}`}
                       className="block text-sm text-gray-600 hover:text-amber-600 py-1"
                     >
-                      {t(`article.categories.${category}`, locale)}
+                      {t(getArticleCategoryTranslationKey(category), locale)}
                     </Link>
                   ))}
                 </div>

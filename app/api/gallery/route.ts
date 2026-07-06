@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
           description: body.description,
           display_order: body.display_order,
           is_active: body.is_active,
+          category: body.category || 'meditation',
         },
       ])
       .select();

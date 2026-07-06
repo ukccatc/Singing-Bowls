@@ -21,6 +21,7 @@ export async function PUT(
     if (body.description !== undefined) update.description = body.description;
     if (body.display_order !== undefined) update.display_order = body.display_order;
     if (body.is_active !== undefined) update.is_active = body.is_active;
+    if (body.category !== undefined) update.category = body.category;
 
     const { data, error } = await getSupabaseServer()
       .from('gallery')

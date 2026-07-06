@@ -1,12 +1,5 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import ProductForm from '../ProductForm';
-
-export default function NewProductPage() {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Add New Product</h1>
-      <ProductForm isNew={true} />
-    </div>
-  );
+export default function NewProductRedirect() {
+  redirect('/admin/products?view=create');
 }

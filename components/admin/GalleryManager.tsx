@@ -1,5 +1,6 @@
 'use client';
 
+import { GalleryCategory } from '@/lib/supabase/gallery';
 import { Button } from '@/components/ui/button';
 import { Edit2, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
@@ -12,7 +13,15 @@ interface GalleryImage {
   description: { en: string; ru: string; uk?: string };
   display_order: number;
   is_active: boolean;
+  category?: GalleryCategory | null;
 }
+
+const GALLERY_CATEGORIES: GalleryCategory[] = [
+  'meditation',
+  'workshop',
+  'retreat',
+  'ceremony',
+];
 
 interface CloudinaryImage {
   url: string;
@@ -31,7 +40,9 @@ export function GalleryManager() {
     title: { en: '', ru: '', uk: '' },
     description: { en: '', ru: '', uk: '' },
     display_order: 0,
+    category: 'meditation' as GalleryCategory,
   });
+  const [newCategory, setNewCategory] = useState<GalleryCategory>('meditation');
 
   useEffect(() => {
     loadGalleryImages();
@@ -77,6 +88,7 @@ export function GalleryManager() {
           description: { en: '', ru: '', uk: '' },
           display_order: galleryImages.length,
           is_active: true,
+          category: newCategory,
         }),
       });
 
@@ -143,6 +155,7 @@ export function GalleryManager() {
         uk: img.description.uk || '',
       },
       display_order: img.display_order,
+      category: img.category || 'meditation',
     });
   };
 
@@ -227,13 +240,29 @@ export function GalleryManager() {
             </div>
           </div>
         ) : (
-          <Button
-            onClick={() => setShowImagePicker(true)}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <select
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value as GalleryCategory)}
+                className="w-full max-w-xs rounded-lg border px-3 py-2"
+              >
+                {GALLERY_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <Button
+              onClick={() => setShowImagePicker(true)}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
             <Plus className="w-4 h-4 mr-2" />
             Select Image from Cloudinary
           </Button>
+          </div>
         )}
       </div>
 
@@ -279,6 +308,25 @@ export function GalleryManager() {
                 />
               </div>
             ))}
+          </div>
+          <div className="w-48">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select
+              value={editForm.category}
+              onChange={(e) =>
+                setEditForm((prev) => ({
+                  ...prev,
+                  category: e.target.value as GalleryCategory,
+                }))
+              }
+              className="w-full rounded-lg border px-3 py-2"
+            >
+              {GALLERY_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="w-32">
             <label className="block text-sm font-medium text-gray-700 mb-1">Display order</label>
@@ -337,6 +385,7 @@ export function GalleryManager() {
                   <p className="text-sm text-gray-600">{img.title.ru}</p>
                   <p className="text-xs text-gray-500 mt-1">
                     Order: {img.display_order}
+                    {img.category ? ` · ${img.category}` : ''}
                   </p>
                 </div>
 

@@ -41,6 +41,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|manifest.json|sw.js|offline.html|\\.well-known).*)',
+  // Exclude API, Next internals, and static assets (public/* must not get a locale prefix)
+    '/((?!_next|api|favicon.ico|robots.txt|sitemap.xml|manifest.json|sw.js|offline.html|\\.well-known|brand/|icons/|icon-|apple-icon|.*\\..*).*)',
   ],
 };

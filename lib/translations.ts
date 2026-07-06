@@ -1378,6 +1378,31 @@ const translations: Translations = {
     ru: 'Прошлые события звукового исцеления',
     uk: 'Минулі події звукового зцілення',
   },
+  'gallery.eventsCaptured': {
+    en: 'Events Captured',
+    ru: 'Событий Запечатлено',
+    uk: 'Подій Запечатлено',
+  },
+  'gallery.momentsShared': {
+    en: 'Moments Shared',
+    ru: 'Моментов поделено',
+    uk: 'Моментів поділено',
+  },
+  'gallery.joinNext': {
+    en: 'Join Our Next Event',
+    ru: 'Присоединитесь к Нашему Следующему Событию',
+    uk: 'Приєднайтеся до Нашої Наступної Події',
+  },
+  'gallery.joinDescription': {
+    en: 'Experience the transformative power of sound healing with our community. Check back soon for upcoming events and retreats.',
+    ru: 'Испытайте преобразующую силу звукового исцеления с нашим сообществом. Проверьте позже предстоящие события и ретриты.',
+    uk: 'Відчуйте перетворюючу силу звукового зцілення з нашою спільнотою. Перевіряйте пізніше майбутні події та ретрити.',
+  },
+  'gallery.getInTouch': {
+    en: 'Get in Touch',
+    ru: 'Свяжитесь с Нами',
+    uk: "Зв'яжіться з Нами",
+  },
 };
 
 // Translation function
