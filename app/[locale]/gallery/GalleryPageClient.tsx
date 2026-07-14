@@ -1,8 +1,11 @@
 'use client';
 
+import { GalleryViewNav } from '@/components/gallery/GalleryViewNav';
+import { optimizeGalleryImageUrl } from '@/lib/images/gallery-image-url';
 import { GalleryCategory, GalleryItem } from '@/lib/supabase/gallery';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 
@@ -47,7 +50,10 @@ export default function GalleryPageClient({ locale, images }: GalleryPageClientP
         </div>
       </section>
 
-      <section className="pb-6 px-4 sm:px-6 lg:px-8">
+      <section className="pb-6 px-4 sm:px-6 lg:px-8 space-y-4">
+        <div className="max-w-7xl mx-auto">
+          <GalleryViewNav locale={locale} active="photos" />
+        </div>
         <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-2">
           {FILTERS.map((filter) => (
             <button
@@ -73,22 +79,25 @@ export default function GalleryPageClient({ locale, images }: GalleryPageClientP
               {filteredImages.map((image) => (
                 <div
                   key={image.id}
-                  className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow"
+                  className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-shadow bg-cream-100"
                 >
-                  <img
-                    src={image.image_url}
-                    alt={image.title[locale] || image.title.en}
-                    className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-end">
-                    <div className="p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <h3 className="font-semibold text-lg">
-                        {image.title[locale] || image.title.en}
-                      </h3>
-                      <p className="text-sm text-gray-200">
-                        {image.description[locale] || image.description.en}
-                      </p>
-                    </div>
+                  <div className="relative aspect-[4/3] w-full">
+                    <Image
+                      src={optimizeGalleryImageUrl(image.image_url, 1600)}
+                      alt={image.title[locale] || image.title.en}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <h3 className="font-semibold text-lg">
+                      {image.title[locale] || image.title.en}
+                    </h3>
+                    <p className="text-sm text-gray-200 line-clamp-2">
+                      {image.description[locale] || image.description.en}
+                    </p>
                   </div>
                 </div>
               ))}

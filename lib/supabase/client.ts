@@ -98,6 +98,8 @@ export type Database = {
           image?: any;
           is_published: boolean;
           published_at?: string;
+          reading_time?: number;
+          seo?: Record<string, unknown>;
           created_at: string;
           updated_at: string;
         };

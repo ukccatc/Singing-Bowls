@@ -55,10 +55,29 @@ CULTURE, SOUND_HEALING, TUTORIALS, MEDITATION, WELLNESS.
 **DOCX:** `ALL-ARTICLES.docx` — та же коллекция в формате Word с оглавлением и стилями заголовков (~197 KB).
 **Промежуточный MD для DOCX:** `ALL-ARTICLES-for-docx.md` — версия, оптимизированная для pandoc.
 
-## Как использовать
+## Импорт на сайт (Supabase)
 
-1. **Все сразу:** откройте `ALL-ARTICLES.md` или `ALL-ARTICLES.docx` — полная коллекция в одном файле
-2. **По одной:** откройте нужный файл `NN-slug.md`
-3. Скопируйте секцию EN / RU / UK в блог
-4. Метаданные `category` и `tags` — для `lib/data/articles.ts`
-5. При публикации на сайт: перенести в TypeScript-формат Article
+Черновики импортируются скриптом с **расписанием 1 статья в день** на ближайшие 30 дней:
+
+```bash
+npm run import:blog-drafts
+```
+
+**Поведение:**
+- Статья `01` → `published_at` = сегодня 09:00 UTC
+- Статья `02` → завтра 09:00 UTC, …, `30` → +29 дней
+- Публичный блог (`/blog`) показывает только статьи с `published_at <= now()`
+- Админка (`/admin/content`) видит все 30 заранее
+- Повторный запуск **обновляет** существующие записи по `slug.en` (без дублей)
+
+**Файлы импорта:**
+- `scripts/import-blog-drafts.ts` — основной скрипт
+- `scripts/lib/parse-blog-draft.ts` — парсер markdown
+- `lib/supabase/article-schedule.ts` — фильтр даты на публичном блоге
+
+После правки черновика `NN-slug.md` снова запустите `npm run import:blog-drafts`.
+
+## Как читать черновики
+
+1. **Все сразу:** `ALL-ARTICLES.md` или `ALL-ARTICLES.docx`
+2. **По одной:** `NN-slug.md` (секции EN / RU / UK)

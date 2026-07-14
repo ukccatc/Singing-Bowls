@@ -12,6 +12,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import LanguageChanger from './LanguageChanger';
 import { Logo } from '@/components/brand/Logo';
+import { useHasMounted } from '@/lib/hooks/useHasMounted';
 
 interface HeaderProps {
   locale: Locale;
@@ -22,8 +23,10 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  const hasMounted = useHasMounted();
   const { getItemCount } = useCart();
   const cartItemCount = getItemCount();
+  const showScrolled = hasMounted && isScrolled;
 
   const pathname = usePathname();
 
@@ -33,6 +36,7 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
       setIsScrolled(window.scrollY > 20);
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -56,30 +60,29 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
   return (
     <header className={cn(
       'site-header fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-lg shadow-lg py-2' 
+      showScrolled
+        ? 'bg-white/95 backdrop-blur-lg shadow-lg py-2'
         : 'bg-white/80 backdrop-blur-sm shadow-sm py-0'
     )}>
       <div className="container mx-auto px-4">
         <div className={cn(
           "flex items-center justify-between transition-all duration-300",
-          isScrolled ? "h-16" : "h-20"
+          showScrolled ? "h-16" : "h-20"
         )}>
           
           {/* Logo */}
           <Link href={`/${locale}`} className="group">
             <Logo
-              markSize={isScrolled ? 40 : 48}
+              markSize={showScrolled ? 40 : 44}
               tagline={t('header.tagline', locale)}
               taglineClassName={cn(
-                '-mt-1 hidden sm:block transition-all duration-300',
-                isScrolled ? 'text-xs' : 'text-sm'
+                'transition-all duration-300',
+                showScrolled && 'sm:text-[11px]'
               )}
               wordmarkClassName={cn(
-                'group-hover:text-gold-600 transition-all duration-300',
-                isScrolled ? 'text-lg' : 'text-xl'
+                'transition-all duration-300',
+                showScrolled && 'text-base sm:text-lg'
               )}
-              className="group-hover:[&_img]:scale-110 transition-transform duration-300"
             />
           </Link>
 
@@ -93,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
                   'text-sm font-medium transition-colors duration-200 hover:text-gold-600',
                   pathname === item.href
                     ? 'text-gold-600'
-                    : isScrolled
+                    : showScrolled
                     ? 'text-charcoal-700'
                     : 'text-charcoal-800'
                 )}
@@ -145,16 +148,21 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
             <LanguageChanger />
 
             {/* Cart */}
-            <Link href={`/${locale}/cart`} className="relative group">
-              <Button variant="ghost" size="sm" className="p-2 hover:bg-gold-50 transition-colors" aria-label="Cart">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="relative p-2 hover:bg-gold-50 transition-colors"
+            >
+              <Link href={`/${locale}/cart`} className="group" aria-label="Cart">
                 <ShoppingCart className="h-5 w-5 group-hover:text-gold-600 transition-colors" />
-                {cartItemCount > 0 && (
+                {hasMounted && cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 h-5 w-5 bg-gradient-to-br from-gold-500 to-gold-600 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-md animate-bounce-gentle">
                     {cartItemCount > 9 ? '9+' : cartItemCount}
                   </span>
                 )}
-              </Button>
-            </Link>
+              </Link>
+            </Button>
 
             {/* Mobile Menu Button */}
             <Button

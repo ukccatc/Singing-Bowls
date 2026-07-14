@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { ArticleCategory, Locale } from '@/lib/types';
 import { getArticleBySlug, getArticles } from '@/lib/supabase/content';
+import { renderArticleContentHtml } from '@/lib/markdown/render-article-content';
 import { getArticleCategoryTranslationKey, t } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -80,6 +81,9 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     notFound();
   }
 
+  const articleContent = article.content[locale];
+  const hasInlineImage = /!\[[^\]]*\]\([^)]+\)/.test(articleContent);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat(
@@ -135,7 +139,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                   </Button>
                 </Link>
                 <Badge variant="secondary">
-                  {t(`article.categories.${article.category}`, locale)}
+                  {t(getArticleCategoryTranslationKey(article.category), locale)}
                 </Badge>
               </div>
 
@@ -181,8 +185,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 </div>
               )}
 
-              {/* Featured Image */}
-              {article.image && (
+              {/* Featured Image (skip when inline image is in article body) */}
+              {article.image && !hasInlineImage && (
                 <div className="mb-8">
                   <img
                     src={article.image.url}
@@ -199,30 +203,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <div 
                   className="article-content"
                   dangerouslySetInnerHTML={{
-                    __html: article.content[locale]
-                      .split('\n\n')
-                      .map(paragraph => {
-                        if (paragraph.startsWith('#')) {
-                          // Handle headers
-                          const match = paragraph.match(/^#+/);
-                          const level = match ? match[0].length : 1;
-                          const text = paragraph.replace(/^#+\s*/, '');
-                          return `<h${level} class="text-${level === 1 ? '3xl' : level === 2 ? '2xl' : 'xl'} font-bold text-gray-900 mb-4 mt-8">${text}</h${level}>`;
-                        } else if (paragraph.startsWith('- ')) {
-                          // Handle lists
-                          const items = paragraph.split('\n').filter(item => item.startsWith('- '));
-                          const listItems = items.map(item => `<li class="mb-2">${item.replace('- ', '')}</li>`).join('');
-                          return `<ul class="list-disc list-inside mb-4 space-y-2">${listItems}</ul>`;
-                        } else if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-                          // Handle bold text
-                          const text = paragraph.replace(/\*\*/g, '');
-                          return `<p class="font-bold text-lg text-gray-900 mb-4">${text}</p>`;
-                        } else {
-                          // Regular paragraph
-                          return `<p class="text-gray-700 leading-relaxed mb-6">${paragraph}</p>`;
-                        }
-                      })
-                      .join('')
+                    __html: renderArticleContentHtml(articleContent),
                   }}
                 />
               </div>
@@ -308,7 +289,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                           />
                         )}
                         <Badge variant="secondary" className="mb-2">
-                          {t(`article.categories.${relatedArticle.category}`, locale)}
+                          {t(getArticleCategoryTranslationKey(relatedArticle.category), locale)}
                         </Badge>
                         <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
                           {relatedArticle.title[locale]}

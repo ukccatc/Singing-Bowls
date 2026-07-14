@@ -1,4 +1,5 @@
 import { getArticles } from '@/lib/supabase/content';
+import { getGalleryAlbumSlugs } from '@/lib/supabase/gallery-albums';
 import { getProductSlugs } from '@/lib/supabase/products';
 import { getSiteUrl } from '@/lib/site';
 import { getAvailableLocales, getDefaultLocale } from '@/lib/translations';
@@ -9,6 +10,7 @@ const STATIC_PAGES = [
   '',
   'shop',
   'gallery',
+  'gallery/albums',
   'about',
   'blog',
   'contact',
@@ -82,6 +84,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     urls.push(
       entry(`/blog/${slug}`, {
         priority: 0.8,
+        changeFrequency: 'monthly',
+      })
+    );
+  }
+
+  const albumSlugs = await getGalleryAlbumSlugs();
+  for (const slug of albumSlugs) {
+    urls.push(
+      entry(`/gallery/albums/${slug}`, {
+        priority: 0.75,
         changeFrequency: 'monthly',
       })
     );

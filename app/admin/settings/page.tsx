@@ -17,7 +17,7 @@ const adminSections = [
   {
     title: 'Gallery',
     href: '/admin/gallery',
-    description: 'Event photos with titles, descriptions, display order, and visibility',
+    description: 'Manage gallery photos and event albums grouped by date and activity',
     status: 'Ready',
   },
   {

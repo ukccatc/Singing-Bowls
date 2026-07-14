@@ -189,11 +189,14 @@ export function GalleryManager() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Gallery Manager</h1>
+    <div className="space-y-6">
+      <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+        Photos appear on the public gallery. Group them into event albums on the{' '}
+        <strong>Albums</strong> tab.
+      </div>
 
       {/* Add Image Section */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">Add Images to Gallery</h2>
 
         {showImagePicker ? (
@@ -268,7 +271,7 @@ export function GalleryManager() {
 
       {/* Edit dialog */}
       {editingImage && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8 space-y-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
           <h2 className="text-xl font-semibold text-gray-900">Edit Gallery Item</h2>
           <div className="grid gap-4 md:grid-cols-3">
             {(['en', 'ru', 'uk'] as const).map((lang) => (
@@ -351,7 +354,7 @@ export function GalleryManager() {
       )}
 
       {/* Gallery Images */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
           Gallery Images ({galleryImages.length})
         </h2>

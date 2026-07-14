@@ -1403,6 +1403,41 @@ const translations: Translations = {
     ru: 'Свяжитесь с Нами',
     uk: "Зв'яжіться з Нами",
   },
+  'gallery.photos': {
+    en: 'All Photos',
+    ru: 'Все фото',
+    uk: 'Усі фото',
+  },
+  'gallery.albums': {
+    en: 'Albums',
+    ru: 'Альбомы',
+    uk: 'Альбоми',
+  },
+  'gallery.albumsTitle': {
+    en: 'Event Albums',
+    ru: 'Альбомы событий',
+    uk: 'Альбоми подій',
+  },
+  'gallery.albumsSubtitle': {
+    en: 'Browse photo albums grouped by event date and activity',
+    ru: 'Просматривайте фотоальбомы, сгруппированные по дате и типу мероприятия',
+    uk: 'Переглядайте фотоальбоми, згруповані за датою та типом події',
+  },
+  'gallery.noAlbums': {
+    en: 'No albums found',
+    ru: 'Альбомы не найдены',
+    uk: 'Альбоми не знайдено',
+  },
+  'gallery.backToAlbums': {
+    en: 'Back to albums',
+    ru: 'Назад к альбомам',
+    uk: 'Назад до альбомів',
+  },
+  'gallery.photoCount': {
+    en: '{count} photos',
+    ru: '{count} фото',
+    uk: '{count} фото',
+  },
 };
 
 // Translation function

@@ -12,7 +12,7 @@ import {
 import { Locale } from '@/lib/types';
 
 const DEFAULT_OG_IMAGE =
-  'https://images.pexels.com/photos/3997132/pexels-photo-3997132.jpeg';
+  'https://images.pexels.com/photos/7970243/pexels-photo-7970243.jpeg';
 
 export function getMetadataBase(): URL {
   return new URL(getSiteUrl());

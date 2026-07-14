@@ -1,4 +1,5 @@
 import { sampleArticles } from '@/lib/data/articles';
+import { publishedBeforeNow } from '@/lib/supabase/article-schedule';
 import { supabaseServerClient } from '@/lib/supabase/server';
 import {
   articleMatchesSlug,
@@ -12,6 +13,7 @@ export async function getArticles(): Promise<Article[]> {
       .from('articles')
       .select('*')
       .eq('is_published', true)
+      .lte('published_at', publishedBeforeNow())
       .order('published_at', { ascending: false });
 
     if (!error && data?.length) {
@@ -31,7 +33,8 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
     const { data, error } = await supabaseServerClient
       .from('articles')
       .select('*')
-      .eq('is_published', true);
+      .eq('is_published', true)
+      .lte('published_at', publishedBeforeNow());
 
     if (!error && data?.length) {
       const article = data.find((row) => articleMatchesSlug(row, slug));

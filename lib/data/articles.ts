@@ -338,7 +338,7 @@ Remember, the journey of sound healing is deeply personal. Allow yourself to exp
     category: ArticleCategory.SOUND_HEALING,
     tags: ['sound-healing', 'meditation', 'wellness', 'singing-bowls', 'chakras'],
     image: {
-      url: 'https://images.pexels.com/photos/3997132/pexels-photo-3997132.jpeg',
+      url: 'https://images.pexels.com/photos/7970243/pexels-photo-7970243.jpeg',
       alt: {
         en: 'Person practicing sound healing with singing bowls in a peaceful setting',
         ru: 'Человек практикует звуковое исцеление с поющими чашами в мирной обстановке',

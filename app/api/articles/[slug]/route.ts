@@ -1,4 +1,5 @@
 import { supabaseServerClient } from '@/lib/supabase/server';
+import { publishedBeforeNow } from '@/lib/supabase/article-schedule';
 import {
   articleMatchesSlug,
   transformSupabaseArticle,
@@ -15,7 +16,8 @@ export async function GET(
     const { data, error } = await supabaseServerClient
       .from('articles')
       .select('*')
-      .eq('is_published', true);
+      .eq('is_published', true)
+      .lte('published_at', publishedBeforeNow());
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });

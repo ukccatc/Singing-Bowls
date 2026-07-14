@@ -1,13 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Globe, Check, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Locale } from '@/lib/types';
-import { getLocaleDisplayName, getLocaleFlag, getLocaleFromPathname, getAvailableLocales } from '@/lib/translations';
+import {
+  getLocaleDisplayName,
+  getLocaleFlag,
+  getLocaleFromPathname,
+  getAvailableLocales,
+} from '@/lib/translations';
 import { setLocalePreferenceCookie } from '@/lib/locale-detection';
 
 interface LanguageChangerProps {
@@ -19,7 +29,6 @@ const LanguageChanger: React.FC<LanguageChangerProps> = ({
   className,
   variant = 'dropdown',
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const currentLocale = getLocaleFromPathname(pathname);
@@ -27,18 +36,16 @@ const LanguageChanger: React.FC<LanguageChangerProps> = ({
 
   const handleLocaleChange = (newLocale: Locale) => {
     const segments = pathname.split('/').filter(Boolean);
-    
-    // Remove current locale if it exists
+
     if (segments[0] && ['en', 'ru', 'uk'].includes(segments[0])) {
       segments.shift();
     }
-    
+
     const suffix = segments.length > 0 ? `/${segments.join('/')}` : '';
     const newPath = `/${newLocale}${suffix}`;
-    
+
     setLocalePreferenceCookie(newLocale);
     router.push(newPath);
-    setIsOpen(false);
   };
 
   if (variant === 'inline') {
@@ -67,71 +74,57 @@ const LanguageChanger: React.FC<LanguageChangerProps> = ({
   }
 
   return (
-    <div className={cn('relative', className)}>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setIsOpen(!isOpen)}
-        className="h-9 px-3 text-charcoal-700 hover:text-gold-600 hover:bg-gold-50"
-        aria-label="Change language"
-      >
-        <Globe className="h-4 w-4 mr-2" />
-        <span className="hidden sm:inline mr-1">
-          {getLocaleDisplayName(currentLocale)}
-        </span>
-        <span className="sm:hidden mr-1">
-          {currentLocale.toUpperCase()}
-        </span>
-        <ChevronDown className={cn(
-          'h-3 w-3 transition-transform duration-200',
-          isOpen && 'rotate-180'
-        )} />
-      </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            'h-9 px-3 text-charcoal-700 hover:text-gold-600 hover:bg-gold-50',
+            className
+          )}
+          aria-label="Change language"
+        >
+          <Globe className="h-4 w-4 mr-2" />
+          <span className="hidden sm:inline mr-1">
+            {getLocaleDisplayName(currentLocale)}
+          </span>
+          <span className="sm:hidden mr-1">{currentLocale.toUpperCase()}</span>
+          <ChevronDown className="h-3 w-3" />
+        </Button>
+      </DropdownMenuTrigger>
 
-      {isOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setIsOpen(false)}
-          />
-          
-          {/* Dropdown */}
-          <Card className="absolute top-full right-0 mt-2 w-48 z-50 shadow-lg border border-cream-200">
-            <CardContent className="p-2">
-              <div className="space-y-1">
-                {availableLocales.map((locale) => (
-                  <Button
-                    key={locale}
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleLocaleChange(locale)}
-                    className={cn(
-                      'w-full justify-start h-9 px-3 text-sm font-medium transition-colors',
-                      currentLocale === locale
-                        ? 'bg-gold-50 text-gold-700'
-                        : 'text-charcoal-700 hover:bg-cream-50 hover:text-gold-600'
-                    )}
-                  >
-                    <span className="mr-3 text-base">{getLocaleFlag(locale)}</span>
-                    <span className="flex-1 text-left">{getLocaleDisplayName(locale)}</span>
-                    {currentLocale === locale && (
-                      <Check className="h-4 w-4 text-gold-600" />
-                    )}
-                  </Button>
-                ))}
-              </div>
-              
-              <div className="mt-3 pt-2 border-t border-cream-200">
-                <p className="text-xs text-charcoal-500 px-3">
-                  Language preferences are saved automatically
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      )}
-    </div>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={8}
+        className="z-[200] w-52 border-cream-200 bg-white p-2 shadow-xl"
+      >
+        {availableLocales.map((locale) => (
+          <DropdownMenuItem
+            key={locale}
+            onClick={() => handleLocaleChange(locale)}
+            className={cn(
+              'flex h-9 cursor-pointer items-center rounded-md px-3 text-sm font-medium',
+              currentLocale === locale
+                ? 'bg-gold-50 text-gold-700 focus:bg-gold-50 focus:text-gold-700'
+                : 'text-charcoal-700 focus:bg-cream-50 focus:text-gold-600'
+            )}
+          >
+            <span className="mr-3 text-base">{getLocaleFlag(locale)}</span>
+            <span className="flex-1">{getLocaleDisplayName(locale)}</span>
+            {currentLocale === locale && (
+              <Check className="h-4 w-4 text-gold-600" />
+            )}
+          </DropdownMenuItem>
+        ))}
+
+        <div className="mt-2 border-t border-cream-200 pt-2">
+          <p className="px-3 text-xs text-charcoal-500">
+            Language preferences are saved automatically
+          </p>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

@@ -102,6 +102,7 @@ async function seedGallery() {
       description: image.description,
       display_order: index + 1,
       is_active: true,
+      category: image.category,
     });
 
     if (error) {

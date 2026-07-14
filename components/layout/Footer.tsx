@@ -93,8 +93,8 @@ const Footer: React.FC<FooterProps> = ({ locale }) => {
             <Link href={`/${locale}`} className="mb-4 inline-block group">
               <Logo
                 markSize={40}
-                wordmarkClassName="text-xl text-white group-hover:text-gold-400 transition-colors"
-                className="items-center"
+                variant="inverse"
+                wordmarkClassName="text-lg sm:text-xl"
               />
             </Link>
             

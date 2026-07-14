@@ -1,4 +1,5 @@
 import { supabaseServerClient } from '@/lib/supabase/server';
+import { publishedBeforeNow } from '@/lib/supabase/article-schedule';
 import { transformSupabaseArticle } from '@/lib/supabase/transforms';
 import { NextResponse } from 'next/server';
 
@@ -8,6 +9,7 @@ export async function GET() {
       .from('articles')
       .select('*')
       .eq('is_published', true)
+      .lte('published_at', publishedBeforeNow())
       .order('published_at', { ascending: false });
 
     if (error) {
