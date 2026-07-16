@@ -1,29 +1,33 @@
 'use client';
 
 import ProductCard from '@/components/product/ProductCard';
+import { ProductReviews } from '@/components/product/ProductReviews';
+import { SoundSamplePanel } from '@/components/product/SoundSamplePanel';
+import { StarRating } from '@/components/product/StarRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { buildAbsoluteSiteUrl } from '@/lib/site';
+import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCart } from '@/lib/hooks/useCart';
+import { ReviewSummary } from '@/lib/reviews';
+import { buildAbsoluteSiteUrl } from '@/lib/site';
+import { t } from '@/lib/translations';
 import { Locale, Product } from '@/lib/types';
 import {
     ArrowLeft,
     Heart,
     Minus,
-    Play,
     Plus,
     RotateCcw,
     Share2,
     Shield,
     ShoppingCart,
     Truck,
-    Volume2
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface ProductDetailClientProps {
@@ -43,12 +47,33 @@ export default function ProductDetailClient({
   })();
   const [selectedImage, setSelectedImage] = useState(initialImageIndex);
   const [quantity, setQuantity] = useState(1);
-  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [reviewSummary, setReviewSummary] = useState<ReviewSummary | null>(null);
   const { addItem, getItem } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
 
   const productName = product.name[locale] || product.name.en;
   const productDescription = product.description[locale] || product.description.en;
   const cartItem = getItem(product.id);
+  const hasSound =
+    Boolean(product.audioSample) ||
+    Boolean(product.videoSample) ||
+    Boolean(product.soundcloudAudio?.streamUrl) ||
+    Boolean(product.youtubeVideo?.videoId);
+
+  useEffect(() => {
+    const loadSummary = async () => {
+      try {
+        const response = await fetch(`/api/products/${product.id}/reviews`);
+        if (!response.ok) return;
+        const json = await response.json();
+        setReviewSummary(json.data?.summary || null);
+      } catch {
+        // ignore
+      }
+    };
+    void loadSummary();
+  }, [product.id]);
 
   const handleAddToCart = () => {
     addItem(product, quantity);
@@ -56,8 +81,10 @@ export default function ProductDetailClient({
   };
 
   const handleToggleWishlist = () => {
-    setIsInWishlist(!isInWishlist);
-    toast.success(isInWishlist ? 'Removed from wishlist' : 'Added to wishlist');
+    const added = toggleWishlist(product.id);
+    toast.success(
+      added ? t('messages.addedToWishlist', locale) : t('product.removeFromWishlist', locale)
+    );
   };
 
   const handleShare = async () => {
@@ -210,9 +237,14 @@ export default function ProductDetailClient({
                         variant="outline"
                         size="icon"
                         onClick={handleToggleWishlist}
-                        className={`transition-all duration-300 hover:scale-110 ${isInWishlist ? 'text-red-600 border-red-600 bg-red-50' : 'hover:bg-gold-50'}`}
+                        className={`transition-all duration-300 hover:scale-110 ${inWishlist ? 'text-copper-700 border-copper-600 bg-copper-50' : 'hover:bg-gold-50'}`}
+                        aria-label={
+                          inWishlist
+                            ? t('product.removeFromWishlist', locale)
+                            : t('product.addToWishlist', locale)
+                        }
                       >
-                        <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-600' : ''}`} />
+                        <Heart className={`h-5 w-5 ${inWishlist ? 'fill-copper-700' : ''}`} />
                       </Button>
                       <Button
                         variant="outline"
@@ -234,11 +266,24 @@ export default function ProductDetailClient({
                         {product.currency}
                       </span>
                     </div>
+                    {reviewSummary && reviewSummary.count > 0 ? (
+                      <div className="mb-2">
+                        <StarRating
+                          value={reviewSummary.average}
+                          showValue
+                          count={reviewSummary.count}
+                        />
+                      </div>
+                    ) : null}
                     <p className="text-sm text-charcoal-600">
                       Free shipping on orders over $200
                     </p>
                   </div>
                 </div>
+
+                {hasSound ? (
+                  <SoundSamplePanel product={product} productName={productName} />
+                ) : null}
 
                 {/* Stock Status */}
                 <div className="bg-white rounded-xl p-4 border border-cream-200 shadow-sm">
@@ -365,6 +410,7 @@ export default function ProductDetailClient({
                   <TabsTrigger value="specifications">Specifications</TabsTrigger>
                   <TabsTrigger value="materials">Materials</TabsTrigger>
                   <TabsTrigger value="audio">Audio & Video</TabsTrigger>
+                  <TabsTrigger value="reviews">{t('product.reviews', locale)}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="specifications" className="mt-6">
@@ -468,72 +514,21 @@ export default function ProductDetailClient({
                 </TabsContent>
 
                 <TabsContent value="audio" className="mt-6">
-                  <Card className="border-0 shadow-md">
-                    <CardContent className="p-6 space-y-8">
-                      <h3 className="text-xl font-bold text-charcoal-900">
-                        Audio & Video
-                      </h3>
+                  {hasSound ? (
+                    <SoundSamplePanel product={product} productName={productName} />
+                  ) : (
+                    <Card className="border-0 shadow-md">
+                      <CardContent className="p-6">
+                        <p className="text-charcoal-600">
+                          No audio or video sample available for this product.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </TabsContent>
 
-                      {product.youtubeVideo?.videoId && (
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-charcoal-700">
-                            <Play className="h-5 w-5 text-gold-600" />
-                            <span>Product video</span>
-                          </div>
-                          <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                            <iframe
-                              src={`https://www.youtube-nocookie.com/embed/${product.youtubeVideo.videoId}`}
-                              title={product.youtubeVideo.title || productName}
-                              className="h-full w-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {product.soundcloudAudio?.streamUrl && (
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-charcoal-700">
-                            <Volume2 className="h-5 w-5 text-gold-600" />
-                            <span>SoundCloud sample</span>
-                          </div>
-                          <iframe
-                            title={product.soundcloudAudio.title || 'SoundCloud sample'}
-                            width="100%"
-                            height="166"
-                            scrolling="no"
-                            frameBorder="no"
-                            allow="autoplay"
-                            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
-                              product.soundcloudAudio.streamUrl
-                            )}&color=%9a6f1e&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
-                            className="rounded-lg"
-                          />
-                        </div>
-                      )}
-
-                      {product.audioSample ? (
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-charcoal-700">
-                            <Volume2 className="h-5 w-5 text-gold-600" />
-                            <span>Listen to the authentic sound of this singing bowl</span>
-                          </div>
-                          <audio controls preload="metadata" className="w-full" src={product.audioSample}>
-                            Your browser does not support the audio element.
-                          </audio>
-                        </div>
-                      ) : null}
-
-                      {!product.audioSample &&
-                        !product.youtubeVideo?.videoId &&
-                        !product.soundcloudAudio?.streamUrl && (
-                          <p className="text-charcoal-600">
-                            No audio or video sample available for this product.
-                          </p>
-                        )}
-                    </CardContent>
-                  </Card>
+                <TabsContent value="reviews" className="mt-6">
+                  <ProductReviews productId={product.id} locale={locale} />
                 </TabsContent>
               </Tabs>
             </div>

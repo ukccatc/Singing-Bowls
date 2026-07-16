@@ -8,13 +8,58 @@ import { Locale, Product } from '@/lib/types';
 import { ArrowLeft, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function CartPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = use(params);
-  const { items, removeItem, updateQuantity } = useCart();
+  const { items, removeItem, updateQuantity, replaceCart } = useCart();
   const [products, setProducts] = useState<Record<string, Product>>({});
   const [loading, setLoading] = useState(true);
+  const recoveredToken = useRef<string | null>(null);
+
+  // Recover abandoned cart from email link (?recover=TOKEN)
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get('recover');
+    if (!token || recoveredToken.current === token) return;
+    recoveredToken.current = token;
+
+    const recover = async () => {
+      try {
+        const response = await fetch(`/api/cart/recover?token=${encodeURIComponent(token)}`);
+        const result = await response.json();
+        if (!response.ok) {
+          toast.error(t('cart.recoverFailed', locale));
+          return;
+        }
+        const recoveredItems = Array.isArray(result.data?.items) ? result.data.items : [];
+        if (recoveredItems.length === 0) {
+          toast.error(t('cart.recoverFailed', locale));
+          return;
+        }
+        replaceCart(
+          recoveredItems.map(
+            (item: { productId: string; quantity: number; addedAt?: string }) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              addedAt: item.addedAt || new Date().toISOString(),
+            })
+          )
+        );
+        await fetch('/api/cart/recover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        toast.success(t('cart.recoverSuccess', locale));
+        window.history.replaceState({}, '', `/${locale}/cart`);
+      } catch {
+        toast.error(t('cart.recoverFailed', locale));
+      }
+    };
+
+    void recover();
+  }, [locale, replaceCart]);
 
   // Fetch product details for cart items
   useEffect(() => {

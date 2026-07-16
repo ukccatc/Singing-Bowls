@@ -144,11 +144,13 @@ function mediaFieldsFromBody(body: Record<string, unknown>) {
     String(body.soundcloud_url || body.soundcloudUrl || '')
   );
   const audioSample = String(body.audio_sample || body.audioSample || '').trim();
+  const videoSample = String(body.video_sample || body.videoSample || '').trim();
 
   return {
     youtube_video: youtube ?? null,
     soundcloud_audio: soundcloud ?? null,
     audio_sample: audioSample || null,
+    video_sample: videoSample || null,
   };
 }
 
@@ -337,6 +339,10 @@ export function mapAdminProductUpdate(body: Record<string, unknown>, existingIma
 
   if (body.audio_sample !== undefined || body.audioSample !== undefined) {
     update.audio_sample = media.audio_sample;
+  }
+
+  if (body.video_sample !== undefined || body.videoSample !== undefined) {
+    update.video_sample = media.video_sample;
   }
 
   if (Array.isArray(body.images)) {

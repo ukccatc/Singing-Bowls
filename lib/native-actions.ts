@@ -87,6 +87,16 @@ export async function syncCartToPreferences(cartJson: string): Promise<void> {
   }
 }
 
+export async function syncWishlistToPreferences(wishlistJson: string): Promise<void> {
+  if (!isNativeApp()) return;
+  try {
+    const { Preferences } = await import('@capacitor/preferences');
+    await Preferences.set({ key: 'himalayan-sound-wishlist', value: wishlistJson });
+  } catch {
+    // ignore
+  }
+}
+
 export async function registerPushToken(locale: string): Promise<void> {
   if (!isNativeApp()) return;
 

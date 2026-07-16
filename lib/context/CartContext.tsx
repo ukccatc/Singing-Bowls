@@ -11,6 +11,7 @@ interface CartContextType {
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  replaceCart: (items: CartItem[]) => void;
   getItemCount: () => number;
   getSubtotal: () => number;
   getItem: (productId: string) => CartItem | undefined;
@@ -111,6 +112,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([]);
   };
 
+  const replaceCart = (nextItems: CartItem[]) => {
+    setItems(
+      nextItems.map((item) => ({
+        productId: item.productId,
+        quantity: Math.max(1, Number(item.quantity) || 1),
+        addedAt: item.addedAt || new Date().toISOString(),
+        variant: item.variant,
+      }))
+    );
+  };
+
   const getItemCount = () => {
     return items.reduce((total, item) => total + item.quantity, 0);
   };
@@ -133,6 +145,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         removeItem,
         updateQuantity,
         clearCart,
+        replaceCart,
         getItemCount,
         getSubtotal,
         getItem,

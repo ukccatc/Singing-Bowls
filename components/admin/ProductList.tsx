@@ -49,6 +49,7 @@ export interface AdminProduct {
   youtube_video?: { url?: string };
   soundcloud_audio?: { streamUrl?: string };
   audio_sample?: string;
+  video_sample?: string;
   created_at: string;
   updated_at: string;
 }

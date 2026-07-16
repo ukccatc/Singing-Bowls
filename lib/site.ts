@@ -92,7 +92,10 @@ export function getInstagramUrl(): string {
 }
 
 export function getYoutubeUrl(): string {
-  return process.env.NEXT_PUBLIC_YOUTUBE_URL || 'https://youtube.com/@himalayansound';
+  return (
+    process.env.NEXT_PUBLIC_YOUTUBE_URL ||
+    'https://www.youtube.com/@SingingBowlsNepal'
+  );
 }
 
 /** Locale-prefixed path, e.g. buildSitePath('uk', '/shop') → '/uk/shop' */

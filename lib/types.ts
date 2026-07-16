@@ -8,6 +8,8 @@ export interface Product {
   currency: string;
   images: ProductImage[];
   audioSample?: string;
+  /** Direct uploaded/recorded product video URL (Cloudinary or other CDN). */
+  videoSample?: string;
   // New media fields
   youtubeVideo?: ProductVideo;
   soundcloudAudio?: ProductAudio;

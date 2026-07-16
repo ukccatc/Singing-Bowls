@@ -77,6 +77,7 @@ export const adminProductSchema = z
     youtube_url: optionalUrl,
     soundcloud_url: optionalUrl,
     audio_sample: optionalUrl,
+    video_sample: optionalUrl,
   })
   .superRefine((data, ctx) => {
     const primaryCount = data.images.filter((image) => image.isPrimary).length;

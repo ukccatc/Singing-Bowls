@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCart } from '@/lib/hooks/useCart';
 import { t } from '@/lib/translations';
 import { Locale } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { Menu, Search, ShoppingCart, X } from 'lucide-react';
+import { Heart, Menu, Search, ShoppingCart, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -25,6 +26,7 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const hasMounted = useHasMounted();
   const { getItemCount } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const cartItemCount = getItemCount();
   const showScrolled = hasMounted && isScrolled;
 
@@ -146,6 +148,23 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
 
             {/* Language Changer */}
             <LanguageChanger />
+
+            {/* Wishlist */}
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="relative p-2 hover:bg-gold-50 transition-colors"
+            >
+              <Link href={`/${locale}/wishlist`} className="group" aria-label="Wishlist">
+                <Heart className="h-5 w-5 group-hover:text-gold-600 transition-colors" />
+                {hasMounted && wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-gradient-to-br from-copper-600 to-copper-700 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-md">
+                    {wishlistCount > 9 ? '9+' : wishlistCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
 
             {/* Cart */}
             <Button

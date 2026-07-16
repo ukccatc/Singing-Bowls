@@ -118,6 +118,11 @@ export default function AdminSettings() {
             <code className="rounded bg-cream-100 px-1">SMTP_PASS</code>) — see{' '}
             <code className="rounded bg-cream-100 px-1">docs/email-setup.md</code>
           </p>
+          <p>
+            8. Set{' '}
+            <code className="rounded bg-cream-100 px-1">NEXT_PUBLIC_GOOGLE_ANALYTICS_ID</code> for
+            analytics (loads only after cookie consent)
+          </p>
         </CardContent>
       </Card>
 

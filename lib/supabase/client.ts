@@ -23,6 +23,7 @@ export type Database = {
           specifications: any[];
           tags: string[];
           audio_sample?: string;
+          video_sample?: string;
           youtube_video?: any; // ProductVideo object
           soundcloud_audio?: any; // ProductAudio object
           sku: string;
@@ -53,11 +54,88 @@ export type Database = {
           shipping_address: any;
           payment_method?: string;
           notes?: string;
+          coupon_code?: string | null;
+          discount_amount?: number;
           created_at: string;
           updated_at: string;
         };
         Insert: Omit<Database['public']['Tables']['orders']['Row'], 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<Database['public']['Tables']['orders']['Row'], 'id' | 'created_at' | 'updated_at'>>;
+      };
+      product_reviews: {
+        Row: {
+          id: string;
+          product_id: string;
+          author_name: string;
+          author_email: string | null;
+          rating: number;
+          title: string | null;
+          body: string;
+          is_verified: boolean;
+          is_published: boolean;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['product_reviews']['Row'], 'id' | 'created_at'> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['product_reviews']['Row']>;
+      };
+      coupons: {
+        Row: {
+          id: string;
+          code: string;
+          description: string | null;
+          discount_type: 'percent' | 'fixed';
+          discount_value: number;
+          min_subtotal: number;
+          max_uses: number | null;
+          used_count: number;
+          starts_at: string | null;
+          ends_at: string | null;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['coupons']['Row'], 'id' | 'created_at'> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['coupons']['Row']>;
+      };
+      coupon_redemptions: {
+        Row: {
+          id: string;
+          coupon_id: string;
+          order_id: string | null;
+          email: string | null;
+          discount_amount: number;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['coupon_redemptions']['Row'], 'id' | 'created_at'> & {
+          id?: string;
+          created_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['coupon_redemptions']['Row']>;
+      };
+      abandoned_carts: {
+        Row: {
+          id: string;
+          email: string;
+          locale: string;
+          items: unknown;
+          subtotal: number;
+          recovery_token: string;
+          reminded_at: string | null;
+          recovered_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['abandoned_carts']['Row'], 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Database['public']['Tables']['abandoned_carts']['Row']>;
       };
       order_items: {
         Row: {

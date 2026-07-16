@@ -3,6 +3,7 @@
 import type { AdminProduct } from '@/components/admin/ProductList';
 import { AdminProductFields } from '@/components/admin/AdminProductFields';
 import { ProductImagesField } from '@/components/admin/ProductImagesField';
+import { ProductMediaField } from '@/components/admin/ProductMediaField';
 import { ProductSpecificationsField } from '@/components/admin/ProductSpecificationsField';
 import { adminProductSchema, AdminProductFormData } from '@/lib/admin/product-form-schema';
 import { ProductCategory } from '@/lib/types';
@@ -101,6 +102,7 @@ function productToFormDefaults(product: AdminProduct): AdminProductFormData {
     youtube_url: youtube?.url || '',
     soundcloud_url: soundcloud?.streamUrl || '',
     audio_sample: product.audio_sample || '',
+    video_sample: product.video_sample || '',
   };
 }
 
@@ -120,6 +122,10 @@ export function EditProductForm({ product, onSuccess, onCancel }: EditProductFor
 
   const images = watch('images') || [];
   const specifications = watch('specifications') || [];
+  const audioSample = watch('audio_sample') || '';
+  const videoSample = watch('video_sample') || '';
+  const youtubeUrl = watch('youtube_url') || '';
+  const soundcloudUrl = watch('soundcloud_url') || '';
 
   const onSubmit = async (data: AdminProductFormData) => {
     setLoading(true);
@@ -166,6 +172,29 @@ export function EditProductForm({ product, onSuccess, onCancel }: EditProductFor
         <div className={ui.card}>
           <h2 className="mb-4 text-xl font-semibold text-charcoal-900">Product Details</h2>
           <AdminProductFields register={register} errors={errors} slugReadOnly />
+        </div>
+
+        <div className={ui.card}>
+          <ProductMediaField
+            value={{
+              audio_sample: audioSample,
+              video_sample: videoSample,
+              youtube_url: youtubeUrl,
+              soundcloud_url: soundcloudUrl,
+            }}
+            onChange={(next) => {
+              setValue('audio_sample', next.audio_sample, { shouldValidate: true });
+              setValue('video_sample', next.video_sample, { shouldValidate: true });
+              setValue('youtube_url', next.youtube_url, { shouldValidate: true });
+              setValue('soundcloud_url', next.soundcloud_url, { shouldValidate: true });
+            }}
+            errors={{
+              audio_sample: errors.audio_sample,
+              video_sample: errors.video_sample,
+              youtube_url: errors.youtube_url,
+              soundcloud_url: errors.soundcloud_url,
+            }}
+          />
         </div>
 
         <div className={ui.card}>

@@ -213,3 +213,79 @@ export async function sendOrderConfirmationEmail(
     ].join('\n'),
   });
 }
+
+export interface OrderAdminNotificationPayload {
+  customerName: string;
+  customerEmail: string;
+  orderId: string;
+  total: number;
+  currency: string;
+  paymentMethod?: string;
+  itemCount: number;
+  locale: string;
+}
+
+export interface AbandonedCartEmailPayload {
+  email: string;
+  locale: string;
+  recoveryUrl: string;
+  subtotal: number;
+  itemCount: number;
+}
+
+export async function sendAbandonedCartEmail(
+  data: AbandonedCartEmailPayload
+): Promise<void> {
+  const siteName = getSiteName();
+  const siteUrl = getSiteUrl();
+
+  await sendEmail({
+    to: data.email,
+    subject: `Your ${siteName} cart is waiting`,
+    text: [
+      'Hello,',
+      '',
+      'You left some singing bowls in your cart. Complete your order when you are ready — your selection is saved.',
+      '',
+      `Items in cart: ${data.itemCount}`,
+      `Subtotal: USD ${data.subtotal.toFixed(2)}`,
+      '',
+      `Restore your cart: ${data.recoveryUrl}`,
+      '',
+      'Tip: use WELCOME10 for 10% off, or FIRSTBOWL for $25 off (min. $80).',
+      '',
+      'Best regards,',
+      `The ${siteName} Team`,
+      siteUrl,
+    ].join('\n'),
+  });
+}
+
+export async function sendOrderAdminNotificationEmail(
+  data: OrderAdminNotificationPayload
+): Promise<void> {
+  const siteName = getSiteName();
+  const siteUrl = getSiteUrl();
+  const adminInbox = getAdminNotificationEmail();
+
+  await sendEmail({
+    to: adminInbox,
+    replyTo: data.customerEmail,
+    subject: `[${siteName}] New order ${data.orderId}`,
+    text: [
+      `New order received (${data.locale})`,
+      '',
+      `Order reference: ${data.orderId}`,
+      `Customer: ${data.customerName}`,
+      `Email: ${data.customerEmail}`,
+      `Items: ${data.itemCount}`,
+      `Total: ${data.currency} ${data.total.toFixed(2)}`,
+      `Payment method: ${data.paymentMethod || 'n/a'}`,
+      '',
+      `Open admin orders: ${siteUrl}/admin/orders`,
+      '',
+      '---',
+      `Reply to this message to reach the customer (${data.customerEmail}).`,
+    ].join('\n'),
+  });
+}

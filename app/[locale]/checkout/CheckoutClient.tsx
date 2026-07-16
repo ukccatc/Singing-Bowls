@@ -31,6 +31,13 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
   const [products, setProducts] = useState<Record<string, Product>>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [couponInput, setCouponInput] = useState('');
+  const [couponApplying, setCouponApplying] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discountAmount: number;
+    description?: string;
+  } | null>(null);
 
   const {
     register,
@@ -51,6 +58,7 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
 
   const sameAsShipping = watch('sameAsShipping');
   const shippingMethod = watch('shippingMethod');
+  const emailValue = watch('email');
 
   // Fetch product details
   useEffect(() => {
@@ -95,11 +103,80 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
     return total + (product ? product.price * item.quantity : 0);
   }, 0);
 
-  const tax = subtotal * 0.1; // 10% tax
-  const shippingCost = shippingMethod && subtotal < 200 
-    ? shippingRates[shippingMethod].price 
-    : 0;
-  const total = subtotal + tax + shippingCost;
+  const discountAmount = appliedCoupon?.discountAmount || 0;
+  const discountedSubtotal = Math.max(0, subtotal - discountAmount);
+  const tax = discountedSubtotal * 0.1; // 10% tax
+  const shippingCost =
+    shippingMethod && discountedSubtotal < 200
+      ? shippingRates[shippingMethod].price
+      : 0;
+  const total = discountedSubtotal + tax + shippingCost;
+
+  // Snapshot abandoned cart when email is entered (for recovery emails)
+  useEffect(() => {
+    if (!emailValue || !emailValue.includes('@') || items.length === 0 || subtotal <= 0) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      const snapshotItems = items.map((item) => {
+        const product = products[item.productId];
+        const primary =
+          product?.images.find((img) => img.isPrimary) || product?.images[0];
+        return {
+          productId: item.productId,
+          quantity: item.quantity,
+          name: product?.name?.en,
+          price: product?.price,
+          slug: product?.slug,
+          imageUrl: primary?.url,
+        };
+      });
+
+      void fetch('/api/cart/abandon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: emailValue,
+          locale,
+          items: snapshotItems,
+          subtotal,
+        }),
+      }).catch(() => {
+        // non-blocking
+      });
+    }, 1500);
+
+    return () => window.clearTimeout(timer);
+  }, [emailValue, items, products, subtotal, locale]);
+
+  const handleApplyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    setCouponApplying(true);
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponInput, subtotal }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.valid) {
+        setAppliedCoupon(null);
+        toast.error(result.error || t('checkout.invalidCoupon', locale));
+        return;
+      }
+      setAppliedCoupon({
+        code: result.code,
+        discountAmount: result.discountAmount,
+        description: result.description,
+      });
+      toast.success(t('checkout.couponApplied', locale));
+    } catch {
+      toast.error(t('checkout.invalidCoupon', locale));
+    } finally {
+      setCouponApplying(false);
+    }
+  };
 
   const onSubmit = async (data: CheckoutFormData) => {
     setSubmitting(true);
@@ -151,11 +228,20 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
           total,
           paymentIntentId: paymentData.paymentIntentId,
           paymentMethod: data.paymentMethod,
+          locale,
+          couponCode: appliedCoupon?.code,
+          discountAmount: appliedCoupon?.discountAmount || 0,
         }),
       });
 
       if (!orderResponse.ok) {
-        throw new Error('Failed to create order');
+        const orderError = await orderResponse.json().catch(() => null);
+        if (orderResponse.status === 409 || orderError?.code === 'INSUFFICIENT_STOCK') {
+          throw new Error(
+            'Some items are no longer available in the requested quantity. Please update your cart and try again.'
+          );
+        }
+        throw new Error(orderError?.error || 'Failed to create order');
       }
 
       const orderData = await orderResponse.json();
@@ -171,7 +257,9 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
       router.push(`/${locale}/order-confirmation?orderId=${orderData.order.id}`);
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Failed to process order. Please try again.');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to process order. Please try again.'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -663,12 +751,63 @@ export default function CheckoutClient({ locale }: CheckoutClientProps) {
 
                     <Separator />
 
+                    {/* Promo code */}
+                    <div className="space-y-2">
+                      <Label htmlFor="coupon">{t('checkout.promoCode', locale)}</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="coupon"
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                          placeholder="WELCOME10"
+                          className="uppercase"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleApplyCoupon}
+                          disabled={couponApplying || !couponInput.trim()}
+                        >
+                          {couponApplying ? '...' : t('checkout.applyCoupon', locale)}
+                        </Button>
+                      </div>
+                      <p className="text-xs text-charcoal-500">
+                        {t('checkout.promoHints', locale)}
+                      </p>
+                      {appliedCoupon ? (
+                        <div className="flex items-center justify-between rounded-lg bg-gold-50 px-3 py-2 text-sm text-gold-900">
+                          <span>
+                            {appliedCoupon.code}
+                            {appliedCoupon.description ? ` — ${appliedCoupon.description}` : ''}
+                          </span>
+                          <button
+                            type="button"
+                            className="text-xs underline"
+                            onClick={() => {
+                              setAppliedCoupon(null);
+                              setCouponInput('');
+                            }}
+                          >
+                            {t('checkout.removeCoupon', locale)}
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <Separator />
+
                     {/* Totals */}
                     <div className="space-y-3">
                       <div className="flex justify-between text-charcoal-700">
                         <span className="font-medium">Subtotal</span>
                         <span className="font-semibold">${subtotal.toFixed(2)}</span>
                       </div>
+                      {discountAmount > 0 ? (
+                        <div className="flex justify-between text-gold-700">
+                          <span className="font-medium">{t('checkout.discount', locale)}</span>
+                          <span className="font-semibold">−${discountAmount.toFixed(2)}</span>
+                        </div>
+                      ) : null}
                       
                       <div className="flex justify-between text-charcoal-700">
                         <span className="font-medium">Tax (10%)</span>

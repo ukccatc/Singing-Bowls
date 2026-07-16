@@ -1,17 +1,21 @@
 'use client';
 
 import { MediaEmbed } from '@/components/media/MediaEmbed';
+import { StarRating } from '@/components/product/StarRating';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { useWishlist } from '@/lib/context/WishlistContext';
 import { useCart } from '@/lib/hooks/useCart';
-import { triggerHapticLight } from '@/lib/native-actions';
 import { MediaFile } from '@/lib/media-manager';
-import { Product } from '@/lib/types';
+import { triggerHapticLight } from '@/lib/native-actions';
+import { ReviewSummary } from '@/lib/reviews';
+import { t } from '@/lib/translations';
+import { Locale, Product } from '@/lib/types';
 import { Heart, ShoppingCart, Volume2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 interface ProductCardProps {
@@ -23,24 +27,27 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, locale, showAudio = false, viewMode = 'grid' }: ProductCardProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isInWishlist, setIsInWishlist] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [ratingSummary, setRatingSummary] = useState<ReviewSummary | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const { addItem } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const inWishlist = isInWishlist(product.id);
+  const typedLocale = locale as Locale;
 
   const productName = product.name[locale as keyof typeof product.name] || product.name.en;
   const productDescription = product.description[locale as keyof typeof product.description] || product.description.en;
   const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
 
-  // Convert product audio sample to MediaFile format
   const audioMedia: MediaFile | null = product.audioSample ? {
     id: `audio-${product.id}`,
     type: 'audio',
     title: productName,
-    description: product.description[locale as keyof typeof product.description] || product.description.en,
+    description: productDescription,
     url: product.audioSample,
-    platform: 'soundcloud', // Assuming SoundCloud for audio samples
+    platform: 'soundcloud',
     thumbnail: primaryImage?.url,
-    duration: 180, // Default duration, could be stored in product data
+    duration: 180,
     size: 0,
     metadata: {
       tags: ['singing bowl', 'meditation', 'sound healing'],
@@ -49,6 +56,24 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
     updatedAt: new Date(),
   } : null;
 
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const response = await fetch(`/api/products/${product.id}/reviews`);
+        if (!response.ok || cancelled) return;
+        const json = await response.json();
+        if (!cancelled) setRatingSummary(json.data?.summary || null);
+      } catch {
+        // ignore
+      }
+    };
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [product.id]);
+
   const handleAddToCart = () => {
     addItem(product, 1);
     void triggerHapticLight();
@@ -56,15 +81,32 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
   };
 
   const handleToggleWishlist = () => {
-    setIsInWishlist(!isInWishlist);
-    // TODO: Implement wishlist functionality
-    console.log('Toggle wishlist:', product.id);
+    const added = toggleWishlist(product.id);
+    void triggerHapticLight();
+    toast.success(
+      added
+        ? t('messages.addedToWishlist', typedLocale)
+        : t('product.removeFromWishlist', typedLocale)
+    );
   };
 
-  const handlePlayAudio = () => {
-    setIsPlaying(!isPlaying);
-    // TODO: Implement audio playback
-    console.log('Play audio:', product.id);
+  const handlePlayAudio = async () => {
+    if (!product.audioSample) return;
+    if (!audioRef.current) {
+      audioRef.current = new Audio(product.audioSample);
+      audioRef.current.addEventListener('ended', () => setIsPlaying(false));
+    }
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      return;
+    }
+    try {
+      await audioRef.current.play();
+      setIsPlaying(true);
+    } catch {
+      setIsPlaying(false);
+    }
   };
 
   if (viewMode === 'list') {
@@ -115,9 +157,20 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
                     onClick={handleToggleWishlist}
                     className="text-charcoal-400 hover:text-red-500"
                   >
-                    <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+                    <Heart className={`h-5 w-5 ${inWishlist ? 'fill-copper-700 text-copper-700' : ''}`} />
                   </Button>
                 </div>
+
+                {ratingSummary && ratingSummary.count > 0 ? (
+                  <div className="mb-3">
+                    <StarRating
+                      value={ratingSummary.average}
+                      showValue
+                      count={ratingSummary.count}
+                      size="sm"
+                    />
+                  </div>
+                ) : null}
 
                 <div className="flex items-center gap-2 mb-3">
                   <Badge className="badge-gold text-xs">
@@ -244,7 +297,7 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
               }}
               className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm hover:bg-white text-charcoal-600 hover:text-red-500 rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 shadow-md"
             >
-              <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+              <Heart className={`h-5 w-5 ${inWishlist ? 'fill-copper-700 text-copper-700' : ''}`} />
             </Button>
             
             {/* Quick add to cart button */}
@@ -276,6 +329,16 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
             <p className="text-sm text-charcoal-600 line-clamp-2 leading-relaxed">
               {productDescription}
             </p>
+            {ratingSummary && ratingSummary.count > 0 ? (
+              <div className="mt-2">
+                <StarRating
+                  value={ratingSummary.average}
+                  showValue
+                  count={ratingSummary.count}
+                  size="sm"
+                />
+              </div>
+            ) : null}
           </div>
 
           <div className="flex items-center justify-between pt-2 border-t border-cream-200">
@@ -310,16 +373,18 @@ export default function ProductCard({ product, locale, showAudio = false, viewMo
           </div>
 
           {/* Audio Sample */}
-          {showAudio && audioMedia && (
-            <div className="bg-gradient-to-r from-gold-50 to-bronze-50 rounded-lg p-3 border border-gold-100">
-              <div className="flex items-center space-x-2">
-                <Volume2 className="h-4 w-4 text-gold-600" />
-                <span className="text-xs font-medium text-gold-800">
-                  🎵 Audio Sample Available
-                </span>
-              </div>
-            </div>
-          )}
+          {showAudio && product.audioSample ? (
+            <button
+              type="button"
+              onClick={handlePlayAudio}
+              className="flex w-full items-center gap-2 rounded-lg border border-gold-200 bg-gradient-to-r from-gold-50 to-bronze-50 p-3 text-left transition hover:border-gold-400"
+            >
+              <Volume2 className={`h-4 w-4 text-gold-600 ${isPlaying ? 'animate-pulse' : ''}`} />
+              <span className="text-xs font-medium text-gold-800">
+                {isPlaying ? t('product.playingSample', typedLocale) : t('product.playSample', typedLocale)}
+              </span>
+            </button>
+          ) : null}
         </div>
       </CardContent>
     </Card>

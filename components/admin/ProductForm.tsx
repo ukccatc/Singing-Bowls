@@ -2,6 +2,7 @@
 
 import { AdminProductFields } from '@/components/admin/AdminProductFields';
 import { ProductImagesField } from '@/components/admin/ProductImagesField';
+import { ProductMediaField } from '@/components/admin/ProductMediaField';
 import { ProductSpecificationsField } from '@/components/admin/ProductSpecificationsField';
 import { adminProductSchema, AdminProductFormData } from '@/lib/admin/product-form-schema';
 import { slugify } from '@/lib/admin/products';
@@ -48,12 +49,17 @@ export function ProductForm({ onSuccess }: ProductFormProps) {
       youtube_url: '',
       soundcloud_url: '',
       audio_sample: '',
+      video_sample: '',
     },
   });
 
   const englishName = watch('name.en');
   const images = watch('images') || [];
   const specifications = watch('specifications') || [];
+  const audioSample = watch('audio_sample') || '';
+  const videoSample = watch('video_sample') || '';
+  const youtubeUrl = watch('youtube_url') || '';
+  const soundcloudUrl = watch('soundcloud_url') || '';
 
   useEffect(() => {
     if (englishName) {
@@ -101,6 +107,29 @@ export function ProductForm({ onSuccess }: ProductFormProps) {
         <div className={ui.card}>
           <h2 className="mb-4 text-xl font-semibold text-charcoal-900">Product Details</h2>
           <AdminProductFields register={register} errors={errors} />
+        </div>
+
+        <div className={ui.card}>
+          <ProductMediaField
+            value={{
+              audio_sample: audioSample,
+              video_sample: videoSample,
+              youtube_url: youtubeUrl,
+              soundcloud_url: soundcloudUrl,
+            }}
+            onChange={(next) => {
+              setValue('audio_sample', next.audio_sample, { shouldValidate: true });
+              setValue('video_sample', next.video_sample, { shouldValidate: true });
+              setValue('youtube_url', next.youtube_url, { shouldValidate: true });
+              setValue('soundcloud_url', next.soundcloud_url, { shouldValidate: true });
+            }}
+            errors={{
+              audio_sample: errors.audio_sample,
+              video_sample: errors.video_sample,
+              youtube_url: errors.youtube_url,
+              soundcloud_url: errors.soundcloud_url,
+            }}
+          />
         </div>
 
         <div className={ui.card}>

@@ -246,41 +246,6 @@ export function AdminProductFields({
         ))}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <label className={ui.label}>YouTube URL</label>
-          <input
-            {...register('youtube_url')}
-            placeholder="https://youtube.com/watch?v=..."
-            className={fieldClass}
-          />
-          {errors.youtube_url && (
-            <p className={errorClass}>{errors.youtube_url.message}</p>
-          )}
-        </div>
-        <div>
-          <label className={ui.label}>SoundCloud URL</label>
-          <input
-            {...register('soundcloud_url')}
-            placeholder="https://soundcloud.com/..."
-            className={fieldClass}
-          />
-          {errors.soundcloud_url && (
-            <p className={errorClass}>{errors.soundcloud_url.message}</p>
-          )}
-        </div>
-        <div>
-          <label className={ui.label}>Audio sample URL</label>
-          <input
-            {...register('audio_sample')}
-            placeholder="https://..."
-            className={fieldClass}
-          />
-          {errors.audio_sample && (
-            <p className={errorClass}>{errors.audio_sample.message}</p>
-          )}
-        </div>
-      </div>
     </>
   );
 }

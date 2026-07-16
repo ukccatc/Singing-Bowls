@@ -10,6 +10,7 @@ export function transformSupabaseProduct(row: Record<string, unknown>): Product 
     currency: (row.currency as string) || 'USD',
     images: (row.images as Product['images']) || [],
     audioSample: row.audio_sample as string | undefined,
+    videoSample: row.video_sample as string | undefined,
     youtubeVideo: row.youtube_video as Product['youtubeVideo'],
     soundcloudAudio: row.soundcloud_audio as Product['soundcloudAudio'],
     category: row.category as Product['category'],

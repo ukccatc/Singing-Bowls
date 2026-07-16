@@ -2,9 +2,11 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { LocaleHtmlLang } from '@/components/layout/LocaleHtmlLang';
 import { NativeShellLoader } from '@/components/native/NativeShellLoader';
+import { CookieConsentBanner } from '@/components/seo/CookieConsentBanner';
 import { GoogleAnalytics } from '@/components/seo/GoogleAnalytics';
 import { Toaster } from '@/components/ui/sonner';
 import { CartProvider } from '@/lib/context/CartContext';
+import { WishlistProvider } from '@/lib/context/WishlistContext';
 import { getDefaultOgImage, getGoogleSiteVerification, getMetadataBase } from '@/lib/seo';
 import { getAvailableLocales, getDefaultLocale } from '@/lib/translations';
 import { Locale } from '@/lib/types';
@@ -136,13 +138,16 @@ export default async function LocaleLayout({
       <LocaleHtmlLang locale={locale} />
       <GoogleAnalytics />
       <CartProvider>
-        <NativeShellLoader locale={locale} />
-        <div className="flex min-h-screen flex-col bg-gradient-to-br from-cream-50 to-cream-100">
-          <Header locale={locale} />
-          <main className="site-main flex-1 pt-16 lg:pt-20">{children}</main>
-          <Footer locale={locale} />
-        </div>
-        <Toaster position="top-right" />
+        <WishlistProvider>
+          <NativeShellLoader locale={locale} />
+          <div className="flex min-h-screen flex-col bg-gradient-to-br from-cream-50 to-cream-100">
+            <Header locale={locale} />
+            <main className="site-main flex-1 pt-16 lg:pt-20">{children}</main>
+            <Footer locale={locale} />
+          </div>
+          <Toaster position="top-right" />
+          <CookieConsentBanner locale={locale} />
+        </WishlistProvider>
       </CartProvider>
     </>
   );

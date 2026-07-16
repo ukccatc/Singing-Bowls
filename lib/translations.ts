@@ -306,9 +306,129 @@ const translations: Translations = {
     uk: 'Аудіо Зразок',
   },
   'product.playSample': {
-    en: 'Play Sample',
-    ru: 'Воспроизвести Образец',
-    uk: 'Відтворити Зразок',
+    en: 'Play sound sample',
+    ru: 'Слушать звук чаши',
+    uk: 'Слухати звук чаші',
+  },
+  'product.playingSample': {
+    en: 'Playing sample…',
+    ru: 'Воспроизведение…',
+    uk: 'Відтворення…',
+  },
+  'product.yourRating': {
+    en: 'Your rating',
+    ru: 'Ваша оценка',
+    uk: 'Ваша оцінка',
+  },
+  'product.reviewName': {
+    en: 'Your name',
+    ru: 'Ваше имя',
+    uk: "Ваше ім'я",
+  },
+  'product.reviewEmail': {
+    en: 'Email (for verified buyer badge)',
+    ru: 'Email (для значка покупателя)',
+    uk: 'Email (для значка покупця)',
+  },
+  'product.reviewTitle': {
+    en: 'Review title',
+    ru: 'Заголовок отзыва',
+    uk: 'Заголовок відгуку',
+  },
+  'product.reviewBody': {
+    en: 'Your experience with this bowl',
+    ru: 'Ваш опыт с этой чашей',
+    uk: 'Ваш досвід з цією чашею',
+  },
+  'product.submitReview': {
+    en: 'Submit review',
+    ru: 'Отправить отзыв',
+    uk: 'Надіслати відгук',
+  },
+  'product.reviewSubmitted': {
+    en: 'Thank you! Your review was published.',
+    ru: 'Спасибо! Ваш отзыв опубликован.',
+    uk: 'Дякуємо! Ваш відгук опубліковано.',
+  },
+  'wishlist.title': {
+    en: 'Wishlist',
+    ru: 'Избранное',
+    uk: 'Обране',
+  },
+  'wishlist.subtitle': {
+    en: 'Bowls and instruments you saved for later',
+    ru: 'Чаши и инструменты, сохранённые на потом',
+    uk: 'Чаші та інструменти, збережені на потім',
+  },
+  'wishlist.empty': {
+    en: 'Your wishlist is empty',
+    ru: 'В избранном пока пусто',
+    uk: 'В обраному поки порожньо',
+  },
+  'wishlist.emptyHint': {
+    en: 'Tap the heart on any product to save it here.',
+    ru: 'Нажмите сердечко на товаре, чтобы сохранить его здесь.',
+    uk: 'Натисніть сердечко на товарі, щоб зберегти його тут.',
+  },
+  'wishlist.browseShop': {
+    en: 'Browse shop',
+    ru: 'В каталог',
+    uk: 'До каталогу',
+  },
+  'wishlist.clear': {
+    en: 'Clear wishlist',
+    ru: 'Очистить избранное',
+    uk: 'Очистити обране',
+  },
+  'wishlist.loading': {
+    en: 'Loading wishlist...',
+    ru: 'Загрузка избранного...',
+    uk: 'Завантаження обраного...',
+  },
+  'checkout.promoCode': {
+    en: 'Promo code',
+    ru: 'Промокод',
+    uk: 'Промокод',
+  },
+  'checkout.applyCoupon': {
+    en: 'Apply',
+    ru: 'Применить',
+    uk: 'Застосувати',
+  },
+  'checkout.removeCoupon': {
+    en: 'Remove',
+    ru: 'Убрать',
+    uk: 'Прибрати',
+  },
+  'checkout.couponApplied': {
+    en: 'Promo code applied',
+    ru: 'Промокод применён',
+    uk: 'Промокод застосовано',
+  },
+  'checkout.invalidCoupon': {
+    en: 'Invalid or expired promo code',
+    ru: 'Недействительный или просроченный промокод',
+    uk: 'Недійсний або прострочений промокод',
+  },
+  'checkout.discount': {
+    en: 'Discount',
+    ru: 'Скидка',
+    uk: 'Знижка',
+  },
+  'checkout.promoHints': {
+    en: 'Try WELCOME10, SEASONAL15, or FIRSTBOWL',
+    ru: 'Попробуйте WELCOME10, SEASONAL15 или FIRSTBOWL',
+    uk: 'Спробуйте WELCOME10, SEASONAL15 або FIRSTBOWL',
+  },
+  'cart.recoverSuccess': {
+    en: 'Your cart was restored from the email link.',
+    ru: 'Корзина восстановлена по ссылке из письма.',
+    uk: 'Кошик відновлено за посиланням з листа.',
+  },
+  'cart.recoverFailed': {
+    en: 'Could not restore that cart. It may have expired.',
+    ru: 'Не удалось восстановить корзину. Возможно, ссылка устарела.',
+    uk: 'Не вдалося відновити кошик. Можливо, посилання застаріло.',
   },
   'product.relatedProducts': {
     en: 'Related Products',
@@ -1120,6 +1240,26 @@ const translations: Translations = {
     en: 'FAQ',
     ru: 'Частые вопросы',
     uk: 'Питання та відповіді',
+  },
+  'cookie.title': {
+    en: 'Cookies & analytics',
+    ru: 'Cookies и аналитика',
+    uk: 'Cookies і аналітика',
+  },
+  'cookie.description': {
+    en: 'We use essential cookies to run the store and optional analytics cookies (Google Analytics) to improve the site. Analytics load only if you accept. Learn more in our',
+    ru: 'Мы используем необходимые cookies для работы магазина и опциональные cookies аналитики (Google Analytics) для улучшения сайта. Аналитика загружается только после вашего согласия. Подробнее в',
+    uk: 'Ми використовуємо необхідні cookies для роботи магазину та опційні cookies аналітики (Google Analytics) для покращення сайту. Аналітика завантажується лише після вашої згоди. Докладніше в',
+  },
+  'cookie.accept': {
+    en: 'Accept analytics',
+    ru: 'Принять аналитику',
+    uk: 'Прийняти аналітику',
+  },
+  'cookie.reject': {
+    en: 'Essential only',
+    ru: 'Только необходимые',
+    uk: 'Лише необхідні',
   },
   'footer.privacyPolicy': {
     en: 'Privacy Policy',

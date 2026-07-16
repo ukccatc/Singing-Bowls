@@ -65,8 +65,13 @@ const faqItems = [
           <li>Fill slug (URL), SKU (auto-generated if empty), title/description in EN / RU / UK.</li>
           <li>Set price, currency, inventory, category, and optional dimensions / weight.</li>
           <li>
-            Attach one or more images from Media Library; mark one as primary. Add YouTube /
-            SoundCloud / audio sample URLs if needed.
+            Attach images from Media Library. In Sound & Video, upload/record audio & video, or
+            browse videos from your YouTube channel (needs YOUTUBE_API_KEY) / paste a link. You
+            can also manage the channel on{' '}
+            <Link href="/admin/youtube" className={ui.link}>
+              YouTube
+            </Link>
+            .
           </li>
           <li>
             Toggle Featured / Available / Handmade, then save. The product appears in the store
@@ -201,6 +206,29 @@ const faqItems = [
           Change <code className="rounded bg-cream-100 px-1">ADMIN_USERNAME</code> /{' '}
           <code className="rounded bg-cream-100 px-1">ADMIN_PASSWORD</code> in production before
           launch. Newsletter tools are not available yet.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: 'growth',
+    question: 'Reviews, wishlist, coupons, and abandoned carts',
+    answer: (
+      <div className="space-y-2">
+        <p>
+          Customers can leave star reviews on product pages; verified buyers (same email as a past
+          order for that product) get a Verified badge. Wishlist hearts save to the browser and sync
+          on the Wishlist page in the header.
+        </p>
+        <p>
+          Promo codes at checkout: <code className="rounded bg-cream-100 px-1">WELCOME10</code>{' '}
+          (10%), <code className="rounded bg-cream-100 px-1">SEASONAL15</code> (15%, min $50),{' '}
+          <code className="rounded bg-cream-100 px-1">FIRSTBOWL</code> ($25 off, min $80).
+        </p>
+        <p>
+          When a shopper enters their email on checkout with items in the cart, we save a snapshot.
+          An hourly cron can email a recovery link after 1–24 hours of inactivity (requires{' '}
+          <code className="rounded bg-cream-100 px-1">CRON_SECRET</code> in production).
         </p>
       </div>
     ),
