@@ -62,7 +62,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '7. Returns and Refunds',
         paragraphs: [
           'We offer a 30-day satisfaction guarantee. If you are not satisfied with your purchase, you may return unused items in original condition within 30 days of delivery for a full refund of the product price.',
-          'Return shipping costs are borne by the customer unless the item is defective or we shipped the wrong product. To initiate a return, contact himalayansound.info@gmail.com with your order number.',
+          'Return shipping costs are borne by the customer unless the item is defective or we shipped the wrong product. To initiate a return, contact ukccatc@gmail.com with your order number.',
           'Refunds are processed to the original payment method within 14 business days of receiving the returned item. This policy does not affect your statutory rights under Ukrainian consumer law, EU Consumer Rights Directive, or other applicable legislation.',
         ],
       },
@@ -129,7 +129,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '15. Contact',
         paragraphs: [
           'For questions about these Terms, contact:',
-          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
+          'Himalayan Sound — ukccatc@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -193,7 +193,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '7. Повернення та відшкодування',
         paragraphs: [
           '30-денна гарантія задоволення. Невикористаний товар у оригінальному стані можна повернути протягом 30 днів для повного повернення вартості товару.',
-          'Витрати на зворотну доставку несе покупець, якщо товар не бракований. Звертайтесь: himalayansound.info@gmail.com з номером замовлення.',
+          'Витрати на зворотну доставку несе покупець, якщо товар не бракований. Звертайтесь: ukccatc@gmail.com з номером замовлення.',
           'Повернення коштів протягом 14 робочих днів після отримання товару. Це не обмежує ваші законні права споживача в Україні, ЄС та інших юрисдикціях.',
         ],
       },
@@ -259,7 +259,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '15. Контакти',
         paragraphs: [
           'З питань Умов:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -323,7 +323,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '7. Возврат и возмещение',
         paragraphs: [
           '30-дневная гарантия удовлетворения. Неиспользованный товар в оригинальном состоянии можно вернуть в течение 30 дней.',
-          'Расходы на обратную доставку несёт покупатель, если товар не бракованный. himalayansound.info@gmail.com с номером заказа.',
+          'Расходы на обратную доставку несёт покупатель, если товар не бракованный. ukccatc@gmail.com с номером заказа.',
           'Возврат средств в течение 14 рабочих дней. Не ограничивает законные права потребителя в Украине, ЕС и др.',
         ],
       },
@@ -389,7 +389,7 @@ export const termsOfService: LocalizedLegalDocument = {
         title: '15. Контакты',
         paragraphs: [
           'По вопросам Условий:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],

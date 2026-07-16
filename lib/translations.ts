@@ -423,14 +423,84 @@ const translations: Translations = {
     uk: 'Стародавня Мудрість, Сучасне Зцілення',
   },
   'about.hero.subtitle': {
-    en: 'Himalayan Sound was born from a deep reverence for the ancient art of sound healing and a commitment to preserving traditional Nepalese craftsmanship.',
-    ru: 'Himalayan Sound родился из глубокого почтения к древнему искусству звукового исцеления и приверженности сохранению традиционного непальского мастерства.',
-    uk: 'Himalayan Sound народився з глибокої пошани до стародавнього мистецтва звукового зцілення та прихильності до збереження традиційної непальської майстерності.',
+    en: 'Himalayan Sound brings authentic Nepalese singing bowls and sound healing practices from the Himalayas to Ukraine — and to people seeking stillness anywhere in the world.',
+    ru: 'Himalayan Sound привозит подлинные непальские поющие чаши и практики звукового исцеления из Гималаев в Украину — и к людям, ищущим тишину в любой точке мира.',
+    uk: 'Himalayan Sound привозить автентичні непальські співаючі чаші та практики звукового зцілення з Гімалаїв в Україну — і до людей, які шукають тишу будь-де у світі.',
+  },
+  'about.hero.ctaShop': {
+    en: 'Explore the shop',
+    ru: 'Смотреть магазин',
+    uk: 'Переглянути магазин',
+  },
+  'about.hero.ctaContact': {
+    en: 'Visit or write us',
+    ru: 'Приехать или написать',
+    uk: 'Завітати або написати',
+  },
+  'about.mission.title': {
+    en: 'Our Mission',
+    ru: 'Наша Миссия',
+    uk: 'Наша Місія',
+  },
+  'about.mission.p1': {
+    en: 'We exist to make the living tradition of Himalayan singing bowls accessible without diluting it. Every bowl we offer is chosen for tone, craftsmanship, and the integrity of the makers who cast and hammer it by hand.',
+    ru: 'Мы существуем, чтобы сделать живую традицию гималайских поющих чаш доступной — без упрощения. Каждую чашу мы выбираем по звуку, мастерству и честности тех, кто отливает и выковывает её вручную.',
+    uk: 'Ми існуємо, щоб зробити живу традицію гімалайських співаючих чаш доступною — без спрощень. Кожну чашу ми обираємо за звучанням, майстерністю та чесністю тих, хто відливає й виковує її вручну.',
+  },
+  'about.mission.p2': {
+    en: 'Beyond commerce, we host sound meditations, workshops, and quiet gatherings in Odesa — spaces where people can feel vibration in the body, not only read about it online.',
+    ru: 'Помимо магазина мы проводим звуковые медитации, мастер-классы и тихие встречи в Одессе — пространства, где вибрацию можно почувствовать телом, а не только прочитать о ней онлайн.',
+    uk: 'Окрім магазину ми проводимо звукові медитації, майстер-класи та тихі зустрічі в Одесі — простори, де вібрацію можна відчути тілом, а не лише прочитати про неї онлайн.',
   },
   'about.journey.title': {
     en: 'Our Journey',
     ru: 'Наш Путь',
     uk: 'Наш Шлях',
+  },
+  'about.journey.subtitle': {
+    en: 'From first encounters with Himalayan metalwork to a home for sound healing in Odesa.',
+    ru: 'От первой встречи с гималайским металлом до дома звукового исцеления в Одессе.',
+    uk: 'Від першої зустрічі з гімалайським металом до дому звукового зцілення в Одесі.',
+  },
+  'about.journey.step1.title': {
+    en: 'Listening first',
+    ru: 'Сначала — слушать',
+    uk: 'Спочатку — слухати',
+  },
+  'about.journey.step1.body': {
+    en: 'It began with travel, study, and long hours in workshops — learning how alloy, shape, and the maker’s hand shape a bowl’s voice.',
+    ru: 'Всё началось с путешествий, учёбы и долгих часов в мастерских — понимание того, как сплав, форма и рука мастера формируют голос чаши.',
+    uk: 'Усе почалося з подорожей, навчання та довгих годин у майстернях — розуміння того, як сплав, форма й рука майстра формують голос чаші.',
+  },
+  'about.journey.step2.title': {
+    en: 'Trusted makers',
+    ru: 'Доверенные мастера',
+    uk: 'Довірені майстри',
+  },
+  'about.journey.step2.body': {
+    en: 'We built lasting relationships with artisan families in Nepal who still cast singing bowls using traditional methods — not mass factory runs.',
+    ru: 'Мы выстроили долгие отношения с семьями мастеров в Непале, которые по-прежнему отливают поющие чаши традиционными методами — не на фабричном потоке.',
+    uk: 'Ми вибудували тривалі стосунки з родинами майстрів у Непалі, які й досі відливають співаючі чаші традиційними методами — не на фабричному потоці.',
+  },
+  'about.journey.step3.title': {
+    en: 'Rooted in Odesa',
+    ru: 'Корни в Одессе',
+    uk: 'Коріння в Одесі',
+  },
+  'about.journey.step3.body': {
+    en: 'Himalayan Sound found a home in Odesa: a showroom, a practice space, and a community for people discovering sound as a path to calm.',
+    ru: 'Himalayan Sound обрёл дом в Одессе: шоурум, пространство практики и сообщество людей, открывающих звук как путь к покою.',
+    uk: 'Himalayan Sound знайшов дім в Одесі: шоурум, простір практики та спільнота людей, які відкривають звук як шлях до спокою.',
+  },
+  'about.journey.step4.title': {
+    en: 'Shared practice',
+    ru: 'Общая практика',
+    uk: 'Спільна практика',
+  },
+  'about.journey.step4.body': {
+    en: 'Today we combine careful curation with live sessions, retreats, and writing — so the bowls leave the shelf and enter daily life.',
+    ru: 'Сегодня мы соединяем бережный отбор с живыми сессиями, ретритами и текстами — чтобы чаши сходили с полки и входили в повседневную жизнь.',
+    uk: 'Сьогодні ми поєднуємо дбайливий відбір із живими сесіями, ретритами й текстами — щоб чаші сходили з полиці й входили в щоденне життя.',
   },
   'about.values.title': {
     en: 'Our Values',
@@ -438,24 +508,109 @@ const translations: Translations = {
     uk: 'Наші Цінності',
   },
   'about.values.subtitle': {
-    en: 'These principles guide everything we do, from selecting materials to nurturing relationships with our artisan partners.',
-    ru: 'Эти принципы направляют все, что мы делаем, от выбора материалов до развития отношений с нашими партнерами-ремесленниками.',
-    uk: 'Ці принципи керують усім, що ми робимо, від вибору матеріалів до розвитку відносин з нашими партнерами-ремісниками.',
+    en: 'These principles guide everything we do — from selecting a single bowl to hosting an evening meditation.',
+    ru: 'Эти принципы направляют всё, что мы делаем — от выбора одной чаши до вечерней медитации.',
+    uk: 'Ці принципи керують усім, що ми робимо — від вибору однієї чаші до вечірньої медитації.',
   },
-  'about.team.title': {
-    en: 'Meet Our Team',
-    ru: 'Познакомьтесь с Нашей Командой',
-    uk: 'Познайомтеся з Нашою Командою',
+  'about.values.authenticity.title': {
+    en: 'Authenticity',
+    ru: 'Подлинность',
+    uk: 'Автентичність',
   },
-  'about.team.subtitle': {
-    en: 'Passionate individuals dedicated to sharing the healing power of sound with the world.',
-    ru: 'Увлеченные люди, посвятившие себя распространению целительной силы звука по всему миру.',
-    uk: 'Захоплені люди, присвячені поширенню цілющої сили звуку по всьому світу.',
+  'about.values.authenticity.body': {
+    en: 'Handcrafted Himalayan bowls with character in the tone — never anonymous factory copies dressed up as tradition.',
+    ru: 'Ручная гималайская работа с характером в звуке — не анонимные фабричные копии под видом традиции.',
+    uk: 'Ручна гімалайська робота з характером у звучанні — не анонімні фабричні копії під виглядом традиції.',
   },
-  'about.mission.title': {
-    en: 'Our Mission',
-    ru: 'Наша Миссия',
-    uk: 'Наша Місія',
+  'about.values.care.title': {
+    en: 'Careful curation',
+    ru: 'Бережный отбор',
+    uk: 'Дбайливий відбір',
+  },
+  'about.values.care.body': {
+    en: 'We listen before we list. Each instrument is checked for clarity, overtones, and how it feels in the hands.',
+    ru: 'Мы слушаем, прежде чем предлагать. Каждый инструмент проверяем на ясность, обертона и то, как он лежит в руках.',
+    uk: 'Ми слухаємо, перш ніж пропонувати. Кожен інструмент перевіряємо на ясність, обертони і те, як він лягає в руки.',
+  },
+  'about.values.presence.title': {
+    en: 'Lived presence',
+    ru: 'Живое присутствие',
+    uk: 'Жива присутність',
+  },
+  'about.values.presence.body': {
+    en: 'Sound healing is not only a product page. We practice together — in circles, workshops, and one-to-one sessions.',
+    ru: 'Звуковое исцеление — это не только страница товара. Мы практикуем вместе — в кругах, мастер-классах и индивидуальных сессиях.',
+    uk: 'Звукове зцілення — це не лише сторінка товару. Ми практикуємо разом — у колах, майстер-класах та індивідуальних сесіях.',
+  },
+  'about.offer.title': {
+    en: 'What you will find here',
+    ru: 'Что вы найдёте у нас',
+    uk: 'Що ви знайдете у нас',
+  },
+  'about.offer.subtitle': {
+    en: 'Instruments, practice, and knowledge — woven into one place.',
+    ru: 'Инструменты, практика и знания — в одном месте.',
+    uk: 'Інструменти, практика й знання — в одному місці.',
+  },
+  'about.offer.bowls.title': {
+    en: 'Singing bowls & instruments',
+    ru: 'Поющие чаши и инструменты',
+    uk: 'Співаючі чаші та інструменти',
+  },
+  'about.offer.bowls.body': {
+    en: 'A curated selection of Himalayan singing bowls and related instruments, ready for home practice or professional work.',
+    ru: 'Отобранная коллекция гималайских поющих чаш и сопутствующих инструментов — для домашней практики или профессиональной работы.',
+    uk: 'Відібрана колекція гімалайських співаючих чаш і супутніх інструментів — для домашньої практики чи професійної роботи.',
+  },
+  'about.offer.sessions.title': {
+    en: 'Sessions & gatherings',
+    ru: 'Сессии и встречи',
+    uk: 'Сесії та зустрічі',
+  },
+  'about.offer.sessions.body': {
+    en: 'Sound meditations, healing sessions, and seasonal events in Odesa — see our gallery for glimpses of recent gatherings.',
+    ru: 'Звуковые медитации, исцеляющие сессии и сезонные события в Одессе — загляните в галерею, чтобы увидеть недавние встречи.',
+    uk: 'Звукові медитації, цілющі сесії та сезонні події в Одесі — зазирніть у галерею, щоб побачити нещодавні зустрічі.',
+  },
+  'about.offer.knowledge.title': {
+    en: 'Guides & articles',
+    ru: 'Гайды и статьи',
+    uk: 'Гайди та статті',
+  },
+  'about.offer.knowledge.body': {
+    en: 'Practical writing on history, technique, and care — so you can choose and use a bowl with confidence.',
+    ru: 'Практичные тексты об истории, технике и уходе — чтобы выбирать и использовать чашу уверенно.',
+    uk: 'Практичні тексти про історію, техніку й догляд — щоб обирати й користуватися чашею впевнено.',
+  },
+  'about.place.title': {
+    en: 'Based in Odesa',
+    ru: 'Мы в Одессе',
+    uk: 'Ми в Одесі',
+  },
+  'about.place.body': {
+    en: 'Visit our showroom at RC London on Instytutska Street to hear bowls in person, ask questions, and find the instrument that resonates with you. Prefer to write first? We are happy to help remotely.',
+    ru: 'Приходите в наш шоурум в ЖК «Лондон» на улице Институтской — услышать чаши вживую, задать вопросы и найти инструмент, который отзовётся вам. Удобнее сначала написать? Поможем и удалённо.',
+    uk: 'Завітайте до нашого шоуруму в ЖК «Лондон» на вулиці Інститутській — почути чаші наживо, поставити питання й знайти інструмент, що відгукнеться вам. Зручніше спочатку написати? Допоможемо й дистанційно.',
+  },
+  'about.cta.title': {
+    en: 'Ready to listen?',
+    ru: 'Готовы слушать?',
+    uk: 'Готові слухати?',
+  },
+  'about.cta.body': {
+    en: 'Browse the collection, explore event photos, or reach out — we will help you take the next step.',
+    ru: 'Смотрите коллекцию, фото встреч или напишите нам — поможем сделать следующий шаг.',
+    uk: 'Переглядайте колекцію, фото зустрічей або напишіть нам — допоможемо зробити наступний крок.',
+  },
+  'about.cta.gallery': {
+    en: 'View gallery',
+    ru: 'Смотреть галерею',
+    uk: 'Дивитися галерею',
+  },
+  'about.cta.blog': {
+    en: 'Read the blog',
+    ru: 'Читать блог',
+    uk: 'Читати блог',
   },
 
   // Blog page

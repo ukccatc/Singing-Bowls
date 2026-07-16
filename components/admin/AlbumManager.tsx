@@ -3,6 +3,8 @@
 import { isMissingAlbumsTable } from '@/lib/admin/gallery-albums-sync';
 import { GalleryCategory } from '@/lib/supabase/gallery';
 import { Button } from '@/components/ui/button';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import {
   ArrowDown,
   ArrowUp,
@@ -334,14 +336,18 @@ export function AlbumManager() {
     }
   };
 
+  const fieldClass = cn(ui.field, ui.focus, 'mt-1 px-3');
+
   if (loading) {
-    return <div className="rounded-xl border bg-white p-8 text-center text-gray-600">Loading albums...</div>;
+    return (
+      <div className={cn(ui.card, 'p-8 text-center', ui.page.subtitle)}>Loading albums...</div>
+    );
   }
 
   return (
     <div className="space-y-6">
       {setupRequired ? (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-6">
+        <div className={cn(ui.banner.warning, 'p-6')}>
           <h2 className="text-lg font-semibold text-amber-900">Album tables not set up yet</h2>
           <p className="mt-2 text-sm text-amber-800">
             Run the SQL migration in Supabase SQL Editor, then import the default albums.
@@ -366,8 +372,8 @@ export function AlbumManager() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Event Albums ({albums.length})</h2>
-          <p className="text-sm text-gray-600">
+          <h2 className="text-xl font-semibold text-charcoal-900">Event Albums ({albums.length})</h2>
+          <p className={cn('text-sm', ui.page.subtitle)}>
             Group photos by event date and activity type for the public albums page.
           </p>
         </div>
@@ -376,7 +382,10 @@ export function AlbumManager() {
             <RefreshCw className={`mr-2 h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
             Import seed albums
           </Button>
-          <Button onClick={showCreateForm ? resetForm : startCreate}>
+          <Button
+            onClick={showCreateForm ? resetForm : startCreate}
+            className={ui.button.primary}
+          >
             <Plus className="mr-2 h-4 w-4" />
             {showCreateForm ? 'Close form' : 'New album'}
           </Button>
@@ -384,22 +393,20 @@ export function AlbumManager() {
       </div>
 
       {statusMessage ? (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
-          {statusMessage}
-        </div>
+        <div className={ui.banner.info}>{statusMessage}</div>
       ) : null}
 
       {showCreateForm ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-5">
-          <h3 className="text-lg font-semibold text-gray-900">
+        <div className={cn(ui.card, 'space-y-5')}>
+          <h3 className="text-lg font-semibold text-charcoal-900">
             {editingAlbum ? 'Edit album' : 'Create album'}
           </h3>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="block text-sm">
-              <span className="font-medium text-gray-700">English title *</span>
+              <span className={ui.labelSm}>English title *</span>
               <input
-                className="mt-1 w-full rounded-lg border px-3 py-2"
+                className={fieldClass}
                 value={form.title.en}
                 onChange={(e) => {
                   const en = e.target.value;
@@ -412,26 +419,26 @@ export function AlbumManager() {
               />
             </label>
             <label className="block text-sm">
-              <span className="font-medium text-gray-700">Slug *</span>
+              <span className={ui.labelSm}>Slug *</span>
               <input
-                className="mt-1 w-full rounded-lg border px-3 py-2"
+                className={fieldClass}
                 value={form.slug}
                 onChange={(e) => setForm({ ...form, slug: slugify(e.target.value) })}
               />
             </label>
             <label className="block text-sm">
-              <span className="font-medium text-gray-700">Event date</span>
+              <span className={ui.labelSm}>Event date</span>
               <input
                 type="date"
-                className="mt-1 w-full rounded-lg border px-3 py-2"
+                className={fieldClass}
                 value={form.event_date}
                 onChange={(e) => setForm({ ...form, event_date: e.target.value })}
               />
             </label>
             <label className="block text-sm">
-              <span className="font-medium text-gray-700">Activity / category</span>
+              <span className={ui.labelSm}>Activity / category</span>
               <select
-                className="mt-1 w-full rounded-lg border px-3 py-2"
+                className={fieldClass}
                 value={form.category}
                 onChange={(e) =>
                   setForm({ ...form, category: e.target.value as GalleryCategory })
@@ -445,10 +452,10 @@ export function AlbumManager() {
               </select>
             </label>
             <label className="block text-sm">
-              <span className="font-medium text-gray-700">Display order</span>
+              <span className={ui.labelSm}>Display order</span>
               <input
                 type="number"
-                className="mt-1 w-full rounded-lg border px-3 py-2"
+                className={fieldClass}
                 value={form.display_order}
                 onChange={(e) =>
                   setForm({ ...form, display_order: Number(e.target.value) })
@@ -459,9 +466,9 @@ export function AlbumManager() {
 
           {(['ru', 'uk'] as const).map((lang) => (
             <label key={lang} className="block text-sm">
-              <span className="font-medium text-gray-700">Title ({lang.toUpperCase()})</span>
+              <span className={ui.labelSm}>Title ({lang.toUpperCase()})</span>
               <input
-                className="mt-1 w-full rounded-lg border px-3 py-2"
+                className={fieldClass}
                 value={form.title[lang]}
                 onChange={(e) =>
                   setForm({
@@ -476,9 +483,9 @@ export function AlbumManager() {
           {(['en', 'ru', 'uk'] as const).map((lang) => (
             <div key={`loc-${lang}`} className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <label className="block text-sm">
-                <span className="font-medium text-gray-700">Location ({lang.toUpperCase()})</span>
+                <span className={ui.labelSm}>Location ({lang.toUpperCase()})</span>
                 <input
-                  className="mt-1 w-full rounded-lg border px-3 py-2"
+                  className={fieldClass}
                   value={form.location[lang]}
                   onChange={(e) =>
                     setForm({
@@ -489,9 +496,9 @@ export function AlbumManager() {
                 />
               </label>
               <label className="block text-sm">
-                <span className="font-medium text-gray-700">Description ({lang.toUpperCase()})</span>
+                <span className={ui.labelSm}>Description ({lang.toUpperCase()})</span>
                 <textarea
-                  className="mt-1 w-full rounded-lg border px-3 py-2"
+                  className={fieldClass}
                   rows={2}
                   value={form.description[lang]}
                   onChange={(e) =>
@@ -507,14 +514,14 @@ export function AlbumManager() {
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-700">
+              <p className={ui.labelSm}>
                 Album photos ({form.gallery_ids.length} selected)
               </p>
-              <p className="text-xs text-gray-500">Click to add/remove. Use arrows to reorder.</p>
+              <p className="text-xs text-charcoal-500">Click to add/remove. Use arrows to reorder.</p>
             </div>
 
             {galleryImages.length === 0 ? (
-              <p className="rounded-lg border border-dashed p-4 text-sm text-gray-600">
+              <p className={cn('rounded-lg border border-dashed border-cream-300 p-4 text-sm', ui.page.subtitle)}>
                 No gallery photos yet. Add photos on the Photos tab first.
               </p>
             ) : (
@@ -527,9 +534,10 @@ export function AlbumManager() {
                   return (
                     <div
                       key={image.id}
-                      className={`rounded-lg border-2 p-1 ${
-                        selected ? 'border-gold-600' : 'border-transparent'
-                      }`}
+                      className={cn(
+                        'rounded-lg border-2 p-1',
+                        selected ? ui.selection.selected : ui.selection.idle
+                      )}
                     >
                       <button
                         type="button"
@@ -543,12 +551,22 @@ export function AlbumManager() {
                           className="object-cover"
                         />
                         {selected ? (
-                          <span className="absolute left-1 top-1 rounded bg-gold-600 px-2 py-0.5 text-xs font-semibold text-white">
+                          <span
+                            className={cn(
+                              ui.badge.success,
+                              'absolute left-1 top-1 px-2 py-0.5 text-xs font-semibold'
+                            )}
+                          >
                             #{selectedIndex + 1}
                           </span>
                         ) : null}
                         {!image.is_active ? (
-                          <span className="absolute right-1 top-1 rounded bg-gray-800/80 px-1.5 py-0.5 text-[10px] text-white">
+                          <span
+                            className={cn(
+                              ui.badge.muted,
+                              'absolute right-1 top-1 px-1.5 py-0.5 text-[10px]'
+                            )}
+                          >
                             hidden
                           </span>
                         ) : null}
@@ -558,7 +576,7 @@ export function AlbumManager() {
                           <button
                             type="button"
                             onClick={() => moveImage(image.id, -1)}
-                            className="rounded border p-1 hover:bg-gray-50"
+                            className="rounded border border-cream-200 p-1 hover:bg-cream-50"
                             aria-label="Move up"
                           >
                             <ArrowUp className="h-3 w-3" />
@@ -571,16 +589,17 @@ export function AlbumManager() {
                                 cover_gallery_id: image.id,
                               }))
                             }
-                            className={`flex-1 rounded px-1 py-0.5 text-[10px] font-medium ${
-                              isCover ? 'bg-gold-600 text-white' : 'bg-gray-100 text-gray-700'
-                            }`}
+                            className={cn(
+                              'flex-1 rounded px-1 py-0.5 text-[10px] font-medium',
+                              isCover ? ui.badge.success : ui.badge.muted
+                            )}
                           >
                             {isCover ? 'Cover' : 'Set cover'}
                           </button>
                           <button
                             type="button"
                             onClick={() => moveImage(image.id, 1)}
-                            className="rounded border p-1 hover:bg-gray-50"
+                            className="rounded border border-cream-200 p-1 hover:bg-cream-50"
                             aria-label="Move down"
                           >
                             <ArrowDown className="h-3 w-3" />
@@ -595,20 +614,20 @@ export function AlbumManager() {
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={handleSave} disabled={saving}>
+            <Button onClick={handleSave} disabled={saving} className={ui.button.primary}>
               {saving ? 'Saving...' : editingAlbum ? 'Update album' : 'Create album'}
             </Button>
-            <Button variant="outline" onClick={resetForm}>
+            <Button variant="outline" onClick={resetForm} className={ui.button.outlineNeutral}>
               Cancel
             </Button>
           </div>
         </div>
       ) : null}
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className={ui.card}>
         {albums.length === 0 ? (
           <div className="py-10 text-center">
-            <p className="text-gray-600">No albums yet.</p>
+            <p className={ui.page.subtitle}>No albums yet.</p>
             {!setupRequired ? (
               <div className="mt-4 flex justify-center gap-2">
                 <Button onClick={startCreate}>
@@ -632,11 +651,12 @@ export function AlbumManager() {
               return (
                 <div
                   key={album.id}
-                  className={`overflow-hidden rounded-xl border ${
-                    album.is_active ? 'border-gray-200' : 'border-gray-300 opacity-70'
-                  }`}
+                  className={cn(
+                    'overflow-hidden rounded-xl border',
+                    album.is_active ? 'border-cream-200' : 'border-cream-300 opacity-70'
+                  )}
                 >
-                  <div className="relative h-44 bg-gray-100">
+                  <div className="relative h-44 bg-cream-100">
                     {cover ? (
                       <Image src={cover} alt={album.title.en} fill className="object-cover" />
                     ) : null}
@@ -644,8 +664,8 @@ export function AlbumManager() {
                   <div className="space-y-2 p-4">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h3 className="font-semibold text-gray-900">{album.title.en}</h3>
-                        <p className="text-xs text-gray-500">{album.slug}</p>
+                        <h3 className="font-semibold text-charcoal-900">{album.title.en}</h3>
+                        <p className="text-xs text-charcoal-500">{album.slug}</p>
                       </div>
                       <div className="flex gap-1">
                         <Button variant="outline" size="sm" asChild>
@@ -671,14 +691,14 @@ export function AlbumManager() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleDelete(album.id)}
-                          className="text-red-600"
+                          className={ui.button.dangerOutline}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
-                    <p className="line-clamp-2 text-sm text-gray-600">{album.description.en}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="line-clamp-2 text-sm text-charcoal-600">{album.description.en}</p>
+                    <p className="text-xs text-charcoal-500">
                       {album.event_date || 'No date'} · {album.category || 'meditation'} ·{' '}
                       {imageIds.length} photos
                       {album.location?.en ? ` · ${album.location.en}` : ''}

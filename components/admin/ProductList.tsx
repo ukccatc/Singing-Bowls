@@ -3,6 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { formatAdminDate } from '@/lib/format';
 import { getDefaultLocale } from '@/lib/translations';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import { Edit2, ExternalLink, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,6 +17,7 @@ export interface AdminProduct {
   name: { en: string; ru: string; uk?: string };
   description: { en: string; ru: string; uk?: string };
   price: number;
+  currency?: string;
   category: string;
   images: Array<{
     id: string;
@@ -24,7 +27,20 @@ export interface AdminProduct {
   }>;
   inventory: number;
   weight?: number;
+  dimensions?: {
+    diameter?: number;
+    height?: number;
+    length?: number;
+    width?: number;
+    unit?: 'cm' | 'mm' | 'inches';
+  };
   materials?: string[] | string;
+  tags?: string[] | string;
+  specifications?: Array<{
+    name?: { en?: string; ru?: string; uk?: string };
+    value?: { en?: string; ru?: string; uk?: string };
+    unit?: string;
+  }>;
   origin?: string;
   craftsman?: string;
   is_handmade?: boolean;
@@ -92,7 +108,7 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600">Loading products...</p>
+        <p className={ui.page.subtitle}>Loading products...</p>
       </div>
     );
   }
@@ -100,8 +116,8 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 mb-4">No products yet</p>
-        <Button onClick={onRefresh} className="bg-blue-600 hover:bg-blue-700">
+        <p className={`mb-4 ${ui.page.subtitle}`}>No products yet</p>
+        <Button onClick={onRefresh} className={ui.button.primary}>
           <Plus className="w-4 h-4 mr-2" />
           Create First Product
         </Button>
@@ -112,10 +128,10 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
+        <h2 className="text-2xl font-bold text-charcoal-900">
           Products ({products.length})
         </h2>
-        <Button onClick={loadProducts} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={loadProducts} className={ui.button.primary}>
           Refresh
         </Button>
       </div>
@@ -124,24 +140,31 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
+            className={ui.cardInteractive}
           >
             <div className="flex gap-4">
               {/* Image */}
-              <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+              <div className="relative w-24 h-24 bg-cream-100 rounded-lg overflow-hidden flex-shrink-0">
                 {product.images && product.images.length > 0 ? (
                   <Image
-                    src={product.images[0].url}
-                    alt={product.images[0].alt?.en || product.name.en}
+                    src={
+                      (product.images.find((img) => img.isPrimary) || product.images[0]).url
+                    }
+                    alt={
+                      (product.images.find((img) => img.isPrimary) || product.images[0]).alt
+                        ?.en || product.name.en
+                    }
                     fill
                     className="object-cover"
-                    onError={(e) => {
-                      console.error('Image failed to load:', product.images[0].url);
+                    onError={() => {
+                      const fallback =
+                        product.images.find((img) => img.isPrimary) || product.images[0];
+                      console.error('Image failed to load:', fallback?.url);
                     }}
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                    <span className="text-gray-500 text-xs">No image</span>
+                  <div className="w-full h-full flex items-center justify-center bg-cream-200">
+                    <span className="text-charcoal-500 text-xs">No image</span>
                   </div>
                 )}
               </div>
@@ -150,47 +173,47 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
               <div className="flex-1">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-charcoal-900">
                       {product.name.en}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className={`text-sm ${ui.page.subtitle}`}>
                       {product.name.ru}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-gray-900">
+                    <p className="text-lg font-bold text-charcoal-900">
                       ${product.price.toFixed(2)}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className={`text-sm ${ui.page.subtitle}`}>
                       Stock: {product.inventory}
                     </p>
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                <p className={`text-sm line-clamp-2 mb-3 ${ui.page.subtitle}`}>
                   {product.description.en}
                 </p>
 
                 <div className="flex gap-2 flex-wrap">
-                  <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                  <span className={cn('inline-block rounded px-2 py-1 text-xs', ui.badge.primary)}>
                     {product.category}
                   </span>
                   {product.is_featured && (
-                    <span className="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded">
+                    <span className={cn('inline-block rounded px-2 py-1 text-xs', ui.badge.warning)}>
                       Featured
                     </span>
                   )}
                   {product.is_available === false && (
-                    <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                    <span className={cn('inline-block rounded px-2 py-1 text-xs', ui.badge.muted)}>
                       Hidden
                     </span>
                   )}
                   {product.inventory === 0 && (
-                    <span className="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded">
+                    <span className={cn('inline-block rounded px-2 py-1 text-xs', ui.badge.danger)}>
                       Out of stock
                     </span>
                   )}
-                  <span className="inline-block px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">
+                  <span className={cn('inline-block rounded px-2 py-1 text-xs', ui.badge.info)}>
                     {formatAdminDate(product.created_at)}
                   </span>
                 </div>
@@ -202,7 +225,10 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
                   <Link
                     href={`/${getDefaultLocale()}/product/${product.slug}`}
                     target="_blank"
-                    className="inline-flex items-center justify-center gap-1 rounded-md bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-200"
+                    className={cn(
+                      ui.button.outlineNeutral,
+                      'inline-flex items-center justify-center gap-1 rounded-md px-3 py-2 text-xs font-medium'
+                    )}
                   >
                     <ExternalLink className="w-3 h-3" />
                     View
@@ -210,7 +236,7 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
                 )}
                 <Button
                   onClick={() => onEdit(product)}
-                  className="bg-blue-600 hover:bg-blue-700 px-3"
+                  className={`${ui.button.primary} px-3`}
                   size="sm"
                 >
                   <Edit2 className="w-4 h-4" />
@@ -218,7 +244,7 @@ export function ProductList({ onEdit, onRefresh }: ProductListProps) {
                 <Button
                   onClick={() => handleDelete(product.id)}
                   disabled={deleting === product.id}
-                  className="bg-red-600 hover:bg-red-700 px-3"
+                  className={`${ui.button.danger} px-3`}
                   size="sm"
                 >
                   <Trash2 className="w-4 h-4" />

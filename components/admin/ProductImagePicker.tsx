@@ -1,14 +1,24 @@
 'use client';
 
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface ProductImagePickerProps {
   onSelect: (url: string) => void;
+  selectedUrls?: string[];
+  title?: string;
 }
 
-export function ProductImagePicker({ onSelect }: ProductImagePickerProps) {
-  const [images, setImages] = useState<Array<{ url: string; publicId: string; name: string }>>([]);
+export function ProductImagePicker({
+  onSelect,
+  selectedUrls = [],
+  title = 'Select from Media Library',
+}: ProductImagePickerProps) {
+  const [images, setImages] = useState<Array<{ url: string; publicId: string; name: string }>>(
+    []
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,26 +39,42 @@ export function ProductImagePicker({ onSelect }: ProductImagePickerProps) {
     loadImages();
   }, []);
 
+  const selected = new Set(selectedUrls);
+
   return (
-    <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <h3 className="font-semibold text-gray-900 mb-3">Select from Media Library</h3>
+    <div className="mt-4 rounded-lg border border-cream-200 bg-cream-50 p-4">
+      <h3 className="mb-3 font-semibold text-charcoal-900">{title}</h3>
 
       {loading ? (
-        <p className="text-gray-600">Loading images...</p>
+        <p className={ui.page.subtitle}>Loading images...</p>
       ) : images.length === 0 ? (
-        <p className="text-gray-600">No images in media library. Upload some first.</p>
+        <p className={ui.page.subtitle}>No images in media library. Upload some first.</p>
       ) : (
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-3 max-h-64 overflow-y-auto">
-          {images.map((image) => (
-            <button
-              key={image.publicId}
-              type="button"
-              onClick={() => onSelect(image.url)}
-              className="relative h-20 rounded-lg overflow-hidden border-2 border-gray-300 hover:border-blue-500 transition-colors"
-            >
-              <Image src={image.url} alt={image.name} fill className="object-cover" />
-            </button>
-          ))}
+        <div className="grid max-h-72 grid-cols-3 gap-3 overflow-y-auto md:grid-cols-4">
+          {images.map((image) => {
+            const isSelected = selected.has(image.url);
+            return (
+              <button
+                key={image.publicId}
+                type="button"
+                onClick={() => onSelect(image.url)}
+                disabled={isSelected}
+                className={cn(
+                  'relative h-20 overflow-hidden rounded-lg border-2 transition-colors',
+                  isSelected
+                    ? cn(ui.selection.selected, 'cursor-default opacity-70')
+                    : ui.selection.idle
+                )}
+              >
+                <Image src={image.url} alt={image.name} fill className="object-cover" />
+                {isSelected && (
+                  <span className="absolute inset-x-0 bottom-0 bg-gold-600/90 py-0.5 text-center text-[10px] font-semibold text-white">
+                    Added
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

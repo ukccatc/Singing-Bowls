@@ -22,7 +22,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '2. Destinations We Ship To',
         paragraphs: [
           'We ship worldwide. Ukraine, the European Union, the United Kingdom, Switzerland, Norway, the United States, Canada, and most other countries are supported.',
-          'If your country is not available at checkout, please contact us at himalayansound.info@gmail.com and we will arrange a custom quote.',
+          'If your country is not available at checkout, please contact us at ukccatc@gmail.com and we will arrange a custom quote.',
         ],
       },
       {
@@ -89,7 +89,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         id: 'delayed',
         title: '9. Delayed, Lost, or Undelivered Parcels',
         paragraphs: [
-          'Occasional delays may occur due to customs clearance, weather, strikes, or force majeure. If your parcel is significantly delayed, contact himalayansound.info@gmail.com and we will open an investigation with the carrier.',
+          'Occasional delays may occur due to customs clearance, weather, strikes, or force majeure. If your parcel is significantly delayed, contact ukccatc@gmail.com and we will open an investigation with the carrier.',
           'A parcel is officially considered lost after 30 calendar days from dispatch for international shipments (or 21 days for domestic Ukrainian shipments). In this case we will either resend the order at no extra cost or issue a full refund, at your choice.',
           'Parcels returned to us as "undelivered" because of an incorrect address, no pickup within the storage period, or refusal to pay customs fees can be resent at the customer\'s expense, or refunded minus the actual shipping and return-shipping cost.',
         ],
@@ -107,7 +107,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '11. Contact Us',
         paragraphs: [
           'For any shipping question, tracking issue, or delivery change request, contact:',
-          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
+          'Himalayan Sound — ukccatc@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -131,7 +131,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '2. Куди ми доставляємо',
         paragraphs: [
           'Ми доставляємо по всьому світу. Доступні Україна, країни ЄС, Велика Британія, Швейцарія, Норвегія, США, Канада та більшість інших країн.',
-          'Якщо вашої країни немає у формі оформлення замовлення, напишіть на himalayansound.info@gmail.com — підготуємо індивідуальний розрахунок.',
+          'Якщо вашої країни немає у формі оформлення замовлення, напишіть на ukccatc@gmail.com — підготуємо індивідуальний розрахунок.',
         ],
       },
       {
@@ -198,7 +198,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         id: 'delayed',
         title: '9. Затримки, втрачені або недоставлені посилки',
         paragraphs: [
-          'Можливі затримки через митне оформлення, погоду, страйки або форс-мажор. Якщо посилка суттєво затримується, напишіть на himalayansound.info@gmail.com — ми відкриємо розслідування у перевізника.',
+          'Можливі затримки через митне оформлення, погоду, страйки або форс-мажор. Якщо посилка суттєво затримується, напишіть на ukccatc@gmail.com — ми відкриємо розслідування у перевізника.',
           'Посилка офіційно вважається втраченою через 30 календарних днів з дня відправлення для міжнародних замовлень (або 21 день для внутрішніх українських). У такому разі ми або повторно відправляємо замовлення без доплати, або повертаємо повну суму — на ваш вибір.',
           'Посилки, повернуті до нас як «недоставлені» через неправильну адресу, неотримання у термін зберігання або відмову від сплати митних зборів, можуть бути повторно відправлені коштом клієнта або повернуті у сумі за вирахуванням фактичних витрат на доставку та зворотне пересилання.',
         ],
@@ -216,7 +216,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '11. Контакти',
         paragraphs: [
           'З будь-яких питань щодо доставки, відстеження або зміни адреси звертайтесь:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -240,7 +240,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '2. Куда мы доставляем',
         paragraphs: [
           'Мы доставляем по всему миру. Доступны Украина, страны ЕС, Великобритания, Швейцария, Норвегия, США, Канада и большинство других стран.',
-          'Если вашей страны нет в форме оформления, напишите на himalayansound.info@gmail.com — подготовим индивидуальный расчёт.',
+          'Если вашей страны нет в форме оформления, напишите на ukccatc@gmail.com — подготовим индивидуальный расчёт.',
         ],
       },
       {
@@ -307,7 +307,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         id: 'delayed',
         title: '9. Задержки, потерянные или недоставленные посылки',
         paragraphs: [
-          'Возможны задержки из-за таможенного оформления, погоды, забастовок или форс-мажора. Если посылка значительно задерживается, напишите на himalayansound.info@gmail.com — мы откроем расследование у перевозчика.',
+          'Возможны задержки из-за таможенного оформления, погоды, забастовок или форс-мажора. Если посылка значительно задерживается, напишите на ukccatc@gmail.com — мы откроем расследование у перевозчика.',
           'Посылка официально считается потерянной через 30 календарных дней с даты отправки для международных заказов (или 21 день для внутренних украинских). В этом случае мы либо повторно отправляем заказ без доплаты, либо возвращаем полную сумму — на ваш выбор.',
           'Посылки, вернувшиеся к нам как «недоставленные» из-за неверного адреса, неполучения в срок хранения или отказа от уплаты таможенных сборов, могут быть повторно отправлены за счёт клиента или возвращены за вычетом фактических расходов на доставку и обратную пересылку.',
         ],
@@ -325,7 +325,7 @@ export const shippingPolicy: LocalizedLegalDocument = {
         title: '11. Контакты',
         paragraphs: [
           'По любым вопросам доставки, отслеживания или изменения адреса обращайтесь:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],

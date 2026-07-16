@@ -28,7 +28,7 @@ export function getSiteName(): string {
 }
 
 export function getContactEmail(): string {
-  return process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'himalayansound.info@gmail.com';
+  return process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'ukccatc@gmail.com';
 }
 
 /** Inbox for contact-form alerts (defaults to public contact address). */

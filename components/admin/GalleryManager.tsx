@@ -1,7 +1,9 @@
 'use client';
 
-import { GalleryCategory } from '@/lib/supabase/gallery';
 import { Button } from '@/components/ui/button';
+import { GalleryCategory } from '@/lib/supabase/gallery';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import { Edit2, Eye, EyeOff, Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -185,19 +187,21 @@ export function GalleryManager() {
   };
 
   if (loading) {
-    return <div className="p-8 text-center">Loading...</div>;
+    return <div className={cn('p-8 text-center', ui.page.subtitle)}>Loading...</div>;
   }
+
+  const fieldClass = cn(ui.field, ui.focus, 'px-3');
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+      <div className={ui.banner.info}>
         Photos appear on the public gallery. Group them into event albums on the{' '}
         <strong>Albums</strong> tab.
       </div>
 
       {/* Add Image Section */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Add Images to Gallery</h2>
+      <div className={ui.card}>
+        <h2 className="mb-4 text-xl font-semibold text-charcoal-900">Add Images to Gallery</h2>
 
         {showImagePicker ? (
           <div className="space-y-4">
@@ -206,11 +210,12 @@ export function GalleryManager() {
                 <button
                   key={img.publicId}
                   onClick={() => setSelectedImage(img)}
-                  className={`relative h-24 rounded-lg overflow-hidden border-2 transition-all ${
+                  className={cn(
+                    'relative h-24 overflow-hidden rounded-lg border-2 transition-all',
                     selectedImage?.publicId === img.publicId
-                      ? 'border-blue-600 ring-2 ring-blue-400'
-                      : 'border-gray-300 hover:border-gray-400'
-                  }`}
+                      ? ui.selection.selected
+                      : ui.selection.idle
+                  )}
                 >
                   <Image
                     src={img.url}
@@ -226,7 +231,7 @@ export function GalleryManager() {
               <Button
                 onClick={handleAddImage}
                 disabled={!selectedImage}
-                className="bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                className={cn(ui.button.primary, 'disabled:opacity-50')}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Selected Image
@@ -236,7 +241,8 @@ export function GalleryManager() {
                   setShowImagePicker(false);
                   setSelectedImage(null);
                 }}
-                className="bg-gray-600 hover:bg-gray-700"
+                variant="outline"
+                className={ui.button.outlineNeutral}
               >
                 Cancel
               </Button>
@@ -245,11 +251,11 @@ export function GalleryManager() {
         ) : (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label className={ui.labelSm}>Category</label>
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value as GalleryCategory)}
-                className="w-full max-w-xs rounded-lg border px-3 py-2"
+                className={cn(fieldClass, 'max-w-xs')}
               >
                 {GALLERY_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>
@@ -260,7 +266,7 @@ export function GalleryManager() {
             </div>
             <Button
               onClick={() => setShowImagePicker(true)}
-              className="bg-blue-600 hover:bg-blue-700"
+              className={ui.button.primary}
             >
             <Plus className="w-4 h-4 mr-2" />
             Select Image from Cloudinary
@@ -271,12 +277,12 @@ export function GalleryManager() {
 
       {/* Edit dialog */}
       {editingImage && (
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
-          <h2 className="text-xl font-semibold text-gray-900">Edit Gallery Item</h2>
+        <div className={cn(ui.card, 'space-y-4')}>
+          <h2 className="text-xl font-semibold text-charcoal-900">Edit Gallery Item</h2>
           <div className="grid gap-4 md:grid-cols-3">
             {(['en', 'ru', 'uk'] as const).map((lang) => (
               <div key={lang}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={ui.labelSm}>
                   Title ({lang.toUpperCase()})
                 </label>
                 <input
@@ -287,7 +293,7 @@ export function GalleryManager() {
                       title: { ...prev.title, [lang]: e.target.value },
                     }))
                   }
-                  className="w-full rounded-lg border px-3 py-2"
+                  className={fieldClass}
                 />
               </div>
             ))}
@@ -295,7 +301,7 @@ export function GalleryManager() {
           <div className="grid gap-4 md:grid-cols-3">
             {(['en', 'ru', 'uk'] as const).map((lang) => (
               <div key={lang}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={ui.labelSm}>
                   Description ({lang.toUpperCase()})
                 </label>
                 <textarea
@@ -307,13 +313,13 @@ export function GalleryManager() {
                     }))
                   }
                   rows={3}
-                  className="w-full rounded-lg border px-3 py-2"
+                  className={fieldClass}
                 />
               </div>
             ))}
           </div>
           <div className="w-48">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className={ui.labelSm}>Category</label>
             <select
               value={editForm.category}
               onChange={(e) =>
@@ -322,7 +328,7 @@ export function GalleryManager() {
                   category: e.target.value as GalleryCategory,
                 }))
               }
-              className="w-full rounded-lg border px-3 py-2"
+              className={fieldClass}
             >
               {GALLERY_CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -332,21 +338,25 @@ export function GalleryManager() {
             </select>
           </div>
           <div className="w-32">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Display order</label>
+            <label className={ui.labelSm}>Display order</label>
             <input
               type="number"
               value={editForm.display_order}
               onChange={(e) =>
                 setEditForm((prev) => ({ ...prev, display_order: Number(e.target.value) }))
               }
-              className="w-full rounded-lg border px-3 py-2"
+              className={fieldClass}
             />
           </div>
           <div className="flex gap-2">
-            <Button onClick={handleSaveEdit} className="bg-green-600 hover:bg-green-700">
+            <Button onClick={handleSaveEdit} className={ui.button.primary}>
               Save Changes
             </Button>
-            <Button variant="outline" onClick={() => setEditingImage(null)}>
+            <Button
+              variant="outline"
+              onClick={() => setEditingImage(null)}
+              className={ui.button.outlineNeutral}
+            >
               Cancel
             </Button>
           </div>
@@ -354,26 +364,27 @@ export function GalleryManager() {
       )}
 
       {/* Gallery Images */}
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+      <div className={ui.card}>
+        <h2 className="mb-4 text-xl font-semibold text-charcoal-900">
           Gallery Images ({galleryImages.length})
         </h2>
 
         {galleryImages.length === 0 ? (
-          <p className="text-gray-600 text-center py-8">No images in gallery yet</p>
+          <p className={cn('py-8 text-center', ui.page.subtitle)}>No images in gallery yet</p>
         ) : (
           <div className="space-y-4">
             {galleryImages.map((img) => (
               <div
                 key={img.id}
-                className={`flex gap-4 p-4 rounded-lg border ${
+                className={cn(
+                  'flex gap-4 rounded-lg border p-4',
                   img.is_active
-                    ? 'border-gray-200 bg-white'
-                    : 'border-gray-300 bg-gray-50 opacity-60'
-                }`}
+                    ? 'border-cream-200 bg-white'
+                    : 'border-cream-300 bg-cream-50 opacity-60'
+                )}
               >
                 {/* Image */}
-                <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-cream-100">
                   <Image
                     src={img.image_url}
                     alt={img.title.en}
@@ -384,9 +395,9 @@ export function GalleryManager() {
 
                 {/* Info */}
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">{img.title.en}</h3>
-                  <p className="text-sm text-gray-600">{img.title.ru}</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <h3 className="font-semibold text-charcoal-900">{img.title.en}</h3>
+                  <p className="text-sm text-charcoal-600">{img.title.ru}</p>
+                  <p className="mt-1 text-xs text-charcoal-500">
                     Order: {img.display_order}
                     {img.category ? ` · ${img.category}` : ''}
                   </p>
@@ -396,14 +407,14 @@ export function GalleryManager() {
                 <div className="flex gap-2 flex-shrink-0">
                   <Button
                     onClick={() => openEdit(img)}
-                    className="bg-gray-600 hover:bg-gray-700"
+                    className={ui.button.secondary}
                     size="sm"
                   >
                     <Edit2 className="w-4 h-4" />
                   </Button>
                   <Button
                     onClick={() => handleToggleActive(img.id, img.is_active)}
-                    className={img.is_active ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-600 hover:bg-gray-700'}
+                    className={img.is_active ? ui.button.primary : ui.button.muted}
                     size="sm"
                   >
                     {img.is_active ? (
@@ -414,7 +425,7 @@ export function GalleryManager() {
                   </Button>
                   <Button
                     onClick={() => handleDelete(img.id)}
-                    className="bg-red-600 hover:bg-red-700"
+                    className={ui.button.danger}
                     size="sm"
                   >
                     <Trash2 className="w-4 h-4" />

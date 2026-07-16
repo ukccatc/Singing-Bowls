@@ -2,12 +2,13 @@
 
 import type { AdminProduct } from '@/components/admin/ProductList';
 import { AdminProductFields } from '@/components/admin/AdminProductFields';
-import { ProductImagePicker } from '@/components/admin/ProductImagePicker';
+import { ProductImagesField } from '@/components/admin/ProductImagesField';
+import { ProductSpecificationsField } from '@/components/admin/ProductSpecificationsField';
 import { adminProductSchema, AdminProductFormData } from '@/lib/admin/product-form-schema';
 import { ProductCategory } from '@/lib/types';
+import { ui } from '@/lib/ui';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Upload, X } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -21,6 +22,32 @@ function productToFormDefaults(product: AdminProduct): AdminProductFormData {
   const youtube = product.youtube_video;
   const soundcloud = product.soundcloud_audio;
   const materials = product.materials;
+  const tags = product.tags;
+  const images = product.images || [];
+  const currency =
+    product.currency === 'EUR' || product.currency === 'UAH' ? product.currency : 'USD';
+
+  const formImages =
+    images.length > 0
+      ? images.map((image, index) => ({
+          id: image.id,
+          url: image.url,
+          isPrimary: Boolean(image.isPrimary) || (images.every((img) => !img.isPrimary) && index === 0),
+        }))
+      : [];
+
+  // Ensure exactly one primary in form defaults
+  if (formImages.length > 0 && !formImages.some((image) => image.isPrimary)) {
+    formImages[0].isPrimary = true;
+  } else if (formImages.filter((image) => image.isPrimary).length > 1) {
+    let seen = false;
+    for (const image of formImages) {
+      if (image.isPrimary) {
+        if (seen) image.isPrimary = false;
+        else seen = true;
+      }
+    }
+  }
 
   return {
     slug: product.slug || '',
@@ -36,11 +63,36 @@ function productToFormDefaults(product: AdminProduct): AdminProductFormData {
       uk: product.description.uk || '',
     },
     price: Number(product.price),
+    currency,
     category: (product.category as ProductCategory) || ProductCategory.SINGING_BOWLS,
-    image_url: product.images[0]?.url || '',
+    images: formImages,
     inventory: Number(product.inventory ?? 0),
-    weight: Number(product.weight ?? 0),
+    weight: product.weight != null ? Number(product.weight) : undefined,
+    diameter:
+      product.dimensions?.diameter != null
+        ? Number(product.dimensions.diameter)
+        : undefined,
+    height:
+      product.dimensions?.height != null ? Number(product.dimensions.height) : undefined,
+    dimension_unit:
+      product.dimensions?.unit === 'mm' || product.dimensions?.unit === 'inches'
+        ? product.dimensions.unit
+        : 'cm',
     materials: Array.isArray(materials) ? materials.join(', ') : String(materials || ''),
+    tags: Array.isArray(tags) ? tags.join(', ') : String(tags || ''),
+    specifications: (product.specifications || []).map((spec) => ({
+      name: {
+        en: spec.name?.en || '',
+        ru: spec.name?.ru || '',
+        uk: spec.name?.uk || '',
+      },
+      value: {
+        en: spec.value?.en || '',
+        ru: spec.value?.ru || '',
+        uk: spec.value?.uk || '',
+      },
+      unit: spec.unit || '',
+    })),
     origin: product.origin || 'Nepal',
     craftsman: product.craftsman || '',
     is_handmade: product.is_handmade ?? true,
@@ -53,20 +105,21 @@ function productToFormDefaults(product: AdminProduct): AdminProductFormData {
 }
 
 export function EditProductForm({ product, onSuccess, onCancel }: EditProductFormProps) {
-  const images = product.images || [];
-  const [imagePreview, setImagePreview] = useState<string>(images[0]?.url || '');
   const [loading, setLoading] = useState(false);
-  const [showImagePicker, setShowImagePicker] = useState(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<AdminProductFormData>({
     resolver: zodResolver(adminProductSchema),
     defaultValues: productToFormDefaults(product),
   });
+
+  const images = watch('images') || [];
+  const specifications = watch('specifications') || [];
 
   const onSubmit = async (data: AdminProductFormData) => {
     setLoading(true);
@@ -92,98 +145,48 @@ export function EditProductForm({ product, onSuccess, onCancel }: EditProductFor
     }
   };
 
-  const handleImageUrlChange = (url: string) => {
-    setValue('image_url', url);
-    setImagePreview(url);
-    setShowImagePicker(false);
-  };
-
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex items-center gap-4 mb-8">
-        <button onClick={onCancel} className="p-2 hover:bg-gray-100 rounded-lg" type="button">
-          <ArrowLeft className="w-5 h-5" />
+    <div className="mx-auto max-w-4xl p-6">
+      <div className="mb-8 flex items-center gap-4">
+        <button onClick={onCancel} className={`rounded-lg p-2 ${ui.button.ghost}`} type="button">
+          <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
+        <h1 className={ui.page.title}>Edit Product</h1>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Product Images</h2>
-
-          {images.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-              {images.map((img) => (
-                <div
-                  key={img.id}
-                  className="relative h-24 bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200"
-                >
-                  <Image
-                    src={img.url}
-                    alt={img.alt?.en || 'Product image'}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {imagePreview ? (
-            <div className="relative w-full h-64 bg-gray-100 rounded-lg overflow-hidden mb-4">
-              <Image src={imagePreview} alt="Product preview" fill className="object-cover" />
-              <button
-                type="button"
-                onClick={() => {
-                  setImagePreview('');
-                  setValue('image_url', '');
-                }}
-                className="absolute top-2 right-2 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          ) : (
-            <div className="w-full h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center mb-4">
-              <div className="text-center">
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-600">No primary image selected</p>
-              </div>
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setShowImagePicker(!showImagePicker)}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-          >
-            {imagePreview ? 'Change Primary Image' : 'Select Primary Image'}
-          </button>
-
-          {showImagePicker && <ProductImagePicker onSelect={handleImageUrlChange} />}
-
-          {errors.image_url && (
-            <p className="text-red-600 text-sm mt-2">{errors.image_url.message}</p>
-          )}
+        <div className={ui.card}>
+          <ProductImagesField
+            images={images}
+            onChange={(next) => setValue('images', next, { shouldValidate: true })}
+            error={errors.images?.message || errors.images?.root?.message}
+          />
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Product Details</h2>
+        <div className={ui.card}>
+          <h2 className="mb-4 text-xl font-semibold text-charcoal-900">Product Details</h2>
           <AdminProductFields register={register} errors={errors} slugReadOnly />
+        </div>
+
+        <div className={ui.card}>
+          <ProductSpecificationsField
+            specifications={specifications}
+            onChange={(next) => setValue('specifications', next, { shouldValidate: true })}
+          />
         </div>
 
         <div className="flex gap-4">
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-semibold disabled:opacity-50"
+            className={`${ui.button.primaryGradient} flex-1 rounded-lg px-6 py-3 font-semibold shadow-md transition-all disabled:opacity-50`}
           >
             {loading ? 'Updating Product...' : 'Update Product'}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-all font-semibold"
+            className={`${ui.button.outlineNeutral} flex-1 rounded-lg px-6 py-3 font-semibold transition-all`}
           >
             Cancel
           </button>

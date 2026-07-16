@@ -14,7 +14,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '1. Data Controller',
         paragraphs: [
           'The data controller responsible for your personal data is Himalayan Sound, operating from RC London, Instytutska St., Odesa, 65000, Ukraine.',
-          'For privacy-related inquiries, contact us at himalayansound.info@gmail.com or through our contact form at himalayan-sound.com/contact.',
+          'For privacy-related inquiries, contact us at ukccatc@gmail.com or through our contact form at himalayan-sound.com/contact.',
         ],
       },
       {
@@ -125,7 +125,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'rights-note',
         title: '',
         paragraphs: [
-          'To exercise your rights, contact us at himalayansound.info@gmail.com. We will respond within 30 days, or within the timeframe required by applicable law (e.g. one month under GDPR).',
+          'To exercise your rights, contact us at ukccatc@gmail.com. We will respond within 30 days, or within the timeframe required by applicable law (e.g. one month under GDPR).',
         ],
       },
       {
@@ -155,7 +155,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '14. Contact Us',
         paragraphs: [
           'For questions about this Privacy Policy or to exercise your data protection rights, contact:',
-          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
+          'Himalayan Sound — ukccatc@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -171,7 +171,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '1. Контролер даних',
         paragraphs: [
           'Контролером персональних даних є Himalayan Sound, що працює з Одеси, Україна.',
-          'З питань конфіденційності звертайтесь: himalayansound.info@gmail.com або через форму на himalayan-sound.com/contact.',
+          'З питань конфіденційності звертайтесь: ukccatc@gmail.com або через форму на himalayan-sound.com/contact.',
         ],
       },
       {
@@ -278,7 +278,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'rights-note',
         title: '',
         paragraphs: [
-          'Для реалізації прав звертайтесь: himalayansound.info@gmail.com. Відповімо протягом 30 днів або у строк, передбачений законом (наприклад, один місяць за GDPR).',
+          'Для реалізації прав звертайтесь: ukccatc@gmail.com. Відповімо протягом 30 днів або у строк, передбачений законом (наприклад, один місяць за GDPR).',
         ],
       },
       {
@@ -308,7 +308,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '14. Контакти',
         paragraphs: [
           'З питань Політики конфіденційності або реалізації прав:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -324,7 +324,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '1. Контролёр данных',
         paragraphs: [
           'Контролёром персональных данных является Himalayan Sound, работающий из Одессы, Украина.',
-          'По вопросам конфиденциальности: himalayansound.info@gmail.com или форма на himalayan-sound.com/contact.',
+          'По вопросам конфиденциальности: ukccatc@gmail.com или форма на himalayan-sound.com/contact.',
         ],
       },
       {
@@ -431,7 +431,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         id: 'rights-note',
         title: '',
         paragraphs: [
-          'Для реализации прав: himalayansound.info@gmail.com. Ответ в течение 30 дней или срока по закону.',
+          'Для реализации прав: ukccatc@gmail.com. Ответ в течение 30 дней или срока по закону.',
         ],
       },
       {
@@ -461,7 +461,7 @@ export const privacyPolicy: LocalizedLegalDocument = {
         title: '14. Контакты',
         paragraphs: [
           'По вопросам Политики и реализации прав:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],

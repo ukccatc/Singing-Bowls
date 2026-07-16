@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
+import { ui } from '@/lib/ui';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
@@ -22,8 +23,8 @@ export function AdminAuthGuard({ children }: { children: ReactNode }) {
 
   if (!mounted || isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-100">
-        <p className="text-gray-600">Loading admin panel...</p>
+      <div className={`flex min-h-screen items-center justify-center ${ui.admin.shellBg}`}>
+        <p className={ui.page.subtitle}>Loading admin panel...</p>
       </div>
     );
   }

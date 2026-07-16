@@ -48,7 +48,7 @@ export const returnPolicy: LocalizedLegalDocument = {
         title: '4. How to Initiate a Return',
         paragraphs: ['To start a return, please follow these steps:'],
         listItems: [
-          'Email us at himalayansound.info@gmail.com with your order number, the item you wish to return, and the reason (optional).',
+          'Email us at ukccatc@gmail.com with your order number, the item you wish to return, and the reason (optional).',
           'We will reply within 2 business days with a Return Merchandise Authorisation (RMA) number and the return address.',
           'Pack the item securely in its original packaging with all accessories and enclose a copy of the receipt and the RMA number.',
           'Ship the parcel to the address we provide. For Ukraine we typically accept returns to a Nova Poshta branch address.',
@@ -108,7 +108,7 @@ export const returnPolicy: LocalizedLegalDocument = {
         title: '10. Contact Us',
         paragraphs: [
           'For any return, refund, or warranty question:',
-          'Himalayan Sound — himalayansound.info@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
+          'Himalayan Sound — ukccatc@gmail.com — RC London, Instytutska St., Odesa, 65000, Ukraine',
         ],
       },
     ],
@@ -156,7 +156,7 @@ export const returnPolicy: LocalizedLegalDocument = {
         title: '4. Як оформити повернення',
         paragraphs: ['Щоб оформити повернення:'],
         listItems: [
-          'Напишіть на himalayansound.info@gmail.com з номером замовлення, вкажіть товар для повернення та причину (за бажанням).',
+          'Напишіть на ukccatc@gmail.com з номером замовлення, вкажіть товар для повернення та причину (за бажанням).',
           'Ми відповімо протягом 2 робочих днів, надамо номер RMA (авторизацію повернення) та адресу відправлення.',
           'Надійно запакуйте товар в оригінальну упаковку з усіма аксесуарами, додайте копію чека та номер RMA.',
           'Надішліть посилку на вказану адресу. Для України ми зазвичай приймаємо повернення у відділення Нової Пошти.',
@@ -216,7 +216,7 @@ export const returnPolicy: LocalizedLegalDocument = {
         title: '10. Контакти',
         paragraphs: [
           'З питань повернення, відшкодування або гарантії:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», вул. Інститутська, Одеса, 65000, Україна',
         ],
       },
     ],
@@ -264,7 +264,7 @@ export const returnPolicy: LocalizedLegalDocument = {
         title: '4. Как оформить возврат',
         paragraphs: ['Чтобы оформить возврат:'],
         listItems: [
-          'Напишите на himalayansound.info@gmail.com с номером заказа, укажите товар для возврата и причину (по желанию).',
+          'Напишите на ukccatc@gmail.com с номером заказа, укажите товар для возврата и причину (по желанию).',
           'Мы ответим в течение 2 рабочих дней, предоставим номер RMA (авторизацию возврата) и адрес отправки.',
           'Надёжно упакуйте товар в оригинальную упаковку со всеми аксессуарами, приложите копию чека и номер RMA.',
           'Отправьте посылку на указанный адрес. Для Украины мы обычно принимаем возвраты в отделение Новой Почты.',
@@ -324,7 +324,7 @@ export const returnPolicy: LocalizedLegalDocument = {
         title: '10. Контакты',
         paragraphs: [
           'По вопросам возврата, возмещения или гарантии:',
-          'Himalayan Sound — himalayansound.info@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
+          'Himalayan Sound — ukccatc@gmail.com — ЖК «Лондон», ул. Институтская, Одесса, 65000, Украина',
         ],
       },
     ],

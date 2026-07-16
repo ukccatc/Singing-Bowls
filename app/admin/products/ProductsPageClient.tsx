@@ -3,6 +3,8 @@
 import { EditProductForm } from '@/components/admin/EditProductForm';
 import { ProductForm } from '@/components/admin/ProductForm';
 import { ProductList, type AdminProduct } from '@/components/admin/ProductList';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -82,37 +84,37 @@ export default function ProductsPageClient() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="mx-auto max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-2">Product Management</h1>
-        <p className="text-gray-600">Manage all your products, edit details, and upload images</p>
+        <h1 className={ui.page.title}>Product Management</h1>
+        <p className={cn('mt-1', ui.page.subtitle)}>
+          Manage products, edit details, and attach images from the media library
+        </p>
       </div>
 
-      <div className="flex gap-4 mb-8">
+      <div className="mb-8 flex flex-wrap gap-3">
         <button
           onClick={showList}
-          className={`px-6 py-3 rounded-lg font-medium transition-all ${
-            view === 'list'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
-          }`}
+          className={cn(
+            'rounded-lg px-6 py-3 font-medium transition-all',
+            view === 'list' ? ui.tab.active : cn(ui.tab.inactive, 'border border-cream-200')
+          )}
         >
           All Products
         </button>
         <button
           onClick={showCreate}
-          className={`px-6 py-3 rounded-lg font-medium transition-all flex items-center gap-2 ${
-            view === 'create'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300'
-          }`}
+          className={cn(
+            'flex items-center gap-2 rounded-lg px-6 py-3 font-medium transition-all',
+            view === 'create' ? ui.tab.active : cn(ui.tab.inactive, 'border border-cream-200')
+          )}
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="h-5 w-5" />
           Add New Product
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className={ui.card}>
         {view === 'list' && (
           <div className="p-6">
             <ProductList

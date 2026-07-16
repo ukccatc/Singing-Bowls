@@ -1,8 +1,9 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Package } from 'lucide-react';
 import { formatAdminDate } from '@/lib/format';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
+import { Package } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface OrderRow {
@@ -50,9 +51,7 @@ export default function AdminOrdersPage() {
 
       if (response.ok) {
         setOrders((prev) =>
-          prev.map((order) =>
-            order.id === orderId ? { ...order, status } : order
-          )
+          prev.map((order) => (order.id === orderId ? { ...order, status } : order))
         );
       } else {
         alert('Failed to update order status');
@@ -66,50 +65,61 @@ export default function AdminOrdersPage() {
 
   return (
     <div>
-      <h1 className="mb-2 text-3xl font-bold text-gray-900">Orders</h1>
-      <p className="mb-8 text-gray-600">View and manage customer orders</p>
+      <h1 className={cn(ui.page.title, 'mb-2')}>Orders</h1>
+      <p className={cn(ui.page.subtitle, 'mb-8')}>View and manage customer orders</p>
 
       {loading ? (
-        <p className="text-gray-600">Loading orders...</p>
+        <p className={ui.page.subtitle}>Loading orders...</p>
       ) : orders.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <Package className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-          <h2 className="text-lg font-semibold text-gray-900">No orders yet</h2>
-          <p className="mt-2 text-gray-600">Orders will appear here once customers complete checkout.</p>
+        <div className="rounded-xl border border-dashed border-cream-300 bg-white p-12 text-center">
+          <Package className="mx-auto mb-4 h-12 w-12 text-charcoal-400" />
+          <h2 className="text-lg font-semibold text-charcoal-900">No orders yet</h2>
+          <p className={cn('mt-2', ui.page.subtitle)}>
+            Orders will appear here once customers complete checkout.
+          </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className={ui.tableShell}>
+          <table className="min-w-full divide-y divide-cream-200">
+            <thead className={ui.tableHead}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Order</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Total</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Date</th>
+                <th className="px-6 py-3 text-left">Order</th>
+                <th className="px-6 py-3 text-left">Email</th>
+                <th className="px-6 py-3 text-left">Status</th>
+                <th className="px-6 py-3 text-left">Total</th>
+                <th className="px-6 py-3 text-left">Date</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-cream-200 bg-white">
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">{order.id}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{order.email}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-charcoal-900">
+                    {order.id}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-charcoal-600">
+                    {order.email}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-charcoal-600">
                     <select
                       value={order.status}
                       disabled={updating === order.id}
                       onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                      className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+                      className={cn(
+                        'rounded-md border border-cream-300 px-2 py-1 text-sm',
+                        ui.focus
+                      )}
                     >
                       {ORDER_STATUSES.map((status) => (
-                        <option key={status} value={status}>{status}</option>
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
                       ))}
                     </select>
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-charcoal-600">
                     {order.currency} {Number(order.total).toFixed(2)}
                   </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
+                  <td className="whitespace-nowrap px-6 py-4 text-sm text-charcoal-600">
                     {formatAdminDate(order.created_at)}
                   </td>
                 </tr>

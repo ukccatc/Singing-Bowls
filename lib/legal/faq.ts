@@ -29,7 +29,7 @@ export const faqDocument: LocalizedFaqDocument = {
     title: 'Frequently Asked Questions',
     lastUpdated: LAST_UPDATED_EN,
     intro:
-      'Answers to the most common questions about our Himalayan singing bowls, orders, delivery to Ukraine and worldwide, payments, returns, and care. If you cannot find your answer here, please contact us at himalayansound.info@gmail.com.',
+      'Answers to the most common questions about our Himalayan singing bowls, orders, delivery to Ukraine and worldwide, payments, returns, and care. If you cannot find your answer here, please contact us at ukccatc@gmail.com.',
     categories: [
       {
         id: 'products',
@@ -178,7 +178,7 @@ export const faqDocument: LocalizedFaqDocument = {
     title: 'Питання та відповіді',
     lastUpdated: LAST_UPDATED_UK,
     intro:
-      'Відповіді на найпоширеніші питання про наші гімалайські співаючі чаші, замовлення, доставку в Україну та по всьому світу, оплату, повернення та догляд. Якщо ви не знайшли відповіді тут — напишіть на himalayansound.info@gmail.com.',
+      'Відповіді на найпоширеніші питання про наші гімалайські співаючі чаші, замовлення, доставку в Україну та по всьому світу, оплату, повернення та догляд. Якщо ви не знайшли відповіді тут — напишіть на ukccatc@gmail.com.',
     categories: [
       {
         id: 'products',
@@ -327,7 +327,7 @@ export const faqDocument: LocalizedFaqDocument = {
     title: 'Часто задаваемые вопросы',
     lastUpdated: LAST_UPDATED_RU,
     intro:
-      'Ответы на самые частые вопросы о наших гималайских поющих чашах, заказах, доставке в Украину и по всему миру, оплате, возврате и уходе. Если вы не нашли ответа здесь — напишите на himalayansound.info@gmail.com.',
+      'Ответы на самые частые вопросы о наших гималайских поющих чашах, заказах, доставке в Украину и по всему миру, оплате, возврате и уходе. Если вы не нашли ответа здесь — напишите на ukccatc@gmail.com.',
     categories: [
       {
         id: 'products',

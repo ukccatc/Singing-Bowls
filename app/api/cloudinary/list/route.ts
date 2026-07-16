@@ -8,29 +8,78 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+type CloudinaryResource = {
+  secure_url: string;
+  public_id: string;
+  original_filename?: string;
+  created_at: string;
+  bytes?: number;
+  format?: string;
+  width?: number;
+  height?: number;
+  resource_type?: string;
+  folder?: string;
+};
+
+function folderFromPublicId(publicId: string, folder?: string): string {
+  if (folder) return folder;
+  const parts = publicId.split('/');
+  if (parts.length <= 1) return '(root)';
+  return parts.slice(0, -1).join('/');
+}
+
 export async function GET(request: NextRequest) {
   const authError = requireAdminSession(request);
   if (authError) return authError;
 
   try {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      max_results: 500,
+    const resources: CloudinaryResource[] = [];
+    let nextCursor: string | undefined;
+
+    // Paginate so the library is not capped at the first 500 only when more exist.
+    do {
+      const result = await cloudinary.api.resources({
+        type: 'upload',
+        resource_type: 'image',
+        max_results: 500,
+        next_cursor: nextCursor,
+      });
+
+      resources.push(...((result.resources || []) as CloudinaryResource[]));
+      nextCursor = result.next_cursor;
+    } while (nextCursor && resources.length < 2000);
+
+    const images = resources.map((resource) => {
+      const folder = folderFromPublicId(resource.public_id, resource.folder);
+      const name =
+        resource.original_filename ||
+        resource.public_id.split('/').pop() ||
+        resource.public_id;
+
+      return {
+        url: resource.secure_url,
+        publicId: resource.public_id,
+        name,
+        uploadedAt: resource.created_at,
+        bytes: resource.bytes ?? 0,
+        format: resource.format || '',
+        width: resource.width ?? 0,
+        height: resource.height ?? 0,
+        folder,
+      };
     });
 
-    const images = result.resources.map((resource: {
-      secure_url: string;
-      public_id: string;
-      original_filename?: string;
-      created_at: string;
-    }) => ({
-      url: resource.secure_url,
-      publicId: resource.public_id,
-      name: resource.original_filename || resource.public_id.split('/').pop(),
-      uploadedAt: resource.created_at,
-    }));
+    const folders = Array.from(new Set(images.map((image) => image.folder))).sort();
 
-    return NextResponse.json({ success: true, images }, { status: 200 });
+    return NextResponse.json(
+      {
+        success: true,
+        images,
+        folders,
+        total: images.length,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('List error:', error);
     return NextResponse.json({ error: 'Failed to list images' }, { status: 500 });

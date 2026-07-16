@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-gray-600">Loading products...</div>}>
+    <Suspense fallback={<div className="p-8 text-charcoal-600">Loading products...</div>}>
       <ProductsPageClient />
     </Suspense>
   );

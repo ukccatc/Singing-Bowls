@@ -37,14 +37,17 @@ export default function ProductDetailClient({
   locale,
   relatedProducts,
 }: ProductDetailClientProps) {
-  const [selectedImage, setSelectedImage] = useState(0);
+  const initialImageIndex = (() => {
+    const primaryIndex = product.images.findIndex((img) => img.isPrimary);
+    return primaryIndex >= 0 ? primaryIndex : 0;
+  })();
+  const [selectedImage, setSelectedImage] = useState(initialImageIndex);
   const [quantity, setQuantity] = useState(1);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const { addItem, getItem } = useCart();
 
   const productName = product.name[locale] || product.name.en;
   const productDescription = product.description[locale] || product.description.en;
-  const primaryImage = product.images.find(img => img.isPrimary) || product.images[0];
   const cartItem = getItem(product.id);
 
   const handleAddToCart = () => {
@@ -361,7 +364,7 @@ export default function ProductDetailClient({
                 <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
                   <TabsTrigger value="specifications">Specifications</TabsTrigger>
                   <TabsTrigger value="materials">Materials</TabsTrigger>
-                  <TabsTrigger value="audio">Audio Sample</TabsTrigger>
+                  <TabsTrigger value="audio">Audio & Video</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="specifications" className="mt-6">
@@ -381,28 +384,40 @@ export default function ProductDetailClient({
                             </span>
                           </div>
                         ))}
-                        {product.dimensions.diameter && (
+                        {product.dimensions?.diameter ? (
                           <div className="flex justify-between py-2 border-b border-cream-200">
                             <span className="text-charcoal-600">Diameter:</span>
                             <span className="font-medium text-charcoal-900">
-                              {product.dimensions.diameter} {product.dimensions.unit}
+                              {product.dimensions.diameter}{' '}
+                              {product.dimensions.unit || 'cm'}
                             </span>
                           </div>
-                        )}
-                        {product.dimensions.height && (
+                        ) : null}
+                        {product.dimensions?.height ? (
                           <div className="flex justify-between py-2 border-b border-cream-200">
                             <span className="text-charcoal-600">Height:</span>
                             <span className="font-medium text-charcoal-900">
-                              {product.dimensions.height} {product.dimensions.unit}
+                              {product.dimensions.height}{' '}
+                              {product.dimensions.unit || 'cm'}
                             </span>
                           </div>
-                        )}
-                        <div className="flex justify-between py-2 border-b border-cream-200">
-                          <span className="text-charcoal-600">Weight:</span>
-                          <span className="font-medium text-charcoal-900">
-                            {product.weight}g
-                          </span>
-                        </div>
+                        ) : null}
+                        {product.weight > 0 ? (
+                          <div className="flex justify-between py-2 border-b border-cream-200">
+                            <span className="text-charcoal-600">Weight:</span>
+                            <span className="font-medium text-charcoal-900">
+                              {product.weight}g
+                            </span>
+                          </div>
+                        ) : null}
+                        {!product.specifications?.length &&
+                          !product.dimensions?.diameter &&
+                          !product.dimensions?.height &&
+                          !(product.weight > 0) && (
+                            <p className="text-charcoal-600 md:col-span-2">
+                              No specifications listed for this product yet.
+                            </p>
+                          )}
                       </div>
                     </CardContent>
                   </Card>
@@ -435,6 +450,18 @@ export default function ProductDetailClient({
                             </p>
                           </div>
                         )}
+                        {product.tags?.length > 0 && (
+                          <div>
+                            <h4 className="font-medium text-charcoal-900 mb-2">Tags:</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {product.tags.map((tag) => (
+                                <Badge key={tag} variant="secondary" className="text-sm">
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -442,28 +469,69 @@ export default function ProductDetailClient({
 
                 <TabsContent value="audio" className="mt-6">
                   <Card className="border-0 shadow-md">
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold text-charcoal-900 mb-4">
-                        Audio Sample
+                    <CardContent className="p-6 space-y-8">
+                      <h3 className="text-xl font-bold text-charcoal-900">
+                        Audio & Video
                       </h3>
+
+                      {product.youtubeVideo?.videoId && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3 text-charcoal-700">
+                            <Play className="h-5 w-5 text-gold-600" />
+                            <span>Product video</span>
+                          </div>
+                          <div className="aspect-video overflow-hidden rounded-lg bg-black">
+                            <iframe
+                              src={`https://www.youtube-nocookie.com/embed/${product.youtubeVideo.videoId}`}
+                              title={product.youtubeVideo.title || productName}
+                              className="h-full w-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {product.soundcloudAudio?.streamUrl && (
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3 text-charcoal-700">
+                            <Volume2 className="h-5 w-5 text-gold-600" />
+                            <span>SoundCloud sample</span>
+                          </div>
+                          <iframe
+                            title={product.soundcloudAudio.title || 'SoundCloud sample'}
+                            width="100%"
+                            height="166"
+                            scrolling="no"
+                            frameBorder="no"
+                            allow="autoplay"
+                            src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(
+                              product.soundcloudAudio.streamUrl
+                            )}&color=%9a6f1e&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
+                            className="rounded-lg"
+                          />
+                        </div>
+                      )}
+
                       {product.audioSample ? (
-                        <div className="space-y-4">
+                        <div className="space-y-3">
                           <div className="flex items-center gap-3 text-charcoal-700">
                             <Volume2 className="h-5 w-5 text-gold-600" />
                             <span>Listen to the authentic sound of this singing bowl</span>
                           </div>
-                          <div className="bg-cream-50 rounded-lg p-6 text-center">
-                            <Button size="lg" className="bg-gold-600 hover:bg-gold-700">
-                              <Play className="h-5 w-5 mr-2" />
-                              Play Audio Sample
-                            </Button>
-                          </div>
+                          <audio controls preload="metadata" className="w-full" src={product.audioSample}>
+                            Your browser does not support the audio element.
+                          </audio>
                         </div>
-                      ) : (
-                        <p className="text-charcoal-600">
-                          No audio sample available for this product.
-                        </p>
-                      )}
+                      ) : null}
+
+                      {!product.audioSample &&
+                        !product.youtubeVideo?.videoId &&
+                        !product.soundcloudAudio?.streamUrl && (
+                          <p className="text-charcoal-600">
+                            No audio or video sample available for this product.
+                          </p>
+                        )}
                     </CardContent>
                   </Card>
                 </TabsContent>

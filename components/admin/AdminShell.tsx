@@ -1,6 +1,8 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -34,49 +36,54 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
   return (
     <AdminAuthGuard>
-      <div className="flex min-h-screen bg-gray-100">
-        <aside className="flex w-64 flex-col bg-gray-900 text-white shadow-lg">
-          <div className="p-6">
-            <h1 className="text-2xl font-bold">Admin Panel</h1>
-            <p className="mt-1 text-sm text-gray-400">Himalayan Sound</p>
-            {user && <p className="mt-2 text-xs text-gray-500">Signed in as {user.username}</p>}
+      <div className={cn('flex min-h-screen', ui.admin.shellBg)}>
+        <aside className={cn('flex w-64 flex-col', ui.admin.sidebar)}>
+          <div className="border-b border-charcoal-800 p-6">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-gold-600 text-sm font-bold text-white">
+              HS
+            </div>
+            <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+            <p className={cn('mt-1 text-sm', ui.admin.sidebarMuted)}>Himalayan Sound</p>
+            {user ? (
+              <p className={cn('mt-2 text-xs', ui.admin.sidebarMuted)}>
+                Signed in as {user.username}
+              </p>
+            ) : null}
           </div>
 
-          <nav className="flex-1 space-y-1 px-4">
+          <nav className="flex-1 space-y-1 px-3 py-4">
             {navItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              const isActive =
+                item.href === '/admin'
+                  ? pathname === '/admin'
+                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`block rounded-lg px-4 py-3 font-medium transition-colors ${
-                    isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
+                  className={cn(
+                    'block rounded-lg px-4 py-3 text-sm font-medium transition-colors',
+                    isActive ? ui.admin.navActive : ui.admin.navIdle
+                  )}
                 >
-                  {item.icon} {item.label}
+                  <span className="mr-2">{item.icon}</span>
+                  {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="space-y-2 border-t border-gray-800 p-4">
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="block w-full rounded-lg bg-gray-800 px-4 py-2 text-center text-sm transition-colors hover:bg-gray-700"
-            >
+          <div className="space-y-2 border-t border-charcoal-800 p-4">
+            <button type="button" onClick={handleLogout} className={ui.admin.sidebarFooterBtn}>
               Log out
             </button>
-            <Link
-              href="/en"
-              className="block rounded-lg bg-gray-800 px-4 py-2 text-center text-sm transition-colors hover:bg-gray-700"
-            >
+            <Link href="/en" className={ui.admin.sidebarFooterBtn}>
               ← Back to Store
             </Link>
           </div>
         </aside>
 
-        <main className="flex-1 overflow-auto p-8">{children}</main>
+        <main className="flex-1 overflow-auto p-6 md:p-8">{children}</main>
       </div>
     </AdminAuthGuard>
   );

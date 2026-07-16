@@ -58,7 +58,7 @@ export default function DebugPage() {
       {data?.sample != null && (
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Sample Product</h2>
-          <pre className="bg-gray-100 p-4 rounded overflow-auto text-sm">
+          <pre className="overflow-auto rounded bg-cream-100 p-4 text-sm text-charcoal-800">
             {JSON.stringify(data.sample, null, 2)}
           </pre>
         </div>

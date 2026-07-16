@@ -2,7 +2,10 @@
 
 import { AlbumManager } from '@/components/admin/AlbumManager';
 import { GalleryManager } from '@/components/admin/GalleryManager';
+import { MediaStorageStatus } from '@/components/admin/MediaStorageStatus';
 import { Button } from '@/components/ui/button';
+import { ui } from '@/lib/ui';
+import { cn } from '@/lib/utils';
 import { ExternalLink, Images, Layers } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -14,8 +17,8 @@ export default function AdminGalleryTabs() {
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gallery</h1>
-          <p className="mt-1 text-gray-600">
+          <h1 className={ui.page.title}>Gallery</h1>
+          <p className={`mt-1 ${ui.page.subtitle}`}>
             Manage public gallery photos and event albums grouped by date and activity.
           </p>
         </div>
@@ -35,15 +38,16 @@ export default function AdminGalleryTabs() {
         </div>
       </div>
 
-      <div className="flex gap-2 border-b border-gray-200 pb-1">
+      <MediaStorageStatus />
+
+      <div className="flex gap-2 border-b border-cream-200 pb-1">
         <button
           type="button"
           onClick={() => setTab('photos')}
-          className={`inline-flex items-center gap-2 rounded-t-lg px-4 py-2 text-sm font-medium transition-colors ${
-            tab === 'photos'
-              ? 'bg-gray-900 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
+          className={cn(
+            'inline-flex items-center gap-2 rounded-t-lg px-4 py-2 text-sm font-medium transition-colors',
+            tab === 'photos' ? ui.tab.active : ui.tab.inactive
+          )}
         >
           <Images className="h-4 w-4" />
           Photos
@@ -51,11 +55,10 @@ export default function AdminGalleryTabs() {
         <button
           type="button"
           onClick={() => setTab('albums')}
-          className={`inline-flex items-center gap-2 rounded-t-lg px-4 py-2 text-sm font-medium transition-colors ${
-            tab === 'albums'
-              ? 'bg-gray-900 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50'
-          }`}
+          className={cn(
+            'inline-flex items-center gap-2 rounded-t-lg px-4 py-2 text-sm font-medium transition-colors',
+            tab === 'albums' ? ui.tab.active : ui.tab.inactive
+          )}
         >
           <Layers className="h-4 w-4" />
           Albums
